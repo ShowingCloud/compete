@@ -1,0 +1,59 @@
+.body {
+    background: #000;
+}
+
+.page {
+    background: url(../images/bg.png) no-repeat center;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+.view-left {
+    float: left;
+    width: 320px;
+    border: none;
+}
+
+.view-main {
+    width: -webkit-calc(100% - 321px);
+    width: -moz-calc(100% - 321px);
+    width: -ms-calc(100% - 321px);
+    width: calc(100% - 321px);
+}
+
+@media (max-width: 768px) {
+    .view-left {
+        width: 240px;
+    }
+    .view-main {
+        width: -webkit-calc(100% - 241px);
+        width: -moz-calc(100% - 241px);
+        width: -ms-calc(100% - 241px);
+        width: calc(100% - 241px);
+    }
+}
+
+.asideBar {
+    top: 50%;
+    position: absolute;
+    transform: translateY(-50%);
+    text-align: center;
+}
+
+.asideBar h2 {
+    color: aliceblue;
+    padding: 20px;
+    font-size: 0.5rem;
+}
+
+.asideBar .btn {
+    background: url(../images/icon-1.png);
+    background-position: left center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+    position: relative;
+}
