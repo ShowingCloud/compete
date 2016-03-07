@@ -3,9 +3,23 @@
 }
 
 .page {
+    /*
     background: url(../images/bg.png) no-repeat center;
     -webkit-background-size: cover;
     background-size: cover;
+*/
+    background: #000;
+}
+
+.page-content {
+    margin: 20% 10%;
+}
+
+#judge-container {
+    background: url(../images/login-border.png) no-repeat center;
+    -webkit-background-size: cover;
+    background-size: cover;
+    background: #000;
 }
 
 .view-left {
@@ -33,6 +47,10 @@
     }
 }
 
+aside-linker {
+    display: block;
+}
+
 .asideBar {
     top: 50%;
     position: absolute;
@@ -56,4 +74,36 @@
     height: 100px;
     margin-bottom: 20px;
     position: relative;
+}
+
+#judge {
+    background: url(../images/icon-judge.png);
+    background-position: left center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+#msg {
+    background: url(../images/icon-msg.png);
+    background-position: left center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+#score {
+    background: url(../images/icon-score.png);
+    background-position: left center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+#data {
+    background: url(../images/icon-data.png);
+    background-position: left center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
 }
