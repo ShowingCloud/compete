@@ -6,21 +6,20 @@ var $$ = Dom7;
 
 // Add view
 var mainView = myApp.addView('.view-main', {
-    // Because we use fixed-through navbar we can enable dynamic navbar
-    dynamicNavbar: true
+    // 
 });
 
 var appPara = {
-    serverHost = "http://localhost:3000/"
+    serverHost: "http://localhost:3000/"
 }
 
-var app {
+var app = {
         init: function () {
             var tempStr, judgeInfo;
-            tempStr = localStorage.getItem("judge");
+            tempStr = localStorage.getItem("judgeInfo");
             if (typeof (tempStr) === "string") {
-                judge = JSON.parse(judgeInfo);
-                showJudge(judge);
+                judgeInfo = JSON.parse(tempStr);
+                showJudge(judgeInfo);
             } else {
                 $$("#login-container").show();
             }
@@ -41,6 +40,11 @@ var score = new PouchDB("score");
 //Not use remote PouchDb server
 var remoteCouch = false;
 
+
+$$(document).on('ajaxComplete', function (e) {
+    var xhr = e.detail.xhr;
+    console.log('request performed');
+});
 // Callbacks to run specific code for specific pages, for example for About page:
 myApp.onPageInit('about', function (page) {
 
@@ -49,9 +53,15 @@ myApp.onPageInit('about', function (page) {
         var username = $$("#username").val();
         var password = $$("#password").val();
         if (typeof username === "string" && typeof password === "string") {
+            var postData = {
+                name: username
+                , password: password
+            }
             $$.ajax({
                 method: "POST"
-                , url: appPara.host + "login"
+                , contentType: "application/json"
+                , url: appPara.host + "/account/sign_in"
+                , data: JSON.stringify(postData)
                 , success: function (d) {
                     console.log(d);
                     var judgeInfo = {

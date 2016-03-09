@@ -2,13 +2,25 @@
     background: #000;
 }
 
-.page {
-    /*
+.pages {
+    width: 60%;
+    margin-left: 40%;
+    background: none;
+}
+
+.verticalTabBar {
+    width: 40%;
+    float: left;
+}
+
+.view {
     background: url(../images/bg.png) no-repeat center;
     -webkit-background-size: cover;
     background-size: cover;
-*/
-    background-color: cadetblue;
+}
+
+.page {
+    background: none;
 }
 
 .page-content {
@@ -16,35 +28,11 @@
 }
 
 #judge-container {
+    width: 80%;
+    height: 30%;
     background: url(../images/login-border.png) no-repeat center;
     -webkit-background-size: cover;
     background-size: cover;
-    background: #000;
-}
-
-.view-left {
-    float: left;
-    width: 320px;
-    border: none;
-}
-
-.view-main {
-    width: -webkit-calc(100% - 321px);
-    width: -moz-calc(100% - 321px);
-    width: -ms-calc(100% - 321px);
-    width: calc(100% - 321px);
-}
-
-@media (max-width: 768px) {
-    .view-left {
-        width: 240px;
-    }
-    .view-main {
-        width: -webkit-calc(100% - 241px);
-        width: -moz-calc(100% - 241px);
-        width: -ms-calc(100% - 241px);
-        width: calc(100% - 241px);
-    }
 }
 
 aside-linker {
@@ -52,6 +40,7 @@ aside-linker {
 }
 
 .asideBar {
+    left: 10%;
     top: 50%;
     position: absolute;
     transform: translateY(-50%);
