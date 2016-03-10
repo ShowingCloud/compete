@@ -38,6 +38,7 @@
 		0D1AD1A19310430DAA4E0138 /* CDVConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 47578119CD7E45A599C1AF7E /* CDVConnection.m */; };
 		AA5B6E3CD4FF4A408490F827 /* CDVReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C005F3FCF77A4EC58D4343F3 /* CDVReachability.m */; };
 		1326CEAB9BE7473BA4485F49 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B4EE0A45AFF402D867F90C9 /* CoreTelephony.framework */; };
+		A57C2E1ED0544953B6DCCED8 /* CDVInAppBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EEA0DDE574461B8918AC3C /* CDVInAppBrowser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +116,8 @@
 		7FDD27A8618649C8B938FDD2 /* CDVConnection.h */ = {isa = PBXFileReference; name = "CDVConnection.h"; path = "cordova-plugin-network-information/CDVConnection.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		0A2B7D938E354DB68C97ECD4 /* CDVReachability.h */ = {isa = PBXFileReference; name = "CDVReachability.h"; path = "cordova-plugin-network-information/CDVReachability.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		0B4EE0A45AFF402D867F90C9 /* CoreTelephony.framework */ = {isa = PBXFileReference; name = "CoreTelephony.framework"; path = "System/Library/Frameworks/CoreTelephony.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		F6EEA0DDE574461B8918AC3C /* CDVInAppBrowser.m */ = {isa = PBXFileReference; name = "CDVInAppBrowser.m"; path = "cordova-plugin-inappbrowser/CDVInAppBrowser.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		65EC4E8EDF2F44BD9B371726 /* CDVInAppBrowser.h */ = {isa = PBXFileReference; name = "CDVInAppBrowser.h"; path = "cordova-plugin-inappbrowser/CDVInAppBrowser.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -264,6 +267,8 @@
 				C005F3FCF77A4EC58D4343F3 /* CDVReachability.m */,
 				7FDD27A8618649C8B938FDD2 /* CDVConnection.h */,
 				0A2B7D938E354DB68C97ECD4 /* CDVReachability.h */,
+				F6EEA0DDE574461B8918AC3C /* CDVInAppBrowser.m */,
+				65EC4E8EDF2F44BD9B371726 /* CDVInAppBrowser.h */,
 			);
 			name = Plugins;
 			path = "compete/Plugins";
@@ -392,6 +397,7 @@
 				8A71BF5765134306B5D42EEE /* CDVSound.m in Sources */,
 				0D1AD1A19310430DAA4E0138 /* CDVConnection.m in Sources */,
 				AA5B6E3CD4FF4A408490F827 /* CDVReachability.m in Sources */,
+				A57C2E1ED0544953B6DCCED8 /* CDVInAppBrowser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

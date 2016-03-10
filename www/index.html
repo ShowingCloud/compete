@@ -44,64 +44,28 @@
     <div class="statusbar-overlay"></div>
     <!-- Views-->
     <div class="views">
-        <!-- Left view-->
-        <!--
-<div class="view view-left">
-    <div class="pages">
-        <div data-page="index-left" class="page">
-            <div class="page-content">
-                <div class="asideBar">
-
-                    <a href="index.html" data-view=".view-main">
-                        <div id="judge" class="btn" href="">
-
-                        </div>
-                    </a>
-
-                    <a href="score.html" data-view=".view-main">
-                        <div id="score" class="btn">
-
-                        </div>
-                    </a>
-                    <a href="data.html" data-view=".view-main">
-                        <div id="data" class="btn" href="data.html">
-
-                        </div>
-                    </a>
-                    <a href="msg.html" data-view=".view-main">
-                        <div id="msg" class="btn" href="msg.html">
-
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
--->
-        <!-- Right view, it is main view-->
         <div class="view view-main">
             <div class="verticalTabBar">
-                <div class="asideBar">
+                <div class="asideBar" id="asideBar">
 
                     <a href="index.html" data-view=".view-main">
-                        <div id="judge" class="btn" href="">
+                        <div id="judge" class="big-icon">
 
                         </div>
                     </a>
 
                     <a href="score.html" data-view=".view-main">
-                        <div id="score" class="btn">
+                        <div id="score" class="big-icon">
 
                         </div>
                     </a>
                     <a href="data.html" data-view=".view-main">
-                        <div id="data" class="btn" href="data.html">
+                        <div id="data" class="big-icon">
 
                         </div>
                     </a>
                     <a href="msg.html" data-view=".view-main">
-                        <div id="msg" class="btn" href="msg.html">
+                        <div id="msg" class="big-icon">
 
                         </div>
                     </a>
@@ -132,18 +96,18 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row competeTab1">
                             <div class="col-25">
-                                <a href="#tab1"><img src="images/c1.png"></a>
+                                <a href="#tab1" class="tab-link active"><img src="images/c1.png"></a>
                             </div>
                             <div class="col-25">
-                                <a href="#tab2"><img src="images/c2.png"></a>
+                                <a href="#tab2" class="tab-link"><img src="images/c2.png"></a>
                             </div>
                             <div class="col-25">
-                                <a href="#tab3"><img src="images/c3.png"></a>
+                                <a href="#tab3" class="tab-link"><img src="images/c3.png"></a>
                             </div>
                             <div class="col-25">
-                                <a href="#tab4"><img src="images/c4.png"></a>
+                                <a href="#tab4" class="tab-link"><img src="images/c4.png"></a>
                             </div>
                         </div>
 
@@ -173,6 +137,7 @@
         </div>
     </div>
     <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/cordova.oauth2.js"></script>
     <script type="text/javascript" src="js/framework7.min.js"></script>
     <script type="text/javascript" src="js/pouchdb-5.2.1.min.js"></script>
     <script type="text/javascript" src="js/my-app.js"></script>

@@ -50,33 +50,36 @@ myApp.onPageInit('about', function (page) {
 
     // handle login 
     $$('＃login-btn').on('click', function () {
-        var username = $$("#username").val();
-        var password = $$("#password").val();
-        if (typeof username === "string" && typeof password === "string") {
-            var postData = {
-                name: username
-                , password: password
-            }
-            $$.ajax({
-                method: "POST"
-                , contentType: "application/json"
-                , url: appPara.host + "/account/sign_in"
-                , data: JSON.stringify(postData)
-                , success: function (d) {
-                    console.log(d);
-                    var judgeInfo = {
-                        userId: d.id
-                        , email: d.info.email
-                        , nickname: d.extra.nickname
-                        , authToken: d.info.private_token
-                    };
-                    localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
-                    console.log('userInfo saved!');
-                    app.showjudge(judgeInfo);
-                }
-            });
-        } else {
-            alert("请输入用户名和密码");
-        }
+        alert("click");
+        var ref = cordova.InAppBrowser.open('http://dev.domelab.com/auth/login/user', '_blank', 'location=yes');
+
+        //        var username = $$("#username").val();
+        //        var password = $$("#password").val();
+        //        if (typeof username === "string" && typeof password === "string") {
+        //            var postData = {
+        //                name: username
+        //                , password: password
+        //            }
+        //            $$.ajax({
+        //                method: "POST"
+        //                , contentType: "application/json"
+        //                , url: appPara.host + "/account/sign_in"
+        //                , data: JSON.stringify(postData)
+        //                , success: function (d) {
+        //                    console.log(d);
+        //                    var judgeInfo = {
+        //                        userId: d.id
+        //                        , email: d.info.email
+        //                        , nickname: d.extra.nickname
+        //                        , authToken: d.info.private_token
+        //                    };
+        //                    localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
+        //                    console.log('userInfo saved!');
+        //                    app.showjudge(judgeInfo);
+        //                }
+        //            });
+        //        } else {
+        //            alert("请输入用户名和密码");
+        //        }
     });
 });
