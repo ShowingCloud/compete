@@ -42,13 +42,13 @@ exports.defineAutoTests = function () {
 
         var iabInstance;
         var originalTimeout;
-        var url = 'http://apache.org/';
+        var url = 'https://dist.apache.org/repos/dist/dev/cordova/';
         var badUrl = 'http://bad-uri/';
 
         beforeEach(function () {
             // increase timeout to ensure test url could be loaded within test time
             originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-            jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000;
+            jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
             iabInstance = null;
         });
@@ -423,7 +423,11 @@ exports.defineManualTests = function (contentEl, createActionButton) {
 
     var video_tag_tests = '<h1>Video tag</h1>' +
         '<div id="openRemoteVideo"></div>' +
-        'Expected result: open successfully in InAppBrowser with an embedded video that works after clicking the "play" button.';
+        'Expected result: open successfully in InAppBrowser with an embedded video plays automatically on iOS and Android.' +
+        '<div id="openRemoteNeedUserNoVideo"></div>' +
+        'Expected result: open successfully in InAppBrowser with an embedded video plays automatically on iOS and Android.' +
+        '<div id="openRemoteNeedUserYesVideo"></div>' +
+        'Expected result: open successfully in InAppBrowser with an embedded video does not play automatically on iOS and Android but rather works after clicking the "play" button.';
 
     var local_with_anchor_tag_tests = '<h1>Local with anchor tag</h1>' +
         '<div id="openAnchor1"></div>' +
@@ -611,6 +615,12 @@ exports.defineManualTests = function (contentEl, createActionButton) {
     createActionButton('Remote Video', function () {
         doOpen(videohtml, '_blank');
     }, 'openRemoteVideo');
+    createActionButton('Remote Need User No Video', function () {
+        doOpen(videohtml, '_blank', 'mediaPlaybackRequiresUserAction=no');
+    }, 'openRemoteNeedUserNoVideo');
+    createActionButton('Remote Need User Yes Video', function () {
+        doOpen(videohtml, '_blank', 'mediaPlaybackRequiresUserAction=yes');
+    }, 'openRemoteNeedUserYesVideo');
 
     //Local With Anchor Tag
     createActionButton('Anchor1', function () {
@@ -620,4 +630,3 @@ exports.defineManualTests = function (contentEl, createActionButton) {
         doOpen(localhtml + '#anchor2', '_blank');
     }, 'openAnchor2');
 };
-

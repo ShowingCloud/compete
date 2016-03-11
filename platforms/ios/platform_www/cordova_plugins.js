@@ -308,7 +308,7 @@ module.exports.metadata =
     "cordova-plugin-console": "1.0.2",
     "cordova-plugin-media": "2.1.0",
     "cordova-plugin-network-information": "1.2.0",
-    "cordova-plugin-inappbrowser": "1.2.1"
+    "cordova-plugin-inappbrowser": "1.3.0"
 }
 // BOTTOM OF METADATA
 });

@@ -1,5 +1,10 @@
-.body {
-    background: #000;
+body {
+    color: #f7f7f7;
+    font-family: 'Adobe Heiti Std';
+}
+
+li {
+    list-style-type: none;
 }
 
 .pages {
@@ -11,61 +16,6 @@
 .verticalTabBar {
     width: 40%;
     float: left;
-}
-
-.competeTab1 img {
-    width: 100%;
-}
-
-.page-on-left {
-    display: none;
-}
-
-.view {
-    background: url(../images/bg.png) no-repeat center;
-    -webkit-background-size: cover;
-    background-size: cover;
-}
-
-.page {
-    background: none;
-}
-
-.page-content {
-    margin: 20% 10%;
-}
-
-#judge-container {
-    width: 60%;
-    background: url(../images/login-border.png) no-repeat center;
-    -webkit-background-size: cover;
-    background-size: cover;
-    padding: 30px;
-}
-
-aside-linker {
-    display: block;
-}
-
-.asideBar {
-    left: 10%;
-    top: 50%;
-    position: absolute;
-    transform: translateY(-50%);
-    text-align: center;
-}
-
-.asideBar h2 {
-    color: aliceblue;
-    padding: 20px;
-    font-size: 0.5rem;
-}
-
-.big-icon {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 20px;
-    position: relative;
 }
 
 #judge {
@@ -98,4 +48,98 @@ aside-linker {
     background-repeat: no-repeat;
     -webkit-background-size: cover;
     background-size: cover;
+}
+
+.competeTab1 {
+    margin: 20px auto;
+}
+
+.competeTab1 img {
+    width: 100%;
+}
+
+.page-on-left {
+    display: none;
+}
+
+.view {
+    background: url(../images/bg.png) no-repeat center;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+.page {
+    background: none;
+}
+
+.page-content {
+    margin: 25% 10%;
+}
+
+#judge-container {
+    background: url(../images/login-border.png) no-repeat center;
+    -webkit-background-size: cover;
+    background-size: cover;
+    padding: 30px;
+}
+
+#login-container {
+    margin: 10px auto;
+    text-align: center;
+}
+
+aside-linker {
+    display: block;
+}
+
+.asideBar {
+    left: 10%;
+    top: 50%;
+    position: absolute;
+    transform: translateY(-50%);
+    text-align: center;
+}
+
+.asideBar h2 {
+    color: aliceblue;
+    padding: 20px;
+    font-size: 0.5rem;
+}
+
+.big-icon {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+#login-container label {
+    display: inline-block;
+    width: 50px;
+    text-align: center;
+}
+
+.input-wrapper {
+    margin-bottom: 10px;
+}
+
+#login-btn img {
+    display: block;
+    margin: auto;
+}
+
+#judgeInfo {
+    position: relative;
+}
+
+#judgeInfo li {
+    width: 50%;
+    float: left;
+}
+
+#logout-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 60px;
 }
