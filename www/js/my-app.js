@@ -84,6 +84,7 @@ var app = {
                                 localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
                                 console.log('userInfo saved!');
                                 app.showJudge(judgeInfo);
+                                ref.close();
                             }
                         }
                     );
@@ -116,8 +117,7 @@ var app = {
 
 
 myApp.onPageInit('score', function (page) {
-    console.log('score page initialized');
-    console.log(page);
+
 });
 
 myApp.onPageBeforeInit('score', function (page) {

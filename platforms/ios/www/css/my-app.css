@@ -1,71 +1,33 @@
-.body {
-    background: #000;
+/*golble*/
+
+body {
+    color: #f7f7f7;
+    font-family: 'Adobe Heiti Std';
+}
+
+li {
+    list-style-type: none;
+}
+
+input {
+    background: none;
+    border-color: #D7E4F4;
+    border-width: 1px;
+}
+
+caption {
+    display: table-caption;
+    text-align: left;
 }
 
 .pages {
-    width: 60%;
-    margin-left: 40%;
+    width: 60.6%;
+    margin-left: 29.6%;
     background: none;
 }
 
-.verticalTabBar {
-    width: 40%;
-    float: left;
-}
-
-.competeTab1 img {
-    width: 100%;
-}
-
-.page-on-left {
-    display: none;
-}
-
-.view {
-    background: url(../images/bg.png) no-repeat center;
-    -webkit-background-size: cover;
-    background-size: cover;
-}
-
-.page {
-    background: none;
-}
-
-.page-content {
-    margin: 20% 10%;
-}
-
-#judge-container {
-    width: 60%;
-    background: url(../images/login-border.png) no-repeat center;
-    -webkit-background-size: cover;
-    background-size: cover;
-    padding: 30px;
-}
-
-aside-linker {
-    display: block;
-}
-
-.asideBar {
-    left: 10%;
-    top: 50%;
-    position: absolute;
-    transform: translateY(-50%);
-    text-align: center;
-}
-
-.asideBar h2 {
-    color: aliceblue;
-    padding: 20px;
-    font-size: 0.5rem;
-}
-
-.big-icon {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 20px;
-    position: relative;
+.inline-block {
+    display: inline-block;
 }
 
 #judge {
@@ -98,4 +60,188 @@ aside-linker {
     background-repeat: no-repeat;
     -webkit-background-size: cover;
     background-size: cover;
+}
+
+.views {
+    background: url(../images/bg.png) no-repeat center;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+.page {
+    background: none;
+}
+
+.page-content {
+    margin: 25% 10%;
+}
+
+aside-linker {
+    display: block;
+}
+
+.asideBar {
+    left: 7.6%;
+    top: 50%;
+    position: absolute;
+    transform: translateY(-50%);
+    text-align: center;
+}
+
+.asideBar h2 {
+    color: aliceblue;
+    padding: 20px;
+    font-size: 0.5rem;
+}
+
+.big-icon {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+
+/*judge page*/
+
+.competeTab1 {
+    margin: 20px 2.3%;
+}
+
+.competeTab1 img {
+    width: 100%;
+}
+
+.page-on-left {
+    display: none;
+}
+
+#judge-container {
+    background: url(../images/login-border.png) no-repeat center;
+    -webkit-background-size: cover;
+    background-size: cover;
+    padding: 20px;
+    height: 20%;
+}
+
+#judge-info ul {
+    width: 55%;
+}
+
+#judge-info li {
+    margin-bottom: 15px;
+}
+
+#judge-info li:last-child {
+    border-bottom: 0px;
+}
+
+#login-container {
+    margin: 10px auto;
+    text-align: center;
+}
+
+#login-container label {
+    display: inline-block;
+    width: 50px;
+    text-align: center;
+}
+
+.input-wrapper {
+    margin-bottom: 10px;
+}
+
+#logout-btn {
+    width: 120px;
+    height: 30px;
+    background: url(../images/logout-btn.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+
+/*score-selcet*/
+
+.title {
+    text-align: right;
+}
+
+.title img {
+    width: 50%;
+}
+
+.left-title {
+    text-align: left;
+    margin: 20px auto;
+}
+
+.left-title img {
+    width: 20%;
+}
+
+.compete-select .active span {
+    border-bottom: 2px solid #D7E4F4;
+}
+
+.title-text {
+    padding-left: 20px;
+    font-size: 1.2em;
+}
+
+.compete-select {
+    margin: 0 auto;
+    width: 94%;
+    border-bottom: 1px solid #D7E4F4;
+}
+
+#events {
+    margin: 30px auto;
+}
+
+#compretes-wrapper {
+    margin: 20px auto;
+}
+
+#competes {
+    margin: 0px auto;
+}
+
+.banner {
+    width: 96%;
+    height: 5px;
+    margin: 0 auto;
+    border-bottom: 2px solid #D7E4F4;
+    border-left: 2px solid #D7E4F4;
+    border-right: 2px solid #D7E4F4;
+}
+
+.tab-link {
+    color: #e4f1ff;
+    font-size: 0.8em;
+}
+
+.tab-link p {}
+
+#groups .tab-link {
+    background-color: #4c6683;
+    padding: 5px;
+}
+
+.groups .active {
+    background-color: #c7e1fd;
+}
+
+#eventsBoard {
+    border: 2px solid #D7E4F4;
+    text-align: center;
+}
+
+#eventsBoard div {
+    font-size: 0.6em;
+    border: 1px solid #e4f1ff;
+    display: inline-block;
+    padding: 5px 20px;
+    margin: 5px;
 }

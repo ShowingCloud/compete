@@ -46,32 +46,32 @@
     <!-- Views-->
     <div class="views">
         <div class="view view-main">
-            <div class="verticalTabBar">
-                <div class="asideBar" id="asideBar">
 
-                    <a href="index.html" data-view=".view-main">
-                        <div id="judge" class="big-icon">
+            <div class="asideBar" id="asideBar">
 
-                        </div>
-                    </a>
+                <a href="index.html" data-view=".view-main">
+                    <div id="judge" class="big-icon">
 
-                    <a href="score.html" data-view=".view-main">
-                        <div id="score" class="big-icon">
+                    </div>
+                </a>
 
-                        </div>
-                    </a>
-                    <a href="data.html" data-view=".view-main">
-                        <div id="data" class="big-icon">
+                <a href="select.html" data-view=".view-main">
+                    <div id="score" class="big-icon">
 
-                        </div>
-                    </a>
-                    <a href="msg.html" data-view=".view-main">
-                        <div id="msg" class="big-icon">
+                    </div>
+                </a>
+                <a href="data.html" data-view=".view-main">
+                    <div id="data" class="big-icon">
 
-                        </div>
-                    </a>
-                </div>
+                    </div>
+                </a>
+                <a href="msg.html" data-view=".view-main">
+                    <div id="msg" class="big-icon">
+
+                    </div>
+                </a>
             </div>
+
             <div class="pages">
                 <!-- Page, data-page contains page name-->
                 <div data-page="home" class="page">
@@ -94,39 +94,50 @@
                                 </div>
                             </div>
                             <div id="judge-info" style="display:none">
-                                <ul>
-                                    <li>裁判ID：<span id="judgeId">12345678</span></li>
-                                    <li>姓名：<span id="judgeName">王磊</span></li>
-                                    <li>学校：<span id="judgeSchool">上海大学</span></li>
-                                    <li>参加项目：<span id="judgeRace">机械奥运</span></li>
+                                <ul class="inline-block">
+                                    <li>裁判ID：<span id="judgeId ">12345678</span></li>
+                                    <li>姓名：<span id="judgeName ">王磊</span></li>
+                                    <li>学校：<span id="judgeSchool ">上海大学</span></li>
+                                    <li>参加项目：<span id="judgeRace ">机械奥运</span></li>
                                 </ul>
-                                <div id="logout-btn">
-                                    <img src="images/logout-btn.png">
+                                <div class="inline-block" id="logout-btn">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row competeTab1">
-                            <div class="col-25">
-                                <a href="#tab1" class="tab-link active"><img src="images/c1.png"></a>
+                        <div class="row competeTab1 ">
+                            <div class="col-25 ">
+                                <a href="#tab1" class="tab-link active"><img src="images/c1.png "></a>
                             </div>
                             <div class="col-25">
                                 <a href="#tab2" class="tab-link"><img src="images/c2.png"></a>
                             </div>
-                            <div class="col-25">
+                            <div class="col-25 ">
                                 <a href="#tab3" class="tab-link"><img src="images/c3.png"></a>
                             </div>
-                            <div class="col-25">
+                            <div class="col-25 ">
                                 <a href="#tab4" class="tab-link"><img src="images/c4.png"></a>
                             </div>
                         </div>
 
 
-
+                        <p>比赛流程：</p>
                         <div class="tabs">
-
                             <div class="tab active" id="tab1">
-                                赛事1
+                                <table class="" style="width:90%">
+                                    <tr>
+                                        <td>8:00</td>
+                                        <td>签到入场</td>
+                                    </tr>
+                                    <tr>
+                                        <td>8:00 － 9:00</td>
+                                        <td>开幕式</td>
+                                    </tr>
+                                    <tr>
+                                        <td>9:00 － 11：30</td>
+                                        <td>初赛</td>
+                                    </tr>
+                                </table>
                             </div>
 
                             <div class="tab" id="tab2">
@@ -146,11 +157,11 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="cordova.js"></script>
-    <!--<script type="text/javascript" src="js/cordova.oauth2.js"></script>-->
-    <script type="text/javascript" src="js/framework7.min.js"></script>
-    <script type="text/javascript" src="js/pouchdb-5.2.1.min.js"></script>
-    <script type="text/javascript" src="js/my-app.js"></script>
+    <script type="text/javascript " src="cordova.js "></script>
+    <!--<script type="text/javascript " src="js/cordova.oauth2.js "></script>-->
+    <script type="text/javascript " src="js/framework7.min.js "></script>
+    <script type="text/javascript " src="js/pouchdb-5.2.1.min.js "></script>
+    <script type="text/javascript " src="js/my-app.js "></script>
 </body>
 
 </html>
