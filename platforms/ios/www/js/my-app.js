@@ -38,19 +38,82 @@ var app = {
     }
     , login: function () {
         $$("#login-btn").off('click');
-        //Oauth2 job 
+        String.prototype.getParam = function (str) {
+                str = str.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+                var regex = new RegExp("[\\?&]*" + str + "=([^&#]*)");
+                var results = regex.exec(this);
+                if (results == null) {
+                    return "";
+                } else {
+                    return results[1];
+                }
+            }
+            //Oauth2 job 
         document.addEventListener("deviceready", function () {
+            var options = {
+                auth_url: 'http://dev.domelab.com/auth/login/authorize'
+                , token_url: 'http://dev.domelab.com/auth/login/access_token'
+                , client_id: '1'
+                , client_secret: '123456'
+                , redirect_uri: 'http://dev.domelab.com'
+            }
+
+            //Generate Login URL
+            var paramObj = {
+                client_id: options.client_id
+                , redirect_uri: options.redirect_uri
+                , response_type: options.response_type
+            };
+            var login_url = options.auth_url + '?' + $$.serializeObject(paramObj);
             //Open an inappbrowser but not show it to user
-            var ref = window.open("http://dev.domelab.com/auth/login/user", "_blank", "hidden=yes");
+            var ref = window.open(login_url, "_blank", "hidden=yes");
             var count = 0;
+            ref.addEventListener('loadstart', function (e) {
+                var url = e.originalEvent.url;
+                url = url.split("#")[0];
+                alert(url);
+                var code = url.getParam("code");
+                if (code) {
+                    alert(code);
+                    ref.close();
+                    $$.ajax({
+                        url: options.token_url
+                        , data: {
+                            code: code
+                            , client_id: options.client_id
+                            , client_secret: options.client_secret
+                            , redirect_uri: options.redirect_uri
+                            , grant_type: "authorization_code"
+                        }
+                        , method: 'POST'
+                        , success: function (data) {
+                            console.log(data);
+                            var access_token;
+                            if ((data instanceof Object)) {
+                                access_token = data.access_token;
+                            } else {
+                                access_token = data.getParam("access_token");
+                            }
+                            alert(access_token);
+                            console.log(access_token, data);
+                            //ToDo get userInfo using accessing token
+                        }
+                        , error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                }
+            });
             ref.addEventListener('loadstop', function (e) {
-                if (e.url === "http://dev.domelab.com/account/sign_in") {
+                alert(e.url);
+                if (e.url === login_url) {
                     if (!count) {
                         count++;
                         alert("请登录");
                         $$("#login-btn").on('click', function () {
                             var username = $$("#username").val();
                             var password = $$("#password").val();
+                            alert(username);
                             if (typeof username === "string" && typeof password === "string") {
                                 //Inject script to inappbrowser to submit the login form
                                 var script = "document.getElementById('user_login').value='" + username + "';" + "document.getElementById('user_password').value='" + password + "';" + "document.getElementById('new_user').submit();"

@@ -36,6 +36,9 @@
         },
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "cn.robodou.compete"
         }
     },
     "dependent_plugins": {}

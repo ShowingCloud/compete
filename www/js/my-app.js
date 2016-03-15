@@ -38,11 +38,78 @@ var app = {
     }
     , login: function () {
         $$("#login-btn").off('click');
-        //Oauth2 job 
+        String.prototype.getParam = function (str) {
+                str = str.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+                var regex = new RegExp("[\\?&]*" + str + "=([^&#]*)");
+                var results = regex.exec(this);
+                if (results == null) {
+                    return "";
+                } else {
+                    return results[1];
+                }
+            }
+            //Oauth2 job 
         document.addEventListener("deviceready", function () {
+            var options = {
+                auth_url: 'http://dev.domelab.com/auth/login/authorize'
+                , token_url: 'http://dev.domelab.com/auth/login/access_token'
+                , client_id: '1'
+                , client_secret: '123456'
+                , redirect_uri: 'http://dev.domelab.com'
+            }
+
+            //Generate Login URL
+            var paramObj = {
+                client_id: options.client_id
+                , redirect_uri: options.redirect_uri
+                , response_type: options.response_type
+            };
+            var login_url = options.auth_url + '?' + $$.serializeObject(paramObj);
             //Open an inappbrowser but not show it to user
-            var ref = window.open("http://dev.domelab.com/auth/login/user", "_blank", "hidden=yes");
+            var ref = window.open(login_url, "_blank", "hidden=yes");
             var count = 0;
+            ref.addEventListener('loadstart', function (e) {
+                var url = e.url;
+                url = url.split("#")[0];
+
+                var code = url.getParam("code");
+                if (code) {
+                    ref.close();
+                    $$.ajax({
+                        url: options.token_url
+                        , data: {
+                            code: code
+                            , client_id: options.client_id
+                            , client_secret: options.client_secret
+                            , redirect_uri: options.redirect_uri
+                            , grant_type: "authorization_code"
+                        }
+                        , method: 'POST'
+                        , success: function (data) {
+                            var dataObj = JSON.parse(data);
+                            $$.getJSON('http://dev.domelab.com/auth/login/user', {
+                                oauth_token: dataObj.access_token
+                            }, function (d) {
+                                console.log(d);
+                                if ((d instanceof Object)) {
+                                    var judgeInfo = {
+                                        userId: d.id
+                                        , email: d.info.email
+                                        , nickname: d.extra.nickname
+                                        , authToken: d.info.private_token
+                                    };
+                                    localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
+                                    console.log('userInfo saved!');
+                                    app.showJudge(judgeInfo);
+                                }
+                            });
+                        }
+                        , error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                }
+            });
             ref.addEventListener('loadstop', function (e) {
                 if (e.url === "http://dev.domelab.com/account/sign_in") {
                     if (!count) {
@@ -66,29 +133,30 @@ var app = {
                     } else {
                         alert("错误，请重新登录");
                     }
-                } else if (e.url === "http://dev.domelab.com/auth/login/user") {
-                    //Get judgeInfo from the inappbrowser
-                    ref.executeScript({
-                            code: "document.getElementsByTagName('pre')[0].innerHTML"
-                        }
-                        , function (values) {
-                            console.log(values);
-                            if (typeof values[0] === "string") {
-                                var d = JSON.parse(values[0]);
-                                var judgeInfo = {
-                                    userId: d.id
-                                    , email: d.info.email
-                                    , nickname: d.extra.nickname
-                                    , authToken: d.info.private_token
-                                };
-                                localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
-                                console.log('userInfo saved!');
-                                app.showJudge(judgeInfo);
-                                ref.close();
-                            }
-                        }
-                    );
                 }
+                /*else if (e.url === "http://dev.domelab.com/auth/login/user") {
+                                   //Get judgeInfo from the inappbrowser
+                                   ref.executeScript({
+                                           code: "document.getElementsByTagName('pre')[0].innerHTML"
+                                       }
+                                       , function (values) {
+                                           console.log(values);
+                                           if (typeof values[0] === "string") {
+                                               var d = JSON.parse(values[0]);
+                                               var judgeInfo = {
+                                                   userId: d.id
+                                                   , email: d.info.email
+                                                   , nickname: d.extra.nickname
+                                                   , authToken: d.info.private_token
+                                               };
+                                               localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
+                                               console.log('userInfo saved!');
+                                               app.showJudge(judgeInfo);
+                                               ref.close();
+                                           }
+                                       }
+                                   );
+                               }*/
 
             });
 

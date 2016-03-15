@@ -30,7 +30,7 @@
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: http://dev.domelab.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src * http://dev.domelab.com">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
@@ -90,22 +90,22 @@
                                     <input type="password" id="password" name="password">
                                 </div>
                                 <div id="login-btn">
-                                    <img src="images/login-btn.png" width="100px">
+                                    <img src="images/login-btn.png" width="130px">
                                 </div>
                             </div>
                             <div id="judge-info" style="display:none">
                                 <ul class="inline-block">
-                                    <li>裁判ID：<span id="judgeId ">12345678</span></li>
-                                    <li>姓名：<span id="judgeName ">王磊</span></li>
-                                    <li>学校：<span id="judgeSchool ">上海大学</span></li>
-                                    <li>参加项目：<span id="judgeRace ">机械奥运</span></li>
+                                    <li>裁判ID：<span id="judgeId">12345678</span></li>
+                                    <li>姓名：<span id="judgeName">王磊</span></li>
+                                    <li>学校：<span id="judgeSchool">上海大学</span></li>
+                                    <li>参加项目：<span id="judgeRace">机械奥运</span></li>
                                 </ul>
                                 <div class="inline-block" id="logout-btn">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row competeTab1 ">
+                        <div class="row competeTab1">
                             <div class="col-25 ">
                                 <a href="#tab1" class="tab-link active"><img src="images/c1.png "></a>
                             </div>
