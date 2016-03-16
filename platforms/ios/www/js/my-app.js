@@ -14,8 +14,8 @@ var score = new PouchDB("score");
 //Not use remote PouchDb server
 var remoteCouch = false;
 
-//parameters for app
-var appPara = {
+// apption for app
+var appOption = {
     serverHost: "http://dev.domelab.com"
 };
 
@@ -27,6 +27,7 @@ var app = {
         if (typeof (tempStr) === "string") {
             judgeInfo = JSON.parse(tempStr);
             app.showJudge(judgeInfo);
+            app.onLogin();
         } else {
             app.login();
         }
@@ -35,6 +36,7 @@ var app = {
             var xhr = e.detail.xhr;
             console.log(xhr);
         });
+        app.getProcess();
     }
     , login: function () {
         $$("#login-btn").off('click');
@@ -69,13 +71,13 @@ var app = {
             var ref = window.open(login_url, "_blank", "hidden=yes");
             var count = 0;
             ref.addEventListener('loadstart', function (e) {
-                var url = e.originalEvent.url;
+                var url = e.url;
                 url = url.split("#")[0];
-                alert(url);
+
                 var code = url.getParam("code");
                 if (code) {
-                    alert(code);
                     ref.close();
+                    //Get access token
                     $$.ajax({
                         url: options.token_url
                         , data: {
@@ -87,16 +89,24 @@ var app = {
                         }
                         , method: 'POST'
                         , success: function (data) {
-                            console.log(data);
-                            var access_token;
-                            if ((data instanceof Object)) {
-                                access_token = data.access_token;
-                            } else {
-                                access_token = data.getParam("access_token");
-                            }
-                            alert(access_token);
-                            console.log(access_token, data);
-                            //ToDo get userInfo using accessing token
+                            //Get userInfo
+                            var dataObj = JSON.parse(data);
+                            $$.getJSON('http://dev.domelab.com/auth/login/user', {
+                                oauth_token: dataObj.access_token
+                            }, function (d) {
+                                console.log(d);
+                                if ((d instanceof Object)) {
+                                    var judgeInfo = {
+                                        userId: d.id
+                                        , email: d.info.email
+                                        , nickname: d.extra.nickname
+                                        , authToken: d.info.private_token
+                                    };
+                                    localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
+                                    console.log('userInfo saved!');
+                                    app.showJudge(judgeInfo);
+                                }
+                            });
                         }
                         , error: function (error) {
                             console.log(error);
@@ -105,15 +115,13 @@ var app = {
                 }
             });
             ref.addEventListener('loadstop', function (e) {
-                alert(e.url);
-                if (e.url === login_url) {
+                if (e.url === "http://dev.domelab.com/account/sign_in") {
                     if (!count) {
                         count++;
                         alert("请登录");
                         $$("#login-btn").on('click', function () {
                             var username = $$("#username").val();
                             var password = $$("#password").val();
-                            alert(username);
                             if (typeof username === "string" && typeof password === "string") {
                                 //Inject script to inappbrowser to submit the login form
                                 var script = "document.getElementById('user_login').value='" + username + "';" + "document.getElementById('user_password').value='" + password + "';" + "document.getElementById('new_user').submit();"
@@ -129,28 +137,6 @@ var app = {
                     } else {
                         alert("错误，请重新登录");
                     }
-                } else if (e.url === "http://dev.domelab.com/auth/login/user") {
-                    //Get judgeInfo from the inappbrowser
-                    ref.executeScript({
-                            code: "document.getElementsByTagName('pre')[0].innerHTML"
-                        }
-                        , function (values) {
-                            console.log(values);
-                            if (typeof values[0] === "string") {
-                                var d = JSON.parse(values[0]);
-                                var judgeInfo = {
-                                    userId: d.id
-                                    , email: d.info.email
-                                    , nickname: d.extra.nickname
-                                    , authToken: d.info.private_token
-                                };
-                                localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
-                                console.log('userInfo saved!');
-                                app.showJudge(judgeInfo);
-                                ref.close();
-                            }
-                        }
-                    );
                 }
 
             });
@@ -163,11 +149,6 @@ var app = {
             app.login();
         });
     }
-    , onLogin: function () {
-        //ToDo: get compete and events the judge responsible for 
-        //ToDo: get competes process
-        //ToDo: get detail about all the competes and events
-    }
     , showJudge: function (judge) {
         console.log(judge);
         $$("#judgeId").text(judge.userId);
@@ -175,12 +156,22 @@ var app = {
         $$("#login-container").hide();
         $$("#judge-info").show();
     }
+    , getProcess: function () {
+        $$.getJSON("./data/process.json", function (process) {
+            var processTemp = $$('#processTemp').html();
+            var compiledTemp = Template7.compile(processTemp);
+            process.forEach(function (p) {
+                var html = compiledTemp(p);
+                $$("#processTab" + p.id).html(html);
+            });
+        })
+    }
 
 };
 
 
-myApp.onPageInit('score', function (page) {
-
+myApp.onPageInit('home', function (page) {
+    app.getProcess();
 });
 
 myApp.onPageBeforeInit('score', function (page) {

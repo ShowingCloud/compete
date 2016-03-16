@@ -36,8 +36,31 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
     <link rel="stylesheet" href="css/framework7.ios.min.css">
     <link rel="stylesheet" href="css/framework7.ios.colors.min.css">
-    <!-- Path to your custom app styles-->
     <link rel="stylesheet" href="css/my-app.css">
+    <script id="processTemp" type="text/template7">
+        <table>
+            {{#each process}}
+            <tr>
+                {{#if end}}
+                <td>{{start}}-{{end}}</td>
+                {{else}}
+                <td>{{start}}</td>
+                {{/if}}
+                <td>{{step}}</td>
+            </tr>
+            {{/each}}
+        </table>
+    </script>
+    <script id="processTabTemp" type="text/template7">
+        <div class="row competeTab1">
+            {{#each this}}
+            <div class="col-25">
+                <a href="#processTab{{id}}" class="tab-link"><img src="images/c1.png "><span>{{name}}</span></a>
+            </div>
+            {{/each}}
+        </div>
+    </script>
+
     <title>Robodou Compete</title>
 </head>
 
@@ -107,47 +130,34 @@
 
                         <div class="row competeTab1">
                             <div class="col-25 ">
-                                <a href="#tab1" class="tab-link active"><img src="images/c1.png "></a>
+                                <a href="#processTab1" class="tab-link active"><img src="images/c1.png "></a>
                             </div>
                             <div class="col-25">
-                                <a href="#tab2" class="tab-link"><img src="images/c2.png"></a>
+                                <a href="#processTab2" class="tab-link"><img src="images/c2.png"></a>
                             </div>
                             <div class="col-25 ">
-                                <a href="#tab3" class="tab-link"><img src="images/c3.png"></a>
+                                <a href="#processTab3" class="tab-link"><img src="images/c3.png"></a>
                             </div>
                             <div class="col-25 ">
-                                <a href="#tab4" class="tab-link"><img src="images/c4.png"></a>
+                                <a href="#processTab4" class="tab-link"><img src="images/c4.png"></a>
                             </div>
                         </div>
 
 
                         <p>比赛流程：</p>
-                        <div class="tabs">
-                            <div class="tab active" id="tab1">
-                                <table class="" style="width:90%">
-                                    <tr>
-                                        <td>8:00</td>
-                                        <td>签到入场</td>
-                                    </tr>
-                                    <tr>
-                                        <td>8:00 － 9:00</td>
-                                        <td>开幕式</td>
-                                    </tr>
-                                    <tr>
-                                        <td>9:00 － 11：30</td>
-                                        <td>初赛</td>
-                                    </tr>
-                                </table>
+                        <div class="tabs process">
+                            <div class="tab active" id="processTab1">
+
                             </div>
 
-                            <div class="tab" id="tab2">
+                            <div class="tab" id="processTab2">
                                 赛事2
                             </div>
 
-                            <div class="tab" id="tab3">
+                            <div class="tab" id="processTab3">
                                 赛事3
                             </div>
-                            <div class="tab" id="tab4">
+                            <div class="tab" id="processTab4">
                                 赛事4
                             </div>
 

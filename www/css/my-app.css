@@ -120,6 +120,10 @@ aside-linker {
     position: relative;
 }
 
+.process table {
+    width: 90%;
+}
+
 
 /*judge page*/
 
@@ -200,8 +204,10 @@ aside-linker {
     width: 20%;
 }
 
-.compete-select .active span {
+.compete-select .active p {
     border-bottom: 2px solid #D7E4F4;
+    width: 45%;
+    margin: 0 auto;
 }
 
 .title-text {
@@ -213,6 +219,7 @@ aside-linker {
     margin: 0 auto;
     width: 94%;
     border-bottom: 1px solid #D7E4F4;
+    text-align: center;
 }
 
 #events {
@@ -240,8 +247,6 @@ aside-linker {
     color: #e4f1ff;
     font-size: 0.8em;
 }
-
-.tab-link p {}
 
 #groups li .active {
     border-bottom: 20px solid #c7e1fd;

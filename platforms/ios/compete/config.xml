@@ -75,6 +75,10 @@
     <preference name="Orientation" value="landscape" />
     <content src="index.html" />
     <access origin="*" />
+    <allow-navigation href="*://*.domelab.com/*" />
+    <allow-navigation href="*://*.robodou.cn/*" />
+    <access origin="http://*.domelab.com" />
+    <access origin="http://*.robodou.cn" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />

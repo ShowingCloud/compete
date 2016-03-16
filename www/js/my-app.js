@@ -14,8 +14,8 @@ var score = new PouchDB("score");
 //Not use remote PouchDb server
 var remoteCouch = false;
 
-//parameters for app
-var appPara = {
+// apption for app
+var appOption = {
     serverHost: "http://dev.domelab.com"
 };
 
@@ -27,6 +27,7 @@ var app = {
         if (typeof (tempStr) === "string") {
             judgeInfo = JSON.parse(tempStr);
             app.showJudge(judgeInfo);
+            app.onLogin();
         } else {
             app.login();
         }
@@ -35,6 +36,7 @@ var app = {
             var xhr = e.detail.xhr;
             console.log(xhr);
         });
+        app.getProcess();
     }
     , login: function () {
         $$("#login-btn").off('click');
@@ -75,6 +77,7 @@ var app = {
                 var code = url.getParam("code");
                 if (code) {
                     ref.close();
+                    //Get access token
                     $$.ajax({
                         url: options.token_url
                         , data: {
@@ -86,6 +89,7 @@ var app = {
                         }
                         , method: 'POST'
                         , success: function (data) {
+                            //Get userInfo
                             var dataObj = JSON.parse(data);
                             $$.getJSON('http://dev.domelab.com/auth/login/user', {
                                 oauth_token: dataObj.access_token
@@ -134,29 +138,6 @@ var app = {
                         alert("错误，请重新登录");
                     }
                 }
-                /*else if (e.url === "http://dev.domelab.com/auth/login/user") {
-                                   //Get judgeInfo from the inappbrowser
-                                   ref.executeScript({
-                                           code: "document.getElementsByTagName('pre')[0].innerHTML"
-                                       }
-                                       , function (values) {
-                                           console.log(values);
-                                           if (typeof values[0] === "string") {
-                                               var d = JSON.parse(values[0]);
-                                               var judgeInfo = {
-                                                   userId: d.id
-                                                   , email: d.info.email
-                                                   , nickname: d.extra.nickname
-                                                   , authToken: d.info.private_token
-                                               };
-                                               localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
-                                               console.log('userInfo saved!');
-                                               app.showJudge(judgeInfo);
-                                               ref.close();
-                                           }
-                                       }
-                                   );
-                               }*/
 
             });
 
@@ -168,11 +149,6 @@ var app = {
             app.login();
         });
     }
-    , onLogin: function () {
-        //ToDo: get compete and events the judge responsible for 
-        //ToDo: get competes process
-        //ToDo: get detail about all the competes and events
-    }
     , showJudge: function (judge) {
         console.log(judge);
         $$("#judgeId").text(judge.userId);
@@ -180,12 +156,22 @@ var app = {
         $$("#login-container").hide();
         $$("#judge-info").show();
     }
+    , getProcess: function () {
+        $$.getJSON("./data/process.json", function (process) {
+            var processTemp = $$('#processTemp').html();
+            var compiledTemp = Template7.compile(processTemp);
+            process.forEach(function (p) {
+                var html = compiledTemp(p);
+                $$("#processTab" + p.id).html(html);
+            });
+        })
+    }
 
 };
 
 
-myApp.onPageInit('score', function (page) {
-
+myApp.onPageInit('home', function (page) {
+    app.getProcess();
 });
 
 myApp.onPageBeforeInit('score', function (page) {
