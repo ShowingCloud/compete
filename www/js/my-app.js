@@ -30,6 +30,7 @@ var app = {
             app.onLogin();
         } else {
             app.login();
+
         }
         //Globle ajax error handller
         $$(document).on('ajaxError', function (e) {
@@ -105,6 +106,8 @@ var app = {
                                     localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
                                     console.log('userInfo saved!');
                                     app.showJudge(judgeInfo);
+                                    app.onLogin();
+
                                 }
                             });
                         }
@@ -144,6 +147,10 @@ var app = {
         });
     }
     , bind: function () {
+
+
+    }
+    , onLogin: function () {
         $$("#logout-btn").on("click", function () {
             localStorage.remove("judgeInfo");
             app.login();
@@ -158,25 +165,37 @@ var app = {
     }
     , getProcess: function () {
         $$.getJSON("./data/process.json", function (process) {
+            console.log(process);
             var processTemp = $$('#processTemp').html();
             var compiledTemp = Template7.compile(processTemp);
-            process.forEach(function (p) {
-                var html = compiledTemp(p);
-                $$("#processTab" + p.id).html(html);
-            });
+            var html = compiledTemp(process);
+            $$("#homePage .page-content").append(html);
+
         })
+    }
+    , getResponse: function () {
+        $$.getJSON("./data/response.json"
+            , function (response) {
+                $$("#judgeComptition").val(response.compition);
+                $$("#judgeEvent").val(response.events.toString());
+            });
     }
 
 };
 
-
-myApp.onPageInit('home', function (page) {
-    app.getProcess();
+myApp.onPageBeforeInit('home', function (page) {
+    app.init();
 });
 
-myApp.onPageBeforeInit('score', function (page) {
-    console.log('Before score page initialized');
-    console.log(page);
+myApp.onPageBeforeRemove('home', function (page) {
+    console.log("bye");
+});
+
+myApp.onPageInit('select', function (page) {
+    $$("#eventsBoard .tab div").on("click", function () {
+        console.log("click");
+        mainView.router.loadPage('player.html');
+    });
 });
 
 

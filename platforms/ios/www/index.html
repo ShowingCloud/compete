@@ -38,27 +38,35 @@
     <link rel="stylesheet" href="css/framework7.ios.colors.min.css">
     <link rel="stylesheet" href="css/my-app.css">
     <script id="processTemp" type="text/template7">
-        <table>
-            {{#each process}}
-            <tr>
-                {{#if end}}
-                <td>{{start}}-{{end}}</td>
-                {{else}}
-                <td>{{start}}</td>
-                {{/if}}
-                <td>{{step}}</td>
-            </tr>
-            {{/each}}
-        </table>
-    </script>
-    <script id="processTabTemp" type="text/template7">
         <div class="row competeTab1">
             {{#each this}}
-            <div class="col-25">
-                <a href="#processTab{{id}}" class="tab-link"><img src="images/c1.png "><span>{{name}}</span></a>
+            <div class="col-auto">
+                <a href="#processTab{{id}}" class="tab-link">{{name}}</a>
             </div>
             {{/each}}
         </div>
+        <p>比赛流程：</p>
+        <div class="tabs process">
+            {{#each this}}
+            <div class="tab {{#unless @index}}active{{/unless}}" id="processTab{{id}}">
+                <table>
+                    {{#each process}}
+                    <tr>
+                        {{#if end}}
+                        <td>{{start}}-{{end}}</td>
+                        {{else}}
+                        <td>{{start}}</td>
+                        {{/if}}
+                        <td>{{step}}</td>
+                    </tr>
+                    {{/each}}
+                </table>
+            </div>
+            {{/each}}
+        </div>
+    </script>
+    <script id="processTabTemp" type="text/template7">
+
     </script>
 
     <title>Robodou Compete</title>
@@ -97,7 +105,7 @@
 
             <div class="pages">
                 <!-- Page, data-page contains page name-->
-                <div data-page="home" class="page">
+                <div data-page="home" class="page" id="homePage">
                     <!-- Scrollable page content-->
                     <div class="page-content">
 
@@ -118,50 +126,17 @@
                             </div>
                             <div id="judge-info" style="display:none">
                                 <ul class="inline-block">
-                                    <li>裁判ID：<span id="judgeId">12345678</span></li>
-                                    <li>姓名：<span id="judgeName">王磊</span></li>
-                                    <li>学校：<span id="judgeSchool">上海大学</span></li>
-                                    <li>参加项目：<span id="judgeRace">机械奥运</span></li>
+                                    <li>裁判ID：<span id="judgeId"></span></li>
+                                    <li>姓名：<span id="judgeName"></span></li>
+                                    <!--                                    <li>学校：<span id="judgeSchool">上海大学</span></li>-->
+                                    <li>负责比赛：<span id="judgeComptition">机械奥运</span></li>
+                                    <li>负责项目：<span id="judgeEvent">机器人短跑，机器人接力</span></li>
                                 </ul>
                                 <div class="inline-block" id="logout-btn">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row competeTab1">
-                            <div class="col-25 ">
-                                <a href="#processTab1" class="tab-link active"><img src="images/c1.png "></a>
-                            </div>
-                            <div class="col-25">
-                                <a href="#processTab2" class="tab-link"><img src="images/c2.png"></a>
-                            </div>
-                            <div class="col-25 ">
-                                <a href="#processTab3" class="tab-link"><img src="images/c3.png"></a>
-                            </div>
-                            <div class="col-25 ">
-                                <a href="#processTab4" class="tab-link"><img src="images/c4.png"></a>
-                            </div>
-                        </div>
-
-
-                        <p>比赛流程：</p>
-                        <div class="tabs process">
-                            <div class="tab active" id="processTab1">
-
-                            </div>
-
-                            <div class="tab" id="processTab2">
-                                赛事2
-                            </div>
-
-                            <div class="tab" id="processTab3">
-                                赛事3
-                            </div>
-                            <div class="tab" id="processTab4">
-                                赛事4
-                            </div>
-
-                        </div>
                     </div>
                 </div>
             </div>
