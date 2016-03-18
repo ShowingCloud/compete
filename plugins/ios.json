@@ -39,7 +39,17 @@
         },
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "de.appplant.cordova.plugin.local-notification": {
+            "PACKAGE_NAME": "cn.robodou.compete"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-app-event": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        }
+    }
 }

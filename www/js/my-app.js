@@ -10,7 +10,8 @@ var mainView = myApp.addView('.view-main', {
 });
 
 //Initialize PouchDB
-var score = new PouchDB("score");
+var scoreDB = new PouchDB("score");
+var msgDB = new PouchDB("msg");
 //Not use remote PouchDb server
 var remoteCouch = false;
 
@@ -27,7 +28,8 @@ var app = {
         if (typeof (tempStr) === "string") {
             judgeInfo = JSON.parse(tempStr);
             app.showJudge(judgeInfo);
-            app.onLogin();
+            app.onLogin(judgeInfo.authToken);
+
         } else {
             app.login();
 
@@ -69,7 +71,7 @@ var app = {
             };
             var login_url = options.auth_url + '?' + $$.serializeObject(paramObj);
             //Open an inappbrowser but not show it to user
-            var ref = window.open(login_url, "_blank", "hidden=yes");
+            var ref = window.open(login_url, "_blank", "hidden=yes,clearcache=yes");
             var count = 0;
             ref.addEventListener('loadstart', function (e) {
                 var url = e.url;
@@ -106,7 +108,7 @@ var app = {
                                     localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
                                     console.log('userInfo saved!');
                                     app.showJudge(judgeInfo);
-                                    app.onLogin();
+                                    app.onLogin(judgeInfo.authToken);
 
                                 }
                             });
@@ -150,10 +152,21 @@ var app = {
 
 
     }
-    , onLogin: function () {
-        $$("#logout-btn").on("click", function () {
-            localStorage.remove("judgeInfo");
+    , onLogin: function (token) {
+        //get realtime message
+        app.getMessage(token);
+        //logout
+        $$("#logout-btn").on("click", function (token) {
+            var channel = "/channel/" + token;
+            localStorage.removeItem("judgeInfo");
+            MessageBus.unsubscribe(channel, function () {
+                console("unsubscribe");
+            });
+            MessageBus.stop();
+            $$("#judge-info").hide();
+            $$("#login-container").show();
             app.login();
+
         });
     }
     , showJudge: function (judge) {
@@ -170,7 +183,6 @@ var app = {
             var compiledTemp = Template7.compile(processTemp);
             var html = compiledTemp(process);
             $$("#homePage .page-content").append(html);
-
         })
     }
     , getResponse: function () {
@@ -180,6 +192,18 @@ var app = {
                 $$("#judgeEvent").val(response.events.toString());
             });
     }
+    , getMessage: function (token) {
+        var channel = "/channel/" + token;
+        MessageBus.start();
+        MessageBus.callbackInterval = 500;
+        MessageBus.subscribe(channel, function (d) {
+            console.log(d);
+            $$("#msgBoard ul").append("<li><p class='date'>" + d.date + "</p><p class='content'>" +
+                d.content + "</p></li>");
+            $$("#msg").addClass("newMsg");
+        });
+
+    }
 
 };
 
@@ -188,7 +212,7 @@ myApp.onPageBeforeInit('home', function (page) {
 });
 
 myApp.onPageBeforeRemove('home', function (page) {
-    console.log("bye");
+    console.log("remove home");
 });
 
 myApp.onPageInit('select', function (page) {
@@ -196,6 +220,10 @@ myApp.onPageInit('select', function (page) {
         console.log("click");
         mainView.router.loadPage('player.html');
     });
+});
+
+myApp.onPageInit('msg', function (page) {
+    $$("#msg").removeClass("newMsg");
 });
 
 

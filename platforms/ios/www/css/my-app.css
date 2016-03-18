@@ -64,6 +64,14 @@ table {
     background-size: cover;
 }
 
+#msg.newMsg {
+    background: url(images/new-message.png);
+    background-position: left center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
 #score {
     background: url(../images/icon-score.png);
     background-position: left center;
@@ -325,4 +333,18 @@ aside-linker {
 
 #eventsBoard .active div {
     flex-grow: 1;
+}
+
+
+/*player*/
+
+#queryPlayer {
+    margin-top: 30%;
+}
+
+#queryPlayer div,
+span,
+input,
+a {
+    margin: 10px;
 }

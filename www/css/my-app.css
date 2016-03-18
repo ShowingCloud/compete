@@ -64,6 +64,14 @@ table {
     background-size: cover;
 }
 
+#msg.newMsg {
+    background: url(images/new-message.png);
+    background-position: left center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
 #score {
     background: url(../images/icon-score.png);
     background-position: left center;
@@ -92,7 +100,7 @@ table {
 }
 
 .page-content {
-    margin: 22% 10%;
+    margin: 20% 10%;
 }
 
 aside-linker {
@@ -339,4 +347,39 @@ span,
 input,
 a {
     margin: 10px;
+}
+
+
+/*msg*/
+
+#msgBoard {
+    background: url(../images/message-board.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    height: 40%;
+    position: absolute;
+    width: 100%;
+}
+
+#contact {
+    background: url(../images/contact.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    width: 80%;
+    height: 100px;
+    position: absolute;
+    bottom: 35%;
+}
+
+#msgBoard ul {
+    width: 90%;
+    margin-top: 80px;
+}
+
+##msgBoard p {
+    margin: 0;
 }
