@@ -272,21 +272,7 @@ aside-linker {
     font-size: 0.8em;
 }
 
-
-/*
-#groups {
-    border-top: 1px solid #c7e1fd;
-    border-left: 1px solid #c7e1fd;
-    position: relative;
-    padding: 5px;
-}
-*/
-
-#groups:before {}
-
-#groups:after {}
-
-#groups: #groups li .active {
+#groups li .active {
     border-bottom: 20px solid #c7e1fd;
     color: #4c6683;
 }
@@ -343,9 +329,9 @@ aside-linker {
 }
 
 #queryPlayer div,
-span,
-input,
-a {
+#queryPlayer span,
+#queryPlayer input,
+#queryPlayer a {
     margin: 10px;
 }
 
@@ -377,9 +363,16 @@ a {
 
 #msgBoard ul {
     width: 90%;
-    margin-top: 80px;
+    height:60%;
+    overflow: auto;
+    margin-top: 80px;  
 }
 
-##msgBoard p {
+#msgBoard p {
     margin: 0;
 }
+
+#msgBoard .time{
+    color: #c7e1fd;
+}
+
