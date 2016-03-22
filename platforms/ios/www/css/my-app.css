@@ -100,7 +100,7 @@ table {
 }
 
 .page-content {
-    margin: 22% 10%;
+    margin: 20% 10%;
 }
 
 aside-linker {
@@ -272,21 +272,7 @@ aside-linker {
     font-size: 0.8em;
 }
 
-
-/*
-#groups {
-    border-top: 1px solid #c7e1fd;
-    border-left: 1px solid #c7e1fd;
-    position: relative;
-    padding: 5px;
-}
-*/
-
-#groups:before {}
-
-#groups:after {}
-
-#groups: #groups li .active {
+#groups li .active {
     border-bottom: 20px solid #c7e1fd;
     color: #4c6683;
 }
@@ -343,8 +329,111 @@ aside-linker {
 }
 
 #queryPlayer div,
-span,
-input,
-a {
+#queryPlayer span,
+#queryPlayer input,
+#queryPlayer a {
     margin: 10px;
+}
+
+
+/*msg*/
+
+#msgBoard {
+    background: url(../images/message-board.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    height: 40%;
+    position: absolute;
+    width: 100%;
+}
+
+#contact {
+    background: url(../images/contact.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    width: 80%;
+    height: 100px;
+    position: absolute;
+    bottom: 35%;
+}
+
+#msgBoard ul {
+    width: 90%;
+    height: 60%;
+    overflow: auto;
+    margin-top: 80px;
+}
+
+#msgBoard p {
+    margin: 0;
+}
+
+#msgBoard .time {
+    color: #c7e1fd;
+}
+
+
+/*stopWatch*/
+
+#stopWatch {
+    height: 100px;
+    border-bottom: 1px solid #e4f1ff;
+}
+
+#stopWatch span {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+#time {
+    font-size: 5em;
+    letter-spacing: 8px;
+}
+
+#start {
+    background: url(../images/start.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    height: 60px;
+    width: 60px;
+}
+
+#start {
+    background: url(../images/start.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    height: 60px;
+    width: 60px;
+}
+
+#record {
+    background: url(../images/record.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    height: 60px;
+    width: 60px;
+}
+
+#reset {
+    background: url(../images/reset.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    height: 70px;
+    width: 70px;
+}
+
+.scores div {
+    margin-bottom: 10px;
 }

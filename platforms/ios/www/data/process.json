@@ -3,32 +3,32 @@
     "name": "机械奥运",
     "process": [{
         "step": "签到入场",
-        "start": "8:00",
-        "end": null
+        "start_time": "8:00",
+        "end_time": null
     }, {
         "step": "开幕式",
-        "start": "8:00",
-        "end": "9:00"
+        "start_time": "8:00",
+        "end_time": "9:00"
     }, {
         "step": "初赛",
-        "start": "9:00",
-        "end": "11:30"
+        "start_time": "9:00",
+        "end_time": "11:30"
     }]
 }, {
     "id": "2",
     "name": "未来工程师",
     "process": [{
         "step": "签到入场",
-        "start": "8:30",
-        "end": null
+        "start_time": "8:30",
+        "end_time": null
     }, {
         "step": "开幕式",
-        "start": "8:30",
-        "end": "9:00"
+        "start_time": "8:30",
+        "end_time": "9:00"
     }, {
         "step": "初赛",
-        "start": "9:00",
-        "end": "12:30"
+        "start_time": "9:00",
+        "end_time": "12:30"
     }]
 },
 {
@@ -36,16 +36,16 @@
     "name": "robocup",
     "process": [{
         "step": "签到入场",
-        "start": "8:30",
-        "end": null
+        "start_time": "8:30",
+        "end_time": null
     }, {
         "step": "开幕式",
-        "start": "8:30",
-        "end": "9:00"
+        "start_time": "8:30",
+        "end_time": "9:00"
     }, {
         "step": "初赛",
-        "start": "9:00",
-        "end": "12:30"
+        "start_time": "9:00",
+        "end_time": "12:30"
     }]
 },
 {
@@ -53,16 +53,16 @@
     "name": "模型节",
     "process": [{
         "step": "签到入场",
-        "start": "8:30",
-        "end": null
+        "start_time": "8:30",
+        "end_time": null
     }, {
         "step": "开幕式",
-        "start": "8:30",
-        "end": "9:00"
+        "start_time": "8:30",
+        "end_time": "9:00"
     }, {
         "step": "初赛",
-        "start": "9:00",
-        "end": "12:30"
+        "start_time": "9:00",
+        "end_time": "12:30"
     }]
 },
 {
@@ -70,15 +70,15 @@
     "name": "西南位育杯",
     "process": [{
         "step": "签到入场",
-        "start": "8:30",
-        "end": null
+        "start_time": "8:30",
+        "end_time": null
     }, {
         "step": "开幕式",
-        "start": "8:30",
-        "end": "9:00"
+        "start_time": "8:30",
+        "end_time": "9:00"
     }, {
         "step": "初赛",
-        "start": "9:00",
-        "end": "12:30"
+        "start_time": "9:00",
+        "end_time": "12:30"
     }]
 }]

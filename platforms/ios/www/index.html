@@ -39,7 +39,7 @@
     <link rel="stylesheet" href="css/my-app.css">
     <script id="processTemp" type="text/template7">
         <div class="row competeTab1">
-            {{#each this}}
+            {{#each competitions}}
             <div class="col-auto">
                 <a href="#processTab{{id}}" class="tab-link">{{name}}</a>
             </div>
@@ -47,15 +47,15 @@
         </div>
         <p>比赛流程：</p>
         <div class="tabs process">
-            {{#each this}}
+            {{#each competitions}}
             <div class="tab {{#unless @index}}active{{/unless}}" id="processTab{{id}}">
                 <table>
-                    {{#each process}}
+                    {{#each schedule}}
                     <tr>
-                        {{#if end}}
-                        <td>{{start}}-{{end}}</td>
+                        {{#if end_time}}
+                        <td>{{start_time}}-{{end_time}}</td>
                         {{else}}
-                        <td>{{start}}</td>
+                        <td>{{start_time}}</td>
                         {{/if}}
                         <td>{{step}}</td>
                     </tr>
@@ -142,13 +142,12 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript " src="cordova.js "></script>
+    <script type="text/javascript" src="cordova.js "></script>
     <script type="text/javascript " src="js/jquery.min.js"></script>
-    <script type="text/javascript " src="js/framework7.min.js "></script>
-    <script type="text/javascript " src="js/pouchdb-5.2.1.min.js "></script>
-
-    <script type="text/javascript " src="js/message_bus.js"></script>
-    <script type="text/javascript " src="js/my-app.js "></script>
+    <script type="text/javascript" src="js/framework7.min.js "></script>
+    <script type="text/javascript" src="js/pouchdb-5.2.1.min.js "></script>
+    <script type="text/javascript" src="js/message_bus.js"></script>
+    <script type="text/javascript" src="js/my-app.js "></script>
 </body>
 
 </html>

@@ -363,16 +363,101 @@ aside-linker {
 
 #msgBoard ul {
     width: 90%;
-    height:60%;
+    height: 60%;
     overflow: auto;
-    margin-top: 80px;  
+    margin-top: 80px;
 }
 
 #msgBoard p {
     margin: 0;
 }
 
-#msgBoard .time{
+#msgBoard .time {
     color: #c7e1fd;
 }
 
+
+/*stopWatch*/
+
+#stopWatch {
+    height: 100px;
+    border-bottom: 1px solid #e4f1ff;
+    margin-bottom: 30px;
+}
+
+#stopWatch span {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+#time {
+    font-size: 5em;
+    letter-spacing: 8px;
+}
+
+#start {
+    background: url(../images/start.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    height: 60px;
+    width: 60px;
+}
+
+#record {
+    background: url(../images/record.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    height: 60px;
+    width: 60px;
+}
+
+#reset {
+    background: url(../images/reset.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    height: 60px;
+    width: 60px;
+}
+
+.scores {
+    margin-top: 50px;
+    padding: 10px;
+}
+
+
+}
+.scores div {
+    margin-bottom: 10px;
+}
+.scoreBoard {
+    margin-left: 30px;
+}
+.left-tag {
+    width: 120px;
+}
+.right-tag {
+    float: right;
+    width: 150px;
+}
+.playerWrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+.playerWrapper div {
+    display: inline-block;
+    flex-basis: 50%;
+    box-sizing: border-box;
+    padding: 10px;
+}
+.playerWrapper .play-event {
+    flex-basis: inherit;
+}
+.mediaBtn {
+    margin-left: 50px;
+}

@@ -177,7 +177,7 @@ var app = {
         $$("#judge-info").show();
     }
     , getProcess: function () {
-        $$.getJSON("./data/process.json", function (process) {
+        $$.getJSON("http://dev.domelab.com/api/v1/competitions", function (process) {
             console.log(process);
             var processTemp = $$('#processTemp').html();
             var compiledTemp = Template7.compile(processTemp);
@@ -186,11 +186,10 @@ var app = {
         })
     }
     , getResponse: function () {
-        $$.getJSON("./data/response.json"
-            , function (response) {
-                $$("#judgeComptition").val(response.compition);
-                $$("#judgeEvent").val(response.events.toString());
-            });
+        $$.getJSON("./data/response.json", function (response) {
+            $$("#judgeComptition").val(response.compition);
+            $$("#judgeEvent").val(response.events.toString());
+        });
     }
     , getMessage: function (token) {
         var channel = "/channel/" + token;
@@ -198,12 +197,16 @@ var app = {
         MessageBus.callbackInterval = 500;
         MessageBus.subscribe(channel, function (d) {
             console.log(d);
+            $$("#msgBoard ul").append("<li><p class='time'>" + d.time + "</p><p class='content'>" +
+                d.content + "</p></li>");
             $$("#msg").addClass("newMsg");
         });
 
     }
 
 };
+
+
 
 myApp.onPageBeforeInit('home', function (page) {
     app.init();
@@ -224,5 +227,123 @@ myApp.onPageInit('msg', function (page) {
     $$("#msg").removeClass("newMsg");
 });
 
+myApp.onPageInit('stopWatch', function (page) {
+
+    var Stopwatch = function () {
+        var startAt = 0;
+        var lapTime = 0;
+
+        var now = function () {
+            return (new Date()).getTime();
+        };
+
+        this.start = function () {
+            startAt = startAt ? startAt : now();
+        };
+
+        this.stop = function () {
+
+            lapTime = startAt ? lapTime + now() - startAt : lapTime;
+            startAt = 0;
+        };
+
+        this.reset = function () {
+            lapTime = startAt = 0;
+        };
+
+        this.time = function () {
+            return lapTime + (startAt ? now() - startAt : 0);
+        };
+    };
+    var x = new Stopwatch();
+    var $time;
+    var clocktimer;
+    var total;
+
+    function pad(num, size) {
+        var a = num;
+        if (a.toString().length > size) {
+            return a.toString().substring(0, size);
+        } else {
+            var s = "0000" + num;
+            return s.substr(s.length - size);
+        }
+
+    }
+
+    function formatTime(time) {
+        var h = m = s = ms = 0;
+        var newTime = '';
+
+        time = time % (60 * 60 * 1000);
+        m = Math.floor(time / (60 * 1000));
+        time = time % (60 * 1000);
+        s = Math.floor(time / 1000);
+        ms = time % 1000;
+
+        newTime = pad(m, 2) + ':' + pad(s, 2) + ':' + pad(ms, 2);
+        return newTime;
+    }
+
+    function show() {
+        $time = document.getElementById('time');
+        update();
+    }
+
+    function update() {
+        $time.innerHTML = formatTime(x.time());
+
+    }
+
+    function start() {
+        clocktimer = setInterval(update, 1);
+        x.start();
+    }
+
+    function stop() {
+        x.stop();
+        clearInterval(clocktimer);
+    }
+
+    function reset() {
+        stop();
+        x.reset();
+        update();
+    }
+
+    function record() {
+        stop();
+        var elements = document.getElementsByClassName("timeScore");
+        for (var i = 0; i < elements.length; i++) {
+            if (!elements[i].innerHTML) {
+                elements[i].innerHTML = $time.innerHTML;
+                if (i === elements.length - 1) {
+                    reset();
+                    document.getElementById('start').onclick = document.getElementById('reset').onclick = document.getElementById('record').onclick = null;
+
+                    total = 0;
+                    for (var i = 0; i < elements.length; i++) {
+                        total = total + unformat(elements[i].innerHTML);
+                    }
+                    console.log(total);
+                    document.getElementById('finalScore').innerHTML = formatTime(total);
+                }
+                break;
+            }
+        }
+        x.reset();
+    }
+
+    function unformat(data) {
+        var a = data.split(":");
+        return a[0] * 60 * 1000 + a[1] * 1000 + a[2] * 10;
+    }
+
+    show();
+
+    document.getElementById('start').onclick = start;
+    document.getElementById('reset').onclick = reset;
+    document.getElementById('record').onclick = record;
+});
 
 app.init();
