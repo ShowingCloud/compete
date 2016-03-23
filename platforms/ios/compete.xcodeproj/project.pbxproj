@@ -47,6 +47,8 @@
 		C79D4A90AA134FF5813B893A /* APPLocalNotificationOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1736F0F219D441A89AD9B307 /* APPLocalNotificationOptions.m */; };
 		998A39A55E4542AB96B476AC /* UIApplication+APPLocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 51791B3C0D6540BC9D1A95F1 /* UIApplication+APPLocalNotification.m */; };
 		2630F1B84CC8453CA63DC8F7 /* UILocalNotification+APPLocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = F52B85C684394F70AFAE3FA9 /* UILocalNotification+APPLocalNotification.m */; };
+		A7F1B78A6DDF40408AEDAC2C /* SQLitePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = A7CF3C24CC204829B21DFAC3 /* SQLitePlugin.m */; };
+		439D288D9B5A42F4A23D6C31 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FED414677C94201B9942D68 /* libsqlite3.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -143,6 +145,9 @@
 		4B2220A8061D40C285AF8206 /* APPLocalNotificationOptions.h */ = {isa = PBXFileReference; name = "APPLocalNotificationOptions.h"; path = "de.appplant.cordova.plugin.local-notification/APPLocalNotificationOptions.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		13BBEBA232B847A9894F4B26 /* UIApplication+APPLocalNotification.h */ = {isa = PBXFileReference; name = "UIApplication+APPLocalNotification.h"; path = "de.appplant.cordova.plugin.local-notification/UIApplication+APPLocalNotification.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		21CE5E9427284A349F879843 /* UILocalNotification+APPLocalNotification.h */ = {isa = PBXFileReference; name = "UILocalNotification+APPLocalNotification.h"; path = "de.appplant.cordova.plugin.local-notification/UILocalNotification+APPLocalNotification.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		A7CF3C24CC204829B21DFAC3 /* SQLitePlugin.m */ = {isa = PBXFileReference; name = "SQLitePlugin.m"; path = "cordova-sqlite-storage/SQLitePlugin.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		8810397D7A9D485A99939899 /* SQLitePlugin.h */ = {isa = PBXFileReference; name = "SQLitePlugin.h"; path = "cordova-sqlite-storage/SQLitePlugin.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		4FED414677C94201B9942D68 /* libsqlite3.dylib */ = {isa = PBXFileReference; name = "libsqlite3.dylib"; path = "usr/lib/libsqlite3.dylib"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = compiled.mach-o.dylib; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +165,7 @@
 				B304A57FA4D74CA5AD11385A /* AVFoundation.framework in Frameworks */,
 				237532DBEE814744AC983C86 /* AudioToolbox.framework in Frameworks */,
 				1326CEAB9BE7473BA4485F49 /* CoreTelephony.framework in Frameworks */,
+				439D288D9B5A42F4A23D6C31 /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,6 +244,7 @@
 				065A0C880DD7463799096302 /* AVFoundation.framework */,
 				FDF83C8E1079412E9CD5827D /* AudioToolbox.framework */,
 				0B4EE0A45AFF402D867F90C9 /* CoreTelephony.framework */,
+				4FED414677C94201B9942D68 /* libsqlite3.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -311,6 +318,8 @@
 				4B2220A8061D40C285AF8206 /* APPLocalNotificationOptions.h */,
 				13BBEBA232B847A9894F4B26 /* UIApplication+APPLocalNotification.h */,
 				21CE5E9427284A349F879843 /* UILocalNotification+APPLocalNotification.h */,
+				A7CF3C24CC204829B21DFAC3 /* SQLitePlugin.m */,
+				8810397D7A9D485A99939899 /* SQLitePlugin.h */,
 			);
 			name = Plugins;
 			path = "compete/Plugins";
@@ -448,6 +457,7 @@
 				C79D4A90AA134FF5813B893A /* APPLocalNotificationOptions.m in Sources */,
 				998A39A55E4542AB96B476AC /* UIApplication+APPLocalNotification.m in Sources */,
 				2630F1B84CC8453CA63DC8F7 /* UILocalNotification+APPLocalNotification.m in Sources */,
+				A7F1B78A6DDF40408AEDAC2C /* SQLitePlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

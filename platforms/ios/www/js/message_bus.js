@@ -141,7 +141,7 @@ window.MessageBus = (function () {
             , type: 'POST'
             , headers: headers
             , xhr: function () {
-                var xhr = jQuery.ajaxSettings.xhr();
+                var xhr = $.ajaxSettings.xhr();
                 if (!chunked) {
                     return xhr;
                 }

@@ -42,6 +42,9 @@
         },
         "de.appplant.cordova.plugin.local-notification": {
             "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "cn.robodou.compete"
         }
     },
     "dependent_plugins": {

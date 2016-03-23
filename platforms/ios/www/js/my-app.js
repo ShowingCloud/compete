@@ -10,8 +10,14 @@ var mainView = myApp.addView('.view-main', {
 });
 
 //Initialize PouchDB
-var scoreDB = new PouchDB("score");
-var msgDB = new PouchDB("msg");
+var scoreDB = new PouchDB("score", {
+    adapter: 'websql'
+    , location: 2
+});
+var msgDB = new PouchDB("msg", {
+    adapter: 'websql'
+    , location: 2
+});
 //Not use remote PouchDb server
 var remoteCouch = false;
 
@@ -217,10 +223,9 @@ myApp.onPageBeforeRemove('home', function (page) {
 });
 
 myApp.onPageInit('select', function (page) {
-    $$("#eventsBoard .tab div").on("click", function () {
-        console.log("click");
-        mainView.router.loadPage('player.html');
-    });
+    //    $$("#eventsBoard .tab div").on("click", function () {
+    //        mainView.router.loadPage('player.html');
+    //    });
 });
 
 myApp.onPageInit('msg', function (page) {
@@ -228,6 +233,12 @@ myApp.onPageInit('msg', function (page) {
 });
 
 myApp.onPageInit('stopWatch', function (page) {
+
+    var mySwiper = myApp.swiper('.swiper-container', {
+        pagination: '.swiper-pagination'
+        , paginationHide: false
+        , paginationClickable: true
+    });
 
     var Stopwatch = function () {
         var startAt = 0;

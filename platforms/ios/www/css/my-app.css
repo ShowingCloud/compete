@@ -382,6 +382,7 @@ aside-linker {
 #stopWatch {
     height: 100px;
     border-bottom: 1px solid #e4f1ff;
+    margin-bottom: 30px;
 }
 
 #stopWatch span {
@@ -392,16 +393,6 @@ aside-linker {
 #time {
     font-size: 5em;
     letter-spacing: 8px;
-}
-
-#start {
-    background: url(../images/start.png);
-    background-position: center center;
-    background-repeat: no-repeat;
-    -webkit-background-size: cover;
-    background-size: cover;
-    height: 60px;
-    width: 60px;
 }
 
 #start {
@@ -430,10 +421,56 @@ aside-linker {
     background-repeat: no-repeat;
     -webkit-background-size: cover;
     background-size: cover;
-    height: 70px;
-    width: 70px;
+    height: 60px;
+    width: 60px;
+}
+
+.scores {
+    padding: 10px;
+    height: 235px;
+    overflow: scroll;
 }
 
 .scores div {
-    margin-bottom: 10px;
+    margin: 20px 0;
+}
+
+.scoreBoard {
+    margin-left: 30px;
+}
+
+.left-tag {
+    width: 120px;
+}
+
+.right-tag {
+    float: right;
+    width: 150px;
+}
+
+.mediaBtn {
+    margin-left: 50px;
+}
+
+.playerInfo p {
+    display: inline-block;
+    width: 45%;
+    box-sizing: border-box;
+    margin: 10px 0;
+}
+
+.playerInfo .play-event {
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 50px;
+}
+
+.swiper-pagination-bullet-active {
+    opacity: 1;
+    background: #c8c7cc;
+}
+
+.remarkInput {
+    width: 300px;
 }
