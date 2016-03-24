@@ -355,6 +355,75 @@ myApp.onPageInit('stopWatch', function (page) {
     document.getElementById('start').onclick = start;
     document.getElementById('reset').onclick = reset;
     document.getElementById('record').onclick = record;
+
+
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext("2d");
+    var offset = $$("#canvas").offset();
+    canvas.addEventListener("touchstart", touchStartHandler, false);
+    canvas.addEventListener("touchmove", touchMoveHandler, false);
+    canvas.addEventListener("touchend", touchEndHandler, false);
+    document.getElementById("clearCanvas").onclick = function () {
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        clickX = new Array();
+        clickY = new Array();
+        clickDrag = new Array();
+    };
+
+    function touchStartHandler(e) {
+        var touchEvent = e.changedTouches[0];
+        console.log(touchEvent.pageX);
+        paint = true;
+        addClick(touchEvent.pageX - canvas.width, touchEvent.pageY - offset.top);
+        redraw();
+    }
+
+    function touchMoveHandler(e) {
+        var touchEvent = e.changedTouches[0];
+        //console.log(touchEvent.pageX - offset.left);
+        //console.log(touchEvent.pageY - offset.top);
+        if (paint) {
+            addClick(touchEvent.pageX - canvas.width, touchEvent.pageY - offset.top, true);
+            redraw();
+        }
+    }
+
+    function touchEndHandler(e) {
+        paint = false;
+    }
+
+    var clickX = new Array();
+    var clickY = new Array();
+    var clickDrag = new Array();
+    var paint;
+
+    function addClick(x, y, dragging) {
+        clickX.push(x);
+        clickY.push(y);
+        clickDrag.push(dragging);
+    }
+
+    function redraw() {
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
+        context.strokeStyle = "#df4b26";
+        context.lineJoin = "round";
+        context.lineWidth = 5;
+
+        for (var i = 0; i < clickX.length; i++) {
+            context.beginPath();
+            if (clickDrag[i] && i) {
+                context.moveTo(clickX[i - 1], clickY[i - 1]);
+            } else {
+                context.moveTo(clickX[i] - 1, clickY[i]);
+            }
+            context.lineTo(clickX[i], clickY[i]);
+            context.closePath();
+            context.stroke();
+        }
+    }
+
+
 });
 
 app.init();

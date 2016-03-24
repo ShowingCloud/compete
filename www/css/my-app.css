@@ -474,3 +474,20 @@ aside-linker {
 .remarkInput {
     width: 300px;
 }
+
+#canvas {
+    border: 1px solid #D7E4F4;
+}
+
+.canvasWrapper {
+    display: table;
+}
+
+.canvasWrapper span {
+    display: table-cell;
+    vertical-align: top;
+}
+
+.canvasWrapper canvas {
+    display: table-cell;
+}
