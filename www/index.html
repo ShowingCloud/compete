@@ -65,7 +65,22 @@
             {{/each}}
         </div>
     </script>
-    <script id="processTabTemp" type="text/template7">
+    <script id="playerInfoTemp" type="text/template7">
+
+        <div class="swiper-container">
+            {{#each users}}
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <p>姓名：{{name}}</p>
+                    <p>参赛编号：{{playCode}}</p>
+                    <p>学校：{{school}}</p>
+                    <p>性别：{{gender}}</p>
+                    <p class="play-event">参赛项目：{{competition}}－{{event}}</p>
+                </div>
+            </div>
+            {{/each}}
+            <div class="swiper-pagination"></div>
+        </div>
 
     </script>
 

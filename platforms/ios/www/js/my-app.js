@@ -44,6 +44,9 @@ var app = {
         $$(document).on('ajaxError', function (e) {
             var xhr = e.detail.xhr;
             console.log(xhr);
+            if (xhr.status === 401) {
+                myApp.alert("登陆失效，请重新登陆", "Robodou");
+            }
         });
         app.getProcess();
     }
@@ -129,7 +132,7 @@ var app = {
                 if (e.url === "http://dev.domelab.com/account/sign_in") {
                     if (!count) {
                         count++;
-                        alert("请登录");
+                        myApp.alert("请登录", "Robodou");
                         $$("#login-btn").on('click', function () {
                             var username = $$("#username").val();
                             var password = $$("#password").val();
@@ -142,11 +145,11 @@ var app = {
                                     console.log(values);
                                 });
                             } else {
-                                alert("请输入用户名和密码");
+                                myApp.alert("请输入用户名和密码", "Robodou");
                             }
                         });
                     } else {
-                        alert("错误，请重新登录");
+                        myApp.alert("错误，请重新登录", "Robodou");
                     }
                 }
 
@@ -174,6 +177,13 @@ var app = {
             app.login();
 
         });
+
+        $$(document).on("click", "#getPlyaer", function (token) {
+            $$.getJSON("http://http://dev.domelab.com/api/v1/" + token + "/team_players ", function (player) {
+                console.log(player);
+
+            });
+        });
     }
     , showJudge: function (judge) {
         console.log(judge);
@@ -189,7 +199,7 @@ var app = {
             var compiledTemp = Template7.compile(processTemp);
             var html = compiledTemp(process);
             $$("#homePage .page-content").append(html);
-        })
+        });
     }
     , getResponse: function () {
         $$.getJSON("./data/response.json", function (response) {
@@ -198,6 +208,12 @@ var app = {
         });
     }
     , getMessage: function (token) {
+        //Get unread counts
+        $$.getJSON("http://dev.domelab.com/api/v1/users/" + token + "/notifications/unread ", function (unread) {
+            console.log(unread);
+            $$("#msg").addClass("newMsg");
+        });
+        //Subscribe message
         var channel = "/channel/" + token;
         MessageBus.start();
         MessageBus.callbackInterval = 500;
@@ -312,7 +328,9 @@ myApp.onPageInit('stopWatch', function (page) {
     }
 
     function stop() {
+        console.log(formatTime(x.time()));
         x.stop();
+        console.log(formatTime(x.time()));
         clearInterval(clocktimer);
     }
 
@@ -355,6 +373,75 @@ myApp.onPageInit('stopWatch', function (page) {
     document.getElementById('start').onclick = start;
     document.getElementById('reset').onclick = reset;
     document.getElementById('record').onclick = record;
+
+
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext("2d");
+    canvas.addEventListener("touchstart", touchStartHandler, false);
+    canvas.addEventListener("touchmove", touchMoveHandler, false);
+    canvas.addEventListener("touchend", touchEndHandler, false);
+    document.getElementById("clearCanvas").onclick = function () {
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+        clickX = [];
+        clickY = [];
+        clickDrag = [];
+    };
+
+    function touchStartHandler(e) {
+        e.preventDefault();
+        var touchEvent = e.changedTouches[0];
+        paint = true;
+        addClick(touchEvent.clientX - $$("#canvas").offset().left, touchEvent.clientY - $$("#canvas").offset().top);
+        redraw();
+    }
+
+    function touchMoveHandler(e) {
+        e.preventDefault();
+        var touchEvent = e.changedTouches[0];
+        console.log(touchEvent.pageX);
+        if (paint) {
+            addClick(touchEvent.clientX - $$("#canvas").offset().left, touchEvent.clientY - $$("#canvas").offset().top, true);
+            redraw();
+        }
+    }
+
+    function touchEndHandler(e) {
+        e.preventDefault();
+        paint = false;
+    }
+
+    var clickX = [];
+    var clickY = [];
+    var clickDrag = [];
+    var paint;
+
+    function addClick(x, y, dragging) {
+        clickX.push(x);
+        clickY.push(y);
+        clickDrag.push(dragging);
+    }
+
+    function redraw() {
+        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
+        context.strokeStyle = "#df4b26";
+        context.lineJoin = "round";
+        context.lineWidth = 3;
+
+        for (var i = 0; i < clickX.length; i++) {
+            context.beginPath();
+            if (clickDrag[i] && i) {
+                context.moveTo(clickX[i - 1], clickY[i - 1]);
+            } else {
+                context.moveTo(clickX[i] - 1, clickY[i]);
+            }
+            context.lineTo(clickX[i], clickY[i]);
+            context.closePath();
+            context.stroke();
+        }
+    }
+
+
 });
 
 app.init();
