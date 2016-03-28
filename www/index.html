@@ -30,7 +30,8 @@
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: http://dev.domelab.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src * http://dev.domelab.com">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: http://dev.domelab.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src * dev.domelab.com">
+
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
@@ -65,7 +66,7 @@
             {{/each}}
         </div>
     </script>
-    <script id="playerInfoTemp" type="text/template7">
+    <script id="teamTemp" type="text/template7">
 
         <div class="swiper-container">
             {{#each users}}
@@ -75,13 +76,21 @@
                     <p>参赛编号：{{playCode}}</p>
                     <p>学校：{{school}}</p>
                     <p>性别：{{gender}}</p>
-                    <p class="play-event">参赛项目：{{competition}}－{{event}}</p>
+                    <p class="play-event">参赛项目：{{this.eventName}}</p>
                 </div>
             </div>
             {{/each}}
             <div class="swiper-pagination"></div>
         </div>
 
+    </script>
+
+    <script id="userTemp" type="text/template7">
+        <p>姓名：{{name}}</p>
+        <p>参赛编号：{{playCode}}</p>
+        <p>学校：{{school}}</p>
+        <p>性别：{{gender}}</p>
+        <p class="play-event">参赛项目：{{eventName}}</p>
     </script>
 
     <title>Robodou Compete</title>

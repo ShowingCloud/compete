@@ -178,11 +178,19 @@ var app = {
 
         });
 
-        $$(document).on("click", "#getPlyaer", function (token) {
-            $$.getJSON("http://http://dev.domelab.com/api/v1/" + token + "/team_players ", function (player) {
-                console.log(player);
+        $$(document).on("click", "#getPlyaer", function () {
+            var playerId = $$("#playerId").val();
+            if (playerId) {
+                $$.getJSON("http://dev.domelab.com/api/v1/users/" + token + "/team_players", {
+                    identifier: playerId
+                }, function (player) {
+                    myApp.alert(JSON.stringify(player), "");
 
-            });
+                });
+            } else {
+                myApp.alert("请输入选手编号", "Robodou");
+            }
+
         });
     }
     , showJudge: function (judge) {

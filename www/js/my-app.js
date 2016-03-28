@@ -26,6 +26,11 @@ var appOption = {
     serverHost: "http://dev.domelab.com"
 };
 
+var temp {
+    compete: {}
+    , event: {}
+};
+
 var app = {
     init: function () {
         //Check local judge data exciting
@@ -38,14 +43,13 @@ var app = {
 
         } else {
             app.login();
-
         }
         //Globle ajax error handller
         $$(document).on('ajaxError', function (e) {
             var xhr = e.detail.xhr;
             console.log(xhr);
             if (xhr.status === 401) {
-                myApp.alert("登陆失效，请重新登陆", "Robodou");
+                myApp.alert("登陆失效，请重新登陆", "");
             }
         });
         app.getProcess();
@@ -132,7 +136,7 @@ var app = {
                 if (e.url === "http://dev.domelab.com/account/sign_in") {
                     if (!count) {
                         count++;
-                        myApp.alert("请登录", "Robodou");
+                        myApp.alert("请登录", "");
                         $$("#login-btn").on('click', function () {
                             var username = $$("#username").val();
                             var password = $$("#password").val();
@@ -145,11 +149,11 @@ var app = {
                                     console.log(values);
                                 });
                             } else {
-                                myApp.alert("请输入用户名和密码", "Robodou");
+                                myApp.alert("请输入用户名和密码", "");
                             }
                         });
                     } else {
-                        myApp.alert("错误，请重新登录", "Robodou");
+                        myApp.alert("错误，请重新登录", "");
                     }
                 }
 
@@ -178,11 +182,33 @@ var app = {
 
         });
 
-        $$(document).on("click", "#getPlyaer", function (token) {
-            $$.getJSON("http://http://dev.domelab.com/api/v1/" + token + "/team_players ", function (player) {
-                console.log(player);
+        $$(document).on("click", "#getPlyaer", function () {
+            var playerId = $$("#playerId").val();
+            if (playerId) {
+                $$.getJSON("http://dev.domelab.com/api/v1/users/" + token + "/team_players", {
+                    identifier: playerId
+                }, function (data) {
+                    if (data.users.length === 0) {
+                        return;
+                    }
+                    if (data.users.length === 1) {
+                        var player = player[0];
+                        player.eventName = temp.compete.name + "-" + temp.event.name;
+                        var playerTemp = $$('#playerTemp').html();
+                        var compiledTemp = Template7.compile(playerTemp);
+                        $$(".playerInfo").append(compiledTemp(player));
+                    } else {
+                        var team = data;
+                        team.eventName = temp.compete.name + "-" + temp.event.name;
+                        var teamTemp = $$('#teamTemp').html();
+                        var compiledTemp = Template7.compile(teamTemp);
+                        $$(".playerInfo").append(compiledTemp(team));
+                    }
+                });
+            } else {
+                myApp.alert("请输入选手编号", "");
+            }
 
-            });
         });
     }
     , showJudge: function (judge) {
@@ -225,10 +251,7 @@ var app = {
         });
 
     }
-
 };
-
-
 
 myApp.onPageBeforeInit('home', function (page) {
     app.init();
@@ -239,9 +262,14 @@ myApp.onPageBeforeRemove('home', function (page) {
 });
 
 myApp.onPageInit('select', function (page) {
-    //    $$("#eventsBoard .tab div").on("click", function () {
-    //        mainView.router.loadPage('player.html');
-    //    });
+    $$("#eventsBoard .tab div").on("click", function () {
+        temp.compete.id = $$(".compete-select .active").data("id");
+        temp.compete.name = $$(".compete-select .active").text();
+        temp.event.id = $$("#eventsBoard .active").data("id");
+        temp.event.name = $$("#eventsBoard .active").data("id");
+
+        mainView.router.loadPage('player.html');
+    });
 });
 
 myApp.onPageInit('msg', function (page) {
