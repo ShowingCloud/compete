@@ -69,13 +69,12 @@
     <script id="teamTemp" type="text/template7">
 
         <div class="swiper-container">
-            {{#each users}}
+            {{#each user}}
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
-                    <p>姓名：{{name}}</p>
+                    <p>姓名：{{username}}</p>
                     <p>参赛编号：{{playCode}}</p>
                     <p>学校：{{school}}</p>
-                    <p>性别：{{gender}}</p>
                     <p class="play-event">参赛项目：{{this.eventName}}</p>
                 </div>
             </div>
@@ -85,11 +84,10 @@
 
     </script>
 
-    <script id="userTemp" type="text/template7">
-        <p>姓名：{{name}}</p>
+    <script id="playerTemp" type="text/template7">
+        <p>姓名：{{username}}</p>
         <p>参赛编号：{{playCode}}</p>
         <p>学校：{{school}}</p>
-        <p>性别：{{gender}}</p>
         <p class="play-event">参赛项目：{{eventName}}</p>
     </script>
 

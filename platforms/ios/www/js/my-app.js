@@ -26,6 +26,11 @@ var appOption = {
     serverHost: "http://dev.domelab.com"
 };
 
+var temp = {
+    compete: {}
+    , event: {}
+};
+
 var app = {
     init: function () {
         //Check local judge data exciting
@@ -35,19 +40,28 @@ var app = {
             judgeInfo = JSON.parse(tempStr);
             app.showJudge(judgeInfo);
             app.onLogin(judgeInfo.authToken);
-
         } else {
             app.login();
-
         }
         //Globle ajax error handller
         $$(document).on('ajaxError', function (e) {
             var xhr = e.detail.xhr;
             console.log(xhr);
             if (xhr.status === 401) {
-                myApp.alert("登陆失效，请重新登陆", "Robodou");
+                myApp.alert("登陆失效，请重新登陆", "");
             }
         });
+        app.getProcess();
+    }
+    , initHome: function () {
+        var tempStr, judgeInfo;
+        tempStr = localStorage.getItem("judgeInfo");
+        if (typeof (tempStr) === "string") {
+            judgeInfo = JSON.parse(tempStr);
+            app.showJudge(judgeInfo);
+        } else {
+            app.login();
+        }
         app.getProcess();
     }
     , login: function () {
@@ -132,7 +146,7 @@ var app = {
                 if (e.url === "http://dev.domelab.com/account/sign_in") {
                     if (!count) {
                         count++;
-                        myApp.alert("请登录", "Robodou");
+                        myApp.alert("请登录", "");
                         $$("#login-btn").on('click', function () {
                             var username = $$("#username").val();
                             var password = $$("#password").val();
@@ -145,11 +159,11 @@ var app = {
                                     console.log(values);
                                 });
                             } else {
-                                myApp.alert("请输入用户名和密码", "Robodou");
+                                myApp.alert("请输入用户名和密码", "");
                             }
                         });
                     } else {
-                        myApp.alert("错误，请重新登录", "Robodou");
+                        myApp.alert("错误，请重新登录", "");
                     }
                 }
 
@@ -175,22 +189,41 @@ var app = {
             $$("#judge-info").hide();
             $$("#login-container").show();
             app.login();
-
         });
 
-        $$(document).on("click", "#getPlyaer", function () {
-            var playerId = $$("#playerId").val();
-            if (playerId) {
-                $$.getJSON("http://dev.domelab.com/api/v1/users/" + token + "/team_players", {
-                    identifier: playerId
-                }, function (player) {
-                    myApp.alert(JSON.stringify(player), "");
+        myApp.onPageInit('player', function (page) {
+            $$("#getPlyaer").off("click").on("click", function () {
+                var playerId = $$("#playerId").val();
+                if (playerId) {
+                    console.log(playerId);
+                    $$.getJSON("http://dev.domelab.com/api/v1/users/" + token + "/team_players", {
+                        identifier: playerId
+                    }, function (data) {
+                        console.log(data);
+                        if (data.user.length === 0) {
+                            return;
+                        }
+                        if (data.user.length === 1) {
+                            var player = data.user[0];
+                            player.eventName = temp.compete.name + "-" + temp.event.name;
+                            var playerTemp = $$('#playerTemp').html();
+                            var compiledTemp = Template7.compile(playerTemp);
+                            temp.playerInfo = compiledTemp(player);
 
-                });
-            } else {
-                myApp.alert("请输入选手编号", "Robodou");
-            }
-
+                            mainView.router.loadPage('stopWatch.html');
+                        } else {
+                            var team = data;
+                            team.eventName = temp.compete.name + "-" + temp.event.name;
+                            var teamTemp = $$('#teamTemp').html();
+                            var compiledTemp = Template7.compile(teamTemp);
+                            $$(".playerInfo").append(compiledTemp(team));
+                            mainView.router.loadPage('player.html');
+                        }
+                    });
+                } else {
+                    myApp.alert("请输入选手编号", "");
+                }
+            });
         });
     }
     , showJudge: function (judge) {
@@ -233,13 +266,10 @@ var app = {
         });
 
     }
-
 };
 
-
-
 myApp.onPageBeforeInit('home', function (page) {
-    app.init();
+    app.initHome();
 });
 
 myApp.onPageBeforeRemove('home', function (page) {
@@ -247,16 +277,24 @@ myApp.onPageBeforeRemove('home', function (page) {
 });
 
 myApp.onPageInit('select', function (page) {
-    //    $$("#eventsBoard .tab div").on("click", function () {
-    //        mainView.router.loadPage('player.html');
-    //    });
+    $$("#eventsBoard .tab div").on("click", function () {
+        temp.compete.id = $$(".compete-select .active").data("id");
+        temp.compete.name = $$(".compete-select .active").text();
+        temp.event.id = $$(this).data("id");
+        temp.event.name = $$(this).text();
+        mainView.router.loadPage('player.html');
+    });
 });
+
+
 
 myApp.onPageInit('msg', function (page) {
     $$("#msg").removeClass("newMsg");
 });
 
 myApp.onPageInit('stopWatch', function (page) {
+
+    $$(".playerInfo").append(temp.playerInfo);
 
     var mySwiper = myApp.swiper('.swiper-container', {
         pagination: '.swiper-pagination'
@@ -336,9 +374,7 @@ myApp.onPageInit('stopWatch', function (page) {
     }
 
     function stop() {
-        console.log(formatTime(x.time()));
         x.stop();
-        console.log(formatTime(x.time()));
         clearInterval(clocktimer);
     }
 
