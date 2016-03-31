@@ -26,23 +26,12 @@ var appOption = {
     serverHost: "http://dev.domelab.com"
 };
 
-var temp = {
-    compete: {}
-    , event: {}
-};
+var temp = {};
+
+var judgeInfo = {};
 
 var app = {
     init: function () {
-        //Check local judge data exciting
-        var tempStr, judgeInfo;
-        tempStr = localStorage.getItem("judgeInfo");
-        if (typeof (tempStr) === "string") {
-            judgeInfo = JSON.parse(tempStr);
-            app.showJudge(judgeInfo);
-            app.onLogin(judgeInfo.authToken);
-        } else {
-            app.login();
-        }
         //Globle ajax error handller
         $$(document).on('ajaxError', function (e) {
             var xhr = e.detail.xhr;
@@ -52,17 +41,17 @@ var app = {
             }
         });
         app.getProcess();
-    }
-    , initHome: function () {
-        var tempStr, judgeInfo;
+        //Check local judge data exciting
+        var tempStr;
         tempStr = localStorage.getItem("judgeInfo");
         if (typeof (tempStr) === "string") {
             judgeInfo = JSON.parse(tempStr);
             app.showJudge(judgeInfo);
+            app.onLogin(judgeInfo.authToken);
         } else {
             app.login();
         }
-        app.getProcess();
+
     }
     , login: function () {
         $$("#login-btn").off('click');
@@ -195,12 +184,12 @@ var app = {
             $$("#getPlyaer").off("click").on("click", function () {
                 var playerId = $$("#playerId").val();
                 if (playerId) {
-                    console.log(playerId);
                     $$.getJSON("http://dev.domelab.com/api/v1/users/" + token + "/team_players", {
                         identifier: playerId
                     }, function (data) {
                         console.log(data);
                         if (data.user.length === 0) {
+                            myApp.alert("没有此人信息")
                             return;
                         }
                         if (data.user.length === 1) {
@@ -209,14 +198,14 @@ var app = {
                             var playerTemp = $$('#playerTemp').html();
                             var compiledTemp = Template7.compile(playerTemp);
                             temp.playerInfo = compiledTemp(player);
-
+                            console.log(temp);
                             mainView.router.loadPage('stopWatch.html');
                         } else {
                             var team = data;
                             team.eventName = temp.compete.name + "-" + temp.event.name;
                             var teamTemp = $$('#teamTemp').html();
                             var compiledTemp = Template7.compile(teamTemp);
-                            $$(".playerInfo").append(compiledTemp(team));
+                            temp.playerInfo = compiledTemp(player);
                             mainView.router.loadPage('player.html');
                         }
                     });
@@ -239,6 +228,7 @@ var app = {
             var processTemp = $$('#processTemp').html();
             var compiledTemp = Template7.compile(processTemp);
             var html = compiledTemp(process);
+            console.log(html);
             $$("#homePage .page-content").append(html);
         });
     }
@@ -266,10 +256,14 @@ var app = {
         });
 
     }
+    , submitSCore: function () {
+
+    }
 };
 
 myApp.onPageBeforeInit('home', function (page) {
-    app.initHome();
+    app.showJudge(judgeInfo);
+    app.getProcess();
 });
 
 myApp.onPageBeforeRemove('home', function (page) {
@@ -278,22 +272,26 @@ myApp.onPageBeforeRemove('home', function (page) {
 
 myApp.onPageInit('select', function (page) {
     $$("#eventsBoard .tab div").on("click", function () {
-        temp.compete.id = $$(".compete-select .active").data("id");
-        temp.compete.name = $$(".compete-select .active").text();
-        temp.event.id = $$(this).data("id");
-        temp.event.name = $$(this).text();
+        var compete = {
+            id: $$(".compete-select .active").data("id")
+            , name: $$(".compete-select .active").text()
+        };
+        var event = {
+            id: $$(this).data("id")
+            , name: $$(this).text()
+        }
+        temp.compete = compete;
+        temp.event = event;
         mainView.router.loadPage('player.html');
     });
 });
-
-
 
 myApp.onPageInit('msg', function (page) {
     $$("#msg").removeClass("newMsg");
 });
 
 myApp.onPageInit('stopWatch', function (page) {
-
+    //var thisEvent = events[temp.event.id];
     $$(".playerInfo").append(temp.playerInfo);
 
     var mySwiper = myApp.swiper('.swiper-container', {
@@ -315,7 +313,6 @@ myApp.onPageInit('stopWatch', function (page) {
         };
 
         this.stop = function () {
-
             lapTime = startAt ? lapTime + now() - startAt : lapTime;
             startAt = 0;
         };
@@ -332,6 +329,11 @@ myApp.onPageInit('stopWatch', function (page) {
     var $time;
     var clocktimer;
     var total;
+    var timeLimit = 5000;
+
+    var timeoutHander = function () {
+        myApp.alert("已超时", "");
+    };
 
     function pad(num, size) {
         var a = num;
@@ -364,18 +366,28 @@ myApp.onPageInit('stopWatch', function (page) {
     }
 
     function update() {
-        $time.innerHTML = formatTime(x.time());
+        var timeNow = x.time();
 
+        if (timeNow >= timeLimit) {
+            stop();
+            $time.innerHTML = formatTime(timeLimit);
+        } else {
+            $time.innerHTML = formatTime(timeNow);
+        }
     }
 
     function start() {
         clocktimer = setInterval(update, 1);
         x.start();
+        $$("#start").text("停止");
+        document.getElementById('start').onclick = stop;
     }
 
     function stop() {
         x.stop();
         clearInterval(clocktimer);
+        document.getElementById('start').onclick = start;
+        $$("#start").text("开始");
     }
 
     function reset() {

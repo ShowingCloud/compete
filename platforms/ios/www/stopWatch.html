@@ -1,10 +1,10 @@
 <div data-page="stopWatch" class="page">
     <div class="page-content">
-        <div id="stopWatch">
+        <div id="stopwatch">
             <span id="time"></span>
-            <span id="reset"></span>
-            <span id="record"></span>
-            <span id="start">开始</span>
+            <span id="reset" class="button">重置</span>
+            <span id="record" class="button">录入</span>
+            <span id="start" class="button">开始</span>
         </div>
         <div class="scoreBoard">
             <div>
@@ -18,9 +18,9 @@
             </div>
             <div class="scores">
                 <div>
-                    第一次成绩：<span class="timeScore" id="score1"></span></div>
-                <div>第二次成绩：<span class="timeScore" id="score2"></span></div>
-                <div>两次之和：<span id="finalScore"></span></div>
+                    第一次成绩：<span class="timeScore score" name="score1"></span></div>
+                <div>第二次成绩：<span class="timeScore score" name="score2"></span></div>
+                <div>两次之和：<span id="finalScore" class="score" name="score3"></span></div>
                 <div class="remarks">
                     <div>备注：
                         <input class="remarkInput"> <span id="remarkSubmit">确定</span>

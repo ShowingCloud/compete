@@ -396,6 +396,8 @@ aside-linker {
     letter-spacing: 8px;
 }
 
+
+/*
 #start {
     background: url(../images/icon-1.png);
     background-position: center center;
@@ -415,9 +417,10 @@ aside-linker {
     height: 60px;
     width: 60px;
 }
+*/
 
-#reset {
-    background: url(../images/reset.png);
+stopwatch .button {
+    background: url(../images/icon-1.png);
     background-position: center center;
     background-repeat: no-repeat;
     -webkit-background-size: cover;
