@@ -1,15 +1,17 @@
 {
     "stopwatch": 1 //0无计时器，1本地计时，2赛道计时，3有时限但不记录时间
-        "time-limit": 30 //时间限制，单位为秒
-        "scores": [
-            {
-                "label": "第一次"
-                , "type": "time"
-            }
-            , {
-                "label": "第二次"
-                , "type": "time"
-            }
+        
+    , "time-limit": 30 //时间限制，单位为秒
+        
+    , "scores": [
+        {
+            "label": "第一次"
+            , "type": "time"
+        }
+        
+        , {
+            "label": "第二次"
+            , "type": "time"
+        }
     ]
-    , "final-calce": 1 //0不计，1相加，2取最佳一次
 }
