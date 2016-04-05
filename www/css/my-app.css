@@ -495,3 +495,39 @@ stopwatch .sm-circle-btn {
 .canvasWrapper canvas {
     display: table-cell;
 }
+
+
+/*Data page*/
+
+#data-top {
+    margin: 0 auto;
+    text-align: center;
+}
+
+#data-title h4 {
+    margin: 0;
+}
+
+#data-title .tray {
+    width: 50%;
+}
+
+.data-tabbar {
+    margin: 20px 2.3%;
+    width: 80%;
+}
+
+.data-tabbar a {
+    height: 35px;
+    display: inline-block;
+    background: url(../images/cbg.png) no-repeat center;
+    -webkit-background-size: cover;
+    background-size: cover;
+    text-align: center;
+    line-height: 31px;
+    font-size: 1em;
+}
+
+.data-items li {
+    background: url(images/data-border.png);
+}

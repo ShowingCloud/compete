@@ -11,12 +11,12 @@ var mainView = myApp.addView('.view-main', {
 
 //Initialize PouchDB
 var scoreDB = new PouchDB("score", {
-    adapter: 'websql',
-    location: 2
+    adapter: 'websql'
+    , location: 2
 });
 var msgDB = new PouchDB("msg", {
-    adapter: 'websql',
-    location: 2
+    adapter: 'websql'
+    , location: 2
 });
 //Not use remote PouchDb server
 var remoteCouch = false;
@@ -28,11 +28,11 @@ var appOption = {
 
 if (!HTMLCanvasElement.prototype.toBlob) {
     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
-        value: function(callback, type, quality) {
+        value: function (callback, type, quality) {
 
-            var binStr = atob(this.toDataURL(type, quality).split(',')[1]),
-                len = binStr.length,
-                arr = new Uint8Array(len);
+            var binStr = atob(this.toDataURL(type, quality).split(',')[1])
+                , len = binStr.length
+                , arr = new Uint8Array(len);
 
             for (var i = 0; i < len; i++) {
                 arr[i] = binStr.charCodeAt(i);
@@ -50,9 +50,9 @@ var temp = {};
 var judgeInfo = {};
 
 var app = {
-    init: function() {
+    init: function () {
         //Globle ajax error handller
-        $$(document).on('ajaxError', function(e) {
+        $$(document).on('ajaxError', function (e) {
             var xhr = e.detail.xhr;
             console.log(xhr);
             if (xhr.status === 401) {
@@ -63,7 +63,7 @@ var app = {
         //Check local judge data exciting
         var tempStr;
         tempStr = localStorage.getItem("judgeInfo");
-        if (typeof(tempStr) === "string") {
+        if (typeof (tempStr) === "string") {
             judgeInfo = JSON.parse(tempStr);
             app.showJudge(judgeInfo);
             app.onLogin(judgeInfo.authToken);
@@ -71,10 +71,10 @@ var app = {
             app.login();
         }
 
-    },
-    login: function() {
+    }
+    , login: function () {
         $$("#login-btn").off('click');
-        String.prototype.getParam = function(str) {
+        String.prototype.getParam = function (str) {
                 str = str.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
                 var regex = new RegExp("[\\?&]*" + str + "=([^&#]*)");
                 var results = regex.exec(this);
@@ -85,26 +85,26 @@ var app = {
                 }
             }
             //Oauth2 job 
-        document.addEventListener("deviceready", function() {
+        document.addEventListener("deviceready", function () {
             var options = {
-                auth_url: 'http://dev.domelab.com/auth/login/authorize',
-                token_url: 'http://dev.domelab.com/auth/login/access_token',
-                client_id: '1',
-                client_secret: '123456',
-                redirect_uri: 'http://dev.domelab.com'
+                auth_url: 'http://dev.domelab.com/auth/login/authorize'
+                , token_url: 'http://dev.domelab.com/auth/login/access_token'
+                , client_id: '1'
+                , client_secret: '123456'
+                , redirect_uri: 'http://dev.domelab.com'
             }
 
             //Generate Login URL
             var paramObj = {
-                client_id: options.client_id,
-                redirect_uri: options.redirect_uri,
-                response_type: options.response_type
+                client_id: options.client_id
+                , redirect_uri: options.redirect_uri
+                , response_type: options.response_type
             };
             var login_url = options.auth_url + '?' + $$.serializeObject(paramObj);
             //Open an inappbrowser but not show it to user
             var ref = window.open(login_url, "_blank", "hidden=yes,clearcache=yes");
             var count = 0;
-            ref.addEventListener('loadstart', function(e) {
+            ref.addEventListener('loadstart', function (e) {
                 var url = e.url;
                 url = url.split("#")[0];
 
@@ -113,28 +113,28 @@ var app = {
                     ref.close();
                     //Get access token
                     $$.ajax({
-                        url: options.token_url,
-                        data: {
-                            code: code,
-                            client_id: options.client_id,
-                            client_secret: options.client_secret,
-                            redirect_uri: options.redirect_uri,
-                            grant_type: "authorization_code"
-                        },
-                        method: 'POST',
-                        success: function(data) {
+                        url: options.token_url
+                        , data: {
+                            code: code
+                            , client_id: options.client_id
+                            , client_secret: options.client_secret
+                            , redirect_uri: options.redirect_uri
+                            , grant_type: "authorization_code"
+                        }
+                        , method: 'POST'
+                        , success: function (data) {
                             //Get userInfo
                             var dataObj = JSON.parse(data);
                             $$.getJSON('http://dev.domelab.com/auth/login/user', {
                                 oauth_token: dataObj.access_token
-                            }, function(d) {
+                            }, function (d) {
                                 console.log(d);
                                 if ((d instanceof Object)) {
                                     var judgeInfo = {
-                                        userId: d.id,
-                                        email: d.info.email,
-                                        nickname: d.extra.nickname,
-                                        authToken: d.info.private_token
+                                        userId: d.id
+                                        , email: d.info.email
+                                        , nickname: d.extra.nickname
+                                        , authToken: d.info.private_token
                                     };
                                     localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
                                     console.log('userInfo saved!');
@@ -143,19 +143,19 @@ var app = {
 
                                 }
                             });
-                        },
-                        error: function(error) {
+                        }
+                        , error: function (error) {
                             console.log(error);
                         }
                     });
                 }
             });
-            ref.addEventListener('loadstop', function(e) {
+            ref.addEventListener('loadstop', function (e) {
                 if (e.url === "http://dev.domelab.com/account/sign_in") {
                     if (!count) {
                         count++;
                         myApp.alert("请登录", "");
-                        $$("#login-btn").on('click', function() {
+                        $$("#login-btn").on('click', function () {
                             var username = $$("#username").val();
                             var password = $$("#password").val();
                             if (typeof username === "string" && typeof password === "string") {
@@ -163,7 +163,7 @@ var app = {
                                 var script = "document.getElementById('user_login').value='" + username + "';" + "document.getElementById('user_password').value='" + password + "';" + "document.getElementById('new_user').submit();"
                                 ref.executeScript({
                                     code: script
-                                }, function(values) {
+                                }, function (values) {
                                     console.log(values);
                                 });
                             } else {
@@ -178,19 +178,19 @@ var app = {
             });
 
         });
-    },
-    bind: function() {
+    }
+    , bind: function () {
 
 
-    },
-    onLogin: function(token) {
+    }
+    , onLogin: function (token) {
         //get realtime message
         app.getMessage(token);
         //logout
-        $$("#logout-btn").on("click", function(token) {
+        $$("#logout-btn").on("click", function (token) {
             var channel = "/channel/" + token;
             localStorage.removeItem("judgeInfo");
-            MessageBus.unsubscribe(channel, function() {
+            MessageBus.unsubscribe(channel, function () {
                 console("unsubscribe");
             });
             MessageBus.stop();
@@ -199,14 +199,14 @@ var app = {
             app.login();
         });
 
-        myApp.onPageInit('player', function(page) {
-            $$("#getPlyaer").off("click").on("click", function() {
+        myApp.onPageInit('player', function (page) {
+            $$("#getPlyaer").off("click").on("click", function () {
                 var playerId = $$("#playerId").val();
                 if (playerId) {
                     var url = "http://dev.domelab.com/api/v1/users/" + token + "/team_players";
                     $$.getJSON(url, {
                         identifier: playerId
-                    }, function(data) {
+                    }, function (data) {
                         console.log(data);
                         if (data.user.length === 0) {
                             myApp.alert("无效的参赛编号", "");
@@ -214,8 +214,8 @@ var app = {
                         } else {
                             data.team = "WHT";
                             temp.player = {
-                                name: data.team,
-                                code: $$("#playerId").val()
+                                name: data.team
+                                , code: $$("#playerId").val()
                             };
                             var player = data;
                             var template, compiledTemp;
@@ -240,32 +240,32 @@ var app = {
                 }
             });
         });
-    },
-    showJudge: function(judge) {
+    }
+    , showJudge: function (judge) {
         console.log(judge);
         $$("#judgeId").text(judge.userId);
         $$("#judgeName").text(judge.nickname);
         $$("#login-container").hide();
         $$("#judge-info").show();
-    },
-    getProcess: function() {
-        $$.getJSON("http://dev.domelab.com/api/v1/competitions", function(process) {
+    }
+    , getProcess: function () {
+        $$.getJSON("http://dev.domelab.com/api/v1/competitions", function (process) {
             console.log(process);
             var processTemp = $$('#processTemp').html();
             var compiledTemp = Template7.compile(processTemp);
             var html = compiledTemp(process);
             $$("#homePage .page-content").append(html);
         });
-    },
-    getResponse: function() {
-        $$.getJSON("./data/response.json", function(response) {
+    }
+    , getResponse: function () {
+        $$.getJSON("./data/response.json", function (response) {
             $$("#judgeComptition").val(response.compition);
             $$("#judgeEvent").val(response.events.toString());
         });
-    },
-    getMessage: function(token) {
+    }
+    , getMessage: function (token) {
         //Get unread counts
-        $$.getJSON("http://dev.domelab.com/api/v1/users/" + token + "/notifications/unread ", function(unread) {
+        $$.getJSON("http://dev.domelab.com/api/v1/users/" + token + "/notifications/unread ", function (unread) {
             console.log(unread);
             $$("#msg").addClass("newMsg");
         });
@@ -273,15 +273,15 @@ var app = {
         var channel = "/channel/" + token;
         MessageBus.start();
         MessageBus.callbackInterval = 500;
-        MessageBus.subscribe(channel, function(d) {
+        MessageBus.subscribe(channel, function (d) {
             console.log(d);
             $$("#msgBoard ul").append("<li><p class='time'>" + d.time + "</p><p class='content'>" +
                 d.content + "</p></li>");
             $$("#msg").addClass("newMsg");
         });
 
-    },
-    submitScore: function(drawed) {
+    }
+    , submitScore: function (drawed) {
         if (drawed < 0) {
             myApp.alert("你还没有签名", "");
             return;
@@ -291,7 +291,7 @@ var app = {
         };
         var remark;
         //Get scores
-        $$(".score").each(function(i, obj) {
+        $$(".score").each(function (i, obj) {
             var _this = $$(this);
             var value = _this.text();
             var name = _this.attr('name');
@@ -310,10 +310,10 @@ var app = {
         //Get signature
         var CanvasElement = document.getElementById("canvas");
 
-        CanvasElement.toBlob(function(blob) {
+        CanvasElement.toBlob(function (blob) {
             var signature = {
-                content_type: "image/jpeg",
-                data: blob
+                content_type: "image/jpeg"
+                , data: blob
             };
             scoreData._attachments.signature = signature;
         }, "image/jpeg", 0.95);
@@ -325,34 +325,38 @@ var app = {
         scoreData.upload = false;
         scoreDB.put(
             scoreData
-        ).then(function(response) {
+        ).then(function (response) {
             console.log(response);
-        }).catch(function(err) {
+        }).catch(function (err) {
             console.log(err);
         });
 
-        console.log(scoreData);
+        app.uploadScore(scoreData);
+    }
+    , uploadScore: function (score) {
+        console.log(score);
+
     }
 };
 
-myApp.onPageBeforeInit('home', function(page) {
+myApp.onPageBeforeInit('home', function (page) {
     app.showJudge(judgeInfo);
     app.getProcess();
 });
 
-myApp.onPageBeforeRemove('home', function(page) {
+myApp.onPageBeforeRemove('home', function (page) {
     console.log("remove home");
 });
 
-myApp.onPageInit('select', function(page) {
-    $$("#eventsBoard .tab div").on("click", function() {
+myApp.onPageInit('select', function (page) {
+    $$("#eventsBoard .tab div").on("click", function () {
         var compete = {
-            id: $$(".compete-select .active").data("id"),
-            name: $$(".compete-select .active").text()
+            id: $$(".compete-select .active").data("id")
+            , name: $$(".compete-select .active").text()
         };
         var event = {
-            id: $$(this).data("id"),
-            name: $$(this).text()
+            id: $$(this).data("id")
+            , name: $$(this).text()
         }
         temp.compete = compete;
         temp.event = event;
@@ -360,56 +364,82 @@ myApp.onPageInit('select', function(page) {
     });
 });
 
-myApp.onPageInit('msg', function(page) {
+myApp.onPageInit('msg', function (page) {
     $$("#msg").removeClass("newMsg");
 });
 
-myApp.onPageInit('data', function(page) {
+myApp.onPageInit('data', function (page) {
+    var toUpload = [];
+    var compid = [];
+    var compname = {};
     scoreDB.allDocs({
-        include_docs: true,
-        attachments: false
-    }).then(function(result) {
+        include_docs: true
+        , attachments: false
+    }).then(function (result) {
         console.log(result);
-    }).catch(function(err) {
+        var templete = $$("#data-item").html();
+
+        result.rows.forEach(function (element, index) {
+            console.log(element);
+            var doc = element.doc;
+            //ToDo render score items
+            if (!doc.upload) {
+                toUpload.push(doc);
+                var id = doc.compete.id;
+                if (!compid.includes(id)) {
+                    compid.push(id);
+                    compname[id] = doc.compete.name;
+                }
+                toUpload.push(doc._id);
+            }
+        });
+        console.log(toUpload);
+        console.log(compid);
+        console.log(compname);
+        compid.forEach(function (i) {
+            var html = '<a href="#dataTab' + i + '" class="tab-link">' + compname[i] + '</a>';
+            $$(".data-tabbar").append(html);
+        });
+    }).catch(function (err) {
         console.log(err);
     });
 });
 
-myApp.onPageInit('stopWatch', function(page) {
+myApp.onPageInit('stopWatch', function (page) {
     var drawed;
     //var thisEvent = events[temp.event.id];
     $$(".playerInfo").append(temp.playerInfo);
-    $$("#submitScore").on("click", function() {
+    $$("#submitScore").on("click", function () {
         app.submitScore(drawed)
     });
     var mySwiper = myApp.swiper('.swiper-container', {
-        pagination: '.swiper-pagination',
-        paginationHide: false,
-        paginationClickable: true
+        pagination: '.swiper-pagination'
+        , paginationHide: false
+        , paginationClickable: true
     });
 
-    var Stopwatch = function() {
+    var Stopwatch = function () {
         var startAt = 0;
         var lapTime = 0;
 
-        var now = function() {
+        var now = function () {
             return (new Date()).getTime();
         };
 
-        this.start = function() {
+        this.start = function () {
             startAt = startAt ? startAt : now();
         };
 
-        this.stop = function() {
+        this.stop = function () {
             lapTime = startAt ? lapTime + now() - startAt : lapTime;
             startAt = 0;
         };
 
-        this.reset = function() {
+        this.reset = function () {
             lapTime = startAt = 0;
         };
 
-        this.time = function() {
+        this.time = function () {
             return lapTime + (startAt ? now() - startAt : 0);
         };
     };
@@ -419,7 +449,7 @@ myApp.onPageInit('stopWatch', function(page) {
     var total;
     var timeLimit = 5000;
 
-    var timeoutHander = function() {
+    var timeoutHander = function () {
         myApp.alert("已超时", "");
     };
 
@@ -525,7 +555,7 @@ myApp.onPageInit('stopWatch', function(page) {
     canvas.addEventListener("touchstart", touchStartHandler, false);
     canvas.addEventListener("touchmove", touchMoveHandler, false);
     canvas.addEventListener("touchend", touchEndHandler, false);
-    document.getElementById("clearCanvas").onclick = function() {
+    document.getElementById("clearCanvas").onclick = function () {
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
         clickX = [];
         clickY = [];
