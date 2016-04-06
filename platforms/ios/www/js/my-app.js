@@ -371,7 +371,6 @@ myApp.onPageInit('msg', function (page) {
 myApp.onPageInit('data', function (page) {
     var toUpload = [];
     var compid = [];
-    var compname = {};
     scoreDB.allDocs({
         include_docs: true
         , attachments: false
@@ -388,18 +387,15 @@ myApp.onPageInit('data', function (page) {
                 var id = doc.compete.id;
                 if (!compid.includes(id)) {
                     compid.push(id);
-                    compname[id] = doc.compete.name;
+                    $$(".data-tabbar").append('<a href="#dataTab' + id + '" class="tab-link">' + doc.compete.name + '</a>');
+                    $$(".data-tabs").append('<ul class="tab active" id="dataTab' + id + '"></ul>');
                 }
+                $$("#dataTab" + id).append("<li>" + doc._id + "<li>")
                 toUpload.push(doc._id);
             }
         });
         console.log(toUpload);
-        console.log(compid);
-        console.log(compname);
-        compid.forEach(function (i) {
-            var html = '<a href="#dataTab' + i + '" class="tab-link">' + compname[i] + '</a>';
-            $$(".data-tabbar").append(html);
-        });
+
     }).catch(function (err) {
         console.log(err);
     });

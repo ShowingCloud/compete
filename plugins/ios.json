@@ -7,22 +7,10 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-camera": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
         "cordova-plugin-console": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-plugin-file": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-file-transfer": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
         "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-media": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-network-information": {
@@ -31,19 +19,31 @@
         "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
         "cordova-plugin-vibration": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-plugin-whitelist": {
+        "de.appplant.cordova.plugin.local-notification": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-sqlite-storage": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "de.appplant.cordova.plugin.local-notification": {
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-media": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "cn.robodou.compete"
         }
     },

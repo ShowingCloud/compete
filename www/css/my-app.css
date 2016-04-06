@@ -509,16 +509,16 @@ stopwatch .sm-circle-btn {
 }
 
 #data-title .tray {
-    width: 50%;
+    width: 40%;
 }
 
 .data-tabbar {
-    margin: 20px 2.3%;
+    margin: 20px auto;
     width: 80%;
 }
 
 .data-tabbar a {
-    height: 35px;
+    width: 100px;
     display: inline-block;
     background: url(../images/cbg.png) no-repeat center;
     -webkit-background-size: cover;
@@ -528,6 +528,54 @@ stopwatch .sm-circle-btn {
     font-size: 1em;
 }
 
-.data-items li {
+.upload-all {
+    width: 180px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.data-tabs {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.data-tabs .tab li {
     background: url(images/data-border.png);
+    -webkit-background-size: cover;
+    background-size: cover;
+    text-align: center;
+    position: relative;
+    padding: 10px;
+}
+
+.data-tabs .number-plate {
+    width: 30%;
+    display: inline-block;
+}
+
+.data-tabs tr,
+.data-tabs td {
+    border: none;
+}
+
+.data-tabs .player-score {
+    width: 60%;
+    display: inline-block;
+}
+
+.data-tabs .rightCornor {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.number-plate img {
+    width: 100px;
+}
+
+.number-plate .number {
+    border: 1px solid #c7e1fd;
+    border-radius: 5px;
+    font-size: 20px;
 }

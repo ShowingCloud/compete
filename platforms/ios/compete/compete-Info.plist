@@ -44,8 +44,6 @@
     </array>
     <key>UIRequiresFullScreen</key>
     <true/>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string/>
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSExceptionDomains</key>
@@ -86,5 +84,7 @@
     <array>
       <string>UIInterfaceOrientationLandscapeLeft</string>
     </array>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string/>
   </dict>
 </plist>

@@ -376,8 +376,8 @@ myApp.onPageInit('data', function (page) {
         , attachments: false
     }).then(function (result) {
         console.log(result);
-        var templete = $$("#data-item").html();
-
+        var template = $$("#data-item").html();
+        var compiledTemp = Template7.compile(template);
         result.rows.forEach(function (element, index) {
             console.log(element);
             var doc = element.doc;
@@ -388,8 +388,11 @@ myApp.onPageInit('data', function (page) {
                 if (!compid.includes(id)) {
                     compid.push(id);
                     $$(".data-tabbar").append('<a href="#dataTab' + id + '" class="tab-link">' + doc.compete.name + '</a>');
-
+                    $$(".data-tabs").append('<ul class="tab active" id="dataTab' + id + '"></ul>');
                 }
+                doc.index = index;
+                var html = compiledTemp(doc);
+                $$("#dataTab" + id).append(html)
                 toUpload.push(doc._id);
             }
         });
