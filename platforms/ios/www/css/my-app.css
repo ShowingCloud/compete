@@ -21,17 +21,17 @@ caption {
     text-align: left;
 }
 
-td {
+.process td {
     padding: 15px 45px;
     border-bottom: 1px solid #e8e8e8;
     width: 50%;
 }
 
-td:first-child {
+.process td:first-child {
     border-right: 1px solid #e8e8e8;
 }
 
-table {
+.process table {
     width: 90%;
     margin: 0 auto;
     border-top: 1px solid #e8e8e8;
@@ -99,7 +99,8 @@ table {
 }
 
 .page-content {
-    margin: 20% 10%;
+    margin: 18% 10%;
+    height: 70%;
 }
 
 aside-linker {
@@ -163,7 +164,7 @@ aside-linker {
     -webkit-background-size: cover;
     background-size: cover;
     padding: 20px;
-    height: 20%;
+    height: 30%;
     width: 80%;
     margin: 0 auto;
 }
@@ -213,7 +214,7 @@ aside-linker {
 }
 
 .title img {
-    width: 50%;
+    width: 60%;
 }
 
 .left-title {
@@ -223,6 +224,11 @@ aside-linker {
 
 .left-title img {
     width: 20%;
+}
+
+.compete-select .tab-link {
+    color: currentColor;
+    font-size: 1.2em;
 }
 
 .compete-select .active p {
@@ -237,7 +243,8 @@ aside-linker {
 
 .title-text {
     padding-left: 20px;
-    font-size: 1.2em;
+    font-size: 1.5em;
+    color: #e4f1ff;
 }
 
 .compete-select {
@@ -326,7 +333,7 @@ aside-linker {
 /*player*/
 
 #queryPlayer {
-    margin-top: 30%;
+    margin-top: 5%;
 }
 
 #queryPlayer div,
@@ -334,6 +341,48 @@ aside-linker {
 #queryPlayer input,
 #queryPlayer a {
     margin: 10px;
+}
+
+#playerTable {
+    background: url(../images/player-table.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    height: 65%;
+}
+
+#playerTable table {
+    border-collapse: collapse;
+    margin-left: 25px;
+    width: 92.5%;
+}
+
+#playerTable tr:last-child {
+    border-bottom: none;
+}
+
+#playerTable tr {
+    border-bottom: 1px solid white;
+}
+
+#playerTable select {
+    margin: 35px 20px;
+    border: 0;
+    width: 275px;
+    font-size: 1.2em;
+    background: none;
+    color: white;
+    -webkit-appearance: none;
+}
+
+#playerTable select option {
+    background: none;
+    font-size: 1em;
+}
+
+#playerTable td {
+    padding: 10px;
 }
 
 
@@ -345,7 +394,7 @@ aside-linker {
     background-repeat: no-repeat;
     -webkit-background-size: cover;
     background-size: cover;
-    height: 40%;
+    height: 60%;
     position: absolute;
     width: 100%;
 }
@@ -357,9 +406,9 @@ aside-linker {
     -webkit-background-size: cover;
     background-size: cover;
     width: 80%;
-    height: 100px;
+    height: 120px;
     position: absolute;
-    bottom: 35%;
+    bottom: 10%;
 }
 
 #msgBoard ul {
@@ -509,7 +558,7 @@ stopwatch .sm-circle-btn {
 }
 
 #data-title .tray {
-    width: 50%;
+    width: 40%;
 }
 
 .data-tabbar {
@@ -528,6 +577,62 @@ stopwatch .sm-circle-btn {
     font-size: 1em;
 }
 
-.data-items li {
+.upload-all {
+    width: 180px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.data-tabs {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.data-tabs .tab li {
     background: url(images/data-border.png);
+    -webkit-background-size: cover;
+    background-size: cover;
+    margin: 0 auto;
+    position: relative;
+    padding: 20px 0;
+    width: 80%;
+}
+
+.data-tabs .number-plate {
+    width: 30%;
+    display: inline-block;
+}
+
+.data-tabs tr,
+.data-tabs td {
+    border: none;
+}
+
+.data-tabs .player-score {
+    width: 60%;
+    display: inline-block;
+    text-align: left;
+}
+
+.player-score span {
+    padding-right: 20px;
+}
+
+.data-tabs .rightCornor {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: small;
+    text-align: right;
+}
+
+.number-plate img {
+    width: 100px;
+}
+
+.number-plate .number {
+    border: 1px solid #c7e1fd;
+    border-radius: 5px;
+    font-size: 50px;
 }

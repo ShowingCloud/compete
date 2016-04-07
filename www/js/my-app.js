@@ -282,12 +282,10 @@ var app = {
 
     }
     , submitScore: function (drawed) {
-        if (drawed < 0) {
-            myApp.alert("你还没有签名", "");
-            return;
-        }
+
         var scoreData = {
             _attachments: {}
+            , scores: {}
         };
         var remark;
         //Get scores
@@ -296,12 +294,20 @@ var app = {
             var value = _this.text();
             var name = _this.attr('name');
             if (value) {
-                scoreData[name] = value;
-            } else {
-                myApp.alert("分数未填写完整", "");
-                return false;
+                scoreData.scores[name] = value;
+                console.log(scoreData.scores[name]);
             }
         });
+
+        if (Object.keys(scoreData.scores).length === 0) {
+            myApp.alert("分数未填写完整", "");
+            return;
+        }
+
+        if (drawed < 0) {
+            myApp.alert("你还没有签名", "");
+            return;
+        }
         //Get remark
         remark = $$("#remark").val();
         if (remark) {
@@ -335,6 +341,9 @@ var app = {
     }
     , uploadScore: function (score) {
         console.log(score);
+        myApp.alert("已上传", "", function () {
+            mainView.router.back();
+        });
 
     }
 };
@@ -390,12 +399,19 @@ myApp.onPageInit('data', function (page) {
                     $$(".data-tabbar").append('<a href="#dataTab' + id + '" class="tab-link">' + doc.compete.name + '</a>');
                     $$(".data-tabs").append('<ul class="tab active" id="dataTab' + id + '"></ul>');
                 }
-                doc.index = index;
+                console.log(typeof index);
+                var num = (index + 1).toString();
+                var pad = "00";
+                if (num.length < 3) {
+                    num = pad.substr(0, 3 - num.length) + num;
+                }
+                doc.index = num;
                 var html = compiledTemp(doc);
                 $$("#dataTab" + id).append(html)
                 toUpload.push(doc._id);
             }
         });
+        $$("#notUploaded").text(toUpload.length);
         console.log(toUpload);
 
     }).catch(function (err) {

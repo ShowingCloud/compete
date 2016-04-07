@@ -91,6 +91,37 @@
         <p class="play-event">参赛项目：{{eventName}}</p>
     </script>
 
+    <script id="data-item" type="text/template7">
+        <li>
+            <div class="number-plate">
+                <img src="images/tiaowen.png">
+                <div class="number">{{index}}</div>
+            </div>
+            <div class="player-score">
+                <table>
+                    <tr>
+                        <td>{{player.name}}</td>
+                        <td>{{player.code}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{compete.name}}</td>
+                        <td>{{event.name}}</td>
+                    </tr>
+                </table>
+                <span>成绩1 {{scores.score1}}</span>
+                <span>成绩2 {{scores.score2}}</span>
+            </div>
+            <div class="rightCornor">
+                <p>{{_id}}</p>
+                {{#if upload}}
+                <p>已上传</p>
+                {{else}}
+                <p>未上传</p>
+                {{/if}}
+            </div>
+        </li>
+    </script>
+
     <title>Robodou Compete</title>
 </head>
 

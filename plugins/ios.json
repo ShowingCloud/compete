@@ -45,6 +45,9 @@
         },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-media-capture": {
+            "PACKAGE_NAME": "cn.robodou.compete"
         }
     },
     "dependent_plugins": {
