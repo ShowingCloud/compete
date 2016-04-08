@@ -70,6 +70,19 @@ var app = {
         } else {
             app.login();
         }
+        
+            $$("#asideBar a").on("click",function(e){
+        var href=$$(this).data("href");
+        if(mainView.activePage.name==="stopWatch"){ 
+            if(href !== "stopWatch.html"){
+                        myApp.confirm("是否放弃本次记分？","",function(goto){
+                    mainView.router.loadPage(href);
+                });
+            }
+        }else{
+            mainView.router.loadPage(href);
+        }
+    });
 
     }
     , login: function () {
@@ -281,6 +294,50 @@ var app = {
         });
 
     }
+    , takePhoto: function (limit) {
+        var photoSuccess = function (mediaFiles) {
+            var i, path, len;
+            for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+                path = mediaFiles[i].fullPath;
+                console.log(path);
+                $$("#photos").append('<img scr="' + path + '">');
+            }
+        };
+
+        // capture error callback
+        var photoError = function (error) {
+            myApp.alert('Error code: ' + error.code, null, 'Capture Error');
+        };
+
+        // start image capture
+        navigator.device.capture.captureImage(photoSuccess, photoError, {
+            limit: limit
+        });
+    }
+    , takeVideo: function () {
+        // capture callback
+        var videoSuccess = function (mediaFiles) {
+
+            var path = mediaFiles[0].fullPath;
+            var type= mediaFiles[0].type;
+            myApp.alert("This is a " + type + " file,path:" + path);
+            var v = "<video controls='controls'>";
+            v += "<source src='" + path + "' type='"+type+"'>";
+            v += "</video>";
+            $$("video").append(v);
+        };
+
+        // capture error callback
+        var videoError = function (error) {
+            myApp.alert('Error code: ' + error.code, null, 'Capture Error');
+        };
+
+        // start video capture
+        navigator.device.capture.captureVideo(videoSuccess, videoError, {
+            limit: 1
+            , duration: 300
+        });
+    }
     , submitScore: function (drawed) {
 
         var scoreData = {
@@ -351,6 +408,7 @@ var app = {
 myApp.onPageBeforeInit('home', function (page) {
     app.showJudge(judgeInfo);
     app.getProcess();
+    console.log(page);
 });
 
 myApp.onPageBeforeRemove('home', function (page) {
@@ -399,7 +457,6 @@ myApp.onPageInit('data', function (page) {
                     $$(".data-tabbar").append('<a href="#dataTab' + id + '" class="tab-link">' + doc.compete.name + '</a>');
                     $$(".data-tabs").append('<ul class="tab active" id="dataTab' + id + '"></ul>');
                 }
-                console.log(typeof index);
                 var num = (index + 1).toString();
                 var pad = "00";
                 if (num.length < 3) {
@@ -420,8 +477,29 @@ myApp.onPageInit('data', function (page) {
 });
 
 myApp.onPageInit('stopWatch', function (page) {
+
+    $$("#takePhoto").on("click", function () {
+        var quantity = $$("#photo img").length;
+        if (quantity === 3) {
+            myApp.alert("最多拍三张照片", "");
+        } else {
+            app.takePhoto(3 - quantity);
+        }
+    });
+
+    $$("#takeVideo").on("click", function () {
+        if ($$("#video video").length) {
+            myApp.confirm("是否重新拍摄视频，弃用之前的视频",function () {
+                $$("#video").html("");
+                app.takeVideo();
+            });
+        } else {
+            app.takeVideo();
+        }
+
+    });
     var drawed;
-    //var thisEvent = events[temp.event.id];
+
     $$(".playerInfo").append(temp.playerInfo);
     $$("#submitScore").on("click", function () {
         app.submitScore(drawed)

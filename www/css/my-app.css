@@ -445,28 +445,18 @@ aside-linker {
     letter-spacing: 8px;
 }
 
-
-/*
-#start {
+.sm-circle-btn{
     background: url(../images/icon-1.png);
     background-position: center center;
     background-repeat: no-repeat;
     -webkit-background-size: cover;
     background-size: cover;
-    height: 60px;
-    width: 60px;
+    display: inline-block;
+    padding:16px;
+    height: 20px;
+    text-align: center;
 }
 
-#record {
-    background: url(../images/record.png);
-    background-position: center center;
-    background-repeat: no-repeat;
-    -webkit-background-size: cover;
-    background-size: cover;
-    height: 60px;
-    width: 60px;
-}
-*/
 
 stopwatch .sm-circle-btn {
     background: url(../images/icon-1.png);
@@ -501,8 +491,16 @@ stopwatch .sm-circle-btn {
     width: 150px;
 }
 
-.mediaBtn {
+.media-capture {
     margin-left: 50px;
+}
+
+#photo img{
+    width:200px;
+}
+
+#video video{
+    width: 200px;
 }
 
 .playerInfo p {

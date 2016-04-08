@@ -1,0 +1,84 @@
+[{
+    "id": "1",
+    "name": "机械奥运",
+    "process": [{
+        "step": "签到入场",
+        "start_time": "8:00",
+        "end_time": null
+    }, {
+        "step": "开幕式",
+        "start_time": "8:00",
+        "end_time": "9:00"
+    }, {
+        "step": "初赛",
+        "start_time": "9:00",
+        "end_time": "11:30"
+    }]
+}, {
+    "id": "2",
+    "name": "未来工程师",
+    "process": [{
+        "step": "签到入场",
+        "start_time": "8:30",
+        "end_time": null
+    }, {
+        "step": "开幕式",
+        "start_time": "8:30",
+        "end_time": "9:00"
+    }, {
+        "step": "初赛",
+        "start_time": "9:00",
+        "end_time": "12:30"
+    }]
+},
+{
+    "id": "3",
+    "name": "robocup",
+    "process": [{
+        "step": "签到入场",
+        "start_time": "8:30",
+        "end_time": null
+    }, {
+        "step": "开幕式",
+        "start_time": "8:30",
+        "end_time": "9:00"
+    }, {
+        "step": "初赛",
+        "start_time": "9:00",
+        "end_time": "12:30"
+    }]
+},
+{
+    "id": "4",
+    "name": "模型节",
+    "process": [{
+        "step": "签到入场",
+        "start_time": "8:30",
+        "end_time": null
+    }, {
+        "step": "开幕式",
+        "start_time": "8:30",
+        "end_time": "9:00"
+    }, {
+        "step": "初赛",
+        "start_time": "9:00",
+        "end_time": "12:30"
+    }]
+},
+{
+    "id": "5",
+    "name": "西南位育杯",
+    "process": [{
+        "step": "签到入场",
+        "start_time": "8:30",
+        "end_time": null
+    }, {
+        "step": "开幕式",
+        "start_time": "8:30",
+        "end_time": "9:00"
+    }, {
+        "step": "初赛",
+        "start_time": "9:00",
+        "end_time": "12:30"
+    }]
+}]

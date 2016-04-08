@@ -1,0 +1,24 @@
+[
+    {
+        "competition": "机械奥运"
+        , "events": [
+            {
+                "name": "机器人短跑（小）"
+                , "id": 1
+            }
+            
+            , {
+                "name": "机器人短跑（中）"
+                , "id": 2
+            }
+        ]
+    }, {
+        "competition": " 未来工程师"
+        , "events": [
+            {
+                "name": "XXXXXX"
+                , "id": 10086
+            }
+        ]
+    }
+]
