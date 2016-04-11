@@ -45,7 +45,15 @@ if (!HTMLCanvasElement.prototype.toBlob) {
     });
 }
 
-var temp = {};
+var temp = {
+    compete:{},
+    event:{},
+    schedule_name:"",
+    kind:1,
+    th:1,
+    team1_id:0,
+    team2_id:0
+};
 
 var judgeInfo = {};
 
@@ -339,7 +347,6 @@ var app = {
         });
     }
     , submitScore: function (drawed) {
-
         var scoreData = {
             _attachments: {}
             , scores: {}
@@ -348,7 +355,7 @@ var app = {
         //Get scores
         $$(".score").each(function (i, obj) {
             var _this = $$(this);
-            var value = _this.text();
+            var value = _this.val();
             var name = _this.attr('name');
             if (value) {
                 scoreData.scores[name] = value;
@@ -356,12 +363,12 @@ var app = {
             }
         });
 
-        if (Object.keys(scoreData.scores).length === 0) {
+        if (Object.keys(scoreData.scores).length < $$(".score").length) {
             myApp.alert("分数未填写完整", "");
             return;
         }
 
-        if (drawed < 0) {
+        if (!drawed) {
             myApp.alert("你还没有签名", "");
             return;
         }
@@ -386,22 +393,28 @@ var app = {
         scoreData.event = temp.event;
         scoreData.compete = temp.compete;
         scoreData.upload = false;
-        scoreDB.put(
-            scoreData
-        ).then(function (response) {
-            console.log(response);
+        scoreDB.put(scoreData).then(function (response) {
+            app.uploadScore(response.id,function(){
+                myApp.hidePreloader();
+                myApp.alert("成绩已上传", "", function () {
+                    mainView.router.back();
+                });
+            });
         }).catch(function (err) {
             console.log(err);
         });
-
-        app.uploadScore(scoreData);
     }
-    , uploadScore: function (score) {
-        console.log(score);
-        myApp.alert("已上传", "", function () {
-            mainView.router.back();
+    , uploadScore: function (doc_id,success) {
+        scoreDB.get(doc_id).then(function(doc) {
+            doc.upload=true;
+            return scoreDB.put(doc);
+        }).then(function(response) {
+            if (typeof success === "function") {
+                success();
+            }
+        }).catch(function (err) {
+            console.log(err);
         });
-
     }
 };
 
@@ -438,6 +451,7 @@ myApp.onPageInit('msg', function (page) {
 myApp.onPageInit('data', function (page) {
     var toUpload = [];
     var compid = [];
+    var length=0;
     scoreDB.allDocs({
         include_docs: true
         , attachments: false
@@ -450,7 +464,7 @@ myApp.onPageInit('data', function (page) {
             var doc = element.doc;
             //ToDo render score items
             if (!doc.upload) {
-                toUpload.push(doc);
+                toUpload.push(doc._id);
                 var id = doc.compete.id;
                 if (!compid.includes(id)) {
                     compid.push(id);
@@ -464,11 +478,32 @@ myApp.onPageInit('data', function (page) {
                 }
                 doc.index = num;
                 var html = compiledTemp(doc);
-                $$("#dataTab" + id).append(html)
-                toUpload.push(doc._id);
+                $$("#dataTab" + id).append(html);
             }
         });
-        $$("#notUploaded").text(toUpload.length);
+        length=toUpload.length;
+        $$("#notUploaded").text(length);
+        $$(".upload-all").on("click",function(){
+            if(length){
+                console.log(toUpload);
+                var newLength=length;
+                function success(){
+                    if(newLength>0){
+                        if(newLength===1){
+                            myApp.hidePreloader();
+                            mainView.router.loadPage('Uploaded.html');
+                        }else{
+                            newLength--; 
+                        }
+                    } 
+                }
+                myApp.showPreloader("正在上传");
+                toUpload.forEach(function(i){
+                    app.uploadScore(i,success);
+                });
+                
+            }
+        });
         console.log(toUpload);
 
     }).catch(function (err) {
@@ -498,11 +533,11 @@ myApp.onPageInit('stopWatch', function (page) {
         }
 
     });
-    var drawed;
+    var drawed=0;
 
     $$(".playerInfo").append(temp.playerInfo);
     $$("#submitScore").on("click", function () {
-        app.submitScore(drawed)
+        app.submitScore(drawed);
     });
     var mySwiper = myApp.swiper('.swiper-container', {
         pagination: '.swiper-pagination'
@@ -611,18 +646,18 @@ myApp.onPageInit('stopWatch', function (page) {
         stop();
         var elements = document.getElementsByClassName("timeScore");
         for (var i = 0; i < elements.length; i++) {
-            if (!elements[i].innerHTML) {
-                elements[i].innerHTML = $time.innerHTML;
+            if (!elements[i].value) {
+                elements[i].value = $time.innerHTML;
                 if (i === elements.length - 1) {
                     reset();
                     document.getElementById('start').onclick = document.getElementById('reset').onclick = document.getElementById('record').onclick = null;
 
                     total = 0;
                     for (var i = 0; i < elements.length; i++) {
-                        total = total + unformat(elements[i].innerHTML);
+                        total = total + unformat(elements[i].value);
                     }
                     console.log(total);
-                    document.getElementById('finalScore').innerHTML = formatTime(total);
+                    document.getElementById('finalScore').value = formatTime(total);
                 }
                 break;
             }

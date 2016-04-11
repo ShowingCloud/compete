@@ -474,6 +474,16 @@ stopwatch .sm-circle-btn {
     overflow: scroll;
 }
 
+.timeScore{
+    border:none;
+    -webkit-user-select: none;
+}
+
+#finalScore{
+    border:none;
+    -webkit-user-select: none;
+}
+
 .scores div {
     margin: 20px 0;
 }
@@ -633,4 +643,13 @@ stopwatch .sm-circle-btn {
     border: 1px solid #c7e1fd;
     border-radius: 5px;
     font-size: 50px;
+}
+
+/*uploaded*/
+.uploaded{
+    margin:10% auto;
+}
+
+.uploaded img{
+    width: 80%;
 }
