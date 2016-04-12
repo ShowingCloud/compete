@@ -65,6 +65,11 @@ var app = {
             console.log(xhr);
             if (xhr.status === 401) {
                 myApp.alert("登陆失效，请重新登陆", "");
+                localStorage.removeItem("judgeInfo");
+                MessageBus.stop();
+                $$("#judge-info").hide();
+                $$("#login-container").show();
+                app.login();
             }
         });
         app.getProcess();
@@ -296,8 +301,17 @@ var app = {
         MessageBus.callbackInterval = 500;
         MessageBus.subscribe(channel, function (d) {
             console.log(d);
-            $$("#msgBoard ul").append("<li><p class='time'>" + d.time + "</p><p class='content'>" +
-                d.content + "</p></li>");
+            myApp.addNotification({
+                title: '重要通知',
+                message: d.content
+            });
+            msgDB.post(d).then(function (response) {
+                console.log(response);
+            }).catch(function (err) {
+                console.log(err);
+            });;
+            // $$("#msgBoard ul").append("<li><p class='time'>" + d.time + "</p><p class='content'>" +
+            //     d.content + "</p></li>");
             $$("#msg").addClass("newMsg");
         });
 
@@ -406,7 +420,8 @@ var app = {
     }
     , uploadScore: function (doc_id,success) {
         scoreDB.get(doc_id).then(function(doc) {
-            doc.upload=true;
+            console.log(doc);
+            doc.upload="Yes";
             return scoreDB.put(doc);
         }).then(function(response) {
             if (typeof success === "function") {
@@ -449,6 +464,12 @@ myApp.onPageInit('msg', function (page) {
 });
 
 myApp.onPageInit('data', function (page) {
+    function formatDate(d){
+        var myDate= new Date(d);
+        var dateStr=(myDate.getMonth() + 1) + "/" + myDate.getDate() + "/" + myDate.getFullYear();
+        var timeStr=myDate.toTimeString().substr(0,5);
+        return timeStr + "  " +dateStr;
+    }
     var toUpload = [];
     var compid = [];
     var length=0;
@@ -465,21 +486,23 @@ myApp.onPageInit('data', function (page) {
             //ToDo render score items
             if (!doc.upload) {
                 toUpload.push(doc._id);
-                var id = doc.compete.id;
-                if (!compid.includes(id)) {
-                    compid.push(id);
-                    $$(".data-tabbar").append('<a href="#dataTab' + id + '" class="tab-link">' + doc.compete.name + '</a>');
-                    $$(".data-tabs").append('<ul class="tab active" id="dataTab' + id + '"></ul>');
-                }
-                var num = (index + 1).toString();
-                var pad = "00";
-                if (num.length < 3) {
-                    num = pad.substr(0, 3 - num.length) + num;
-                }
-                doc.index = num;
-                var html = compiledTemp(doc);
-                $$("#dataTab" + id).append(html);
             }
+            var id = doc.compete.id;
+            if (!compid.includes(id)) {
+                compid.push(id);
+                $$(".data-tabbar").append('<a href="#dataTab' + id + '" class="tab-link">' + doc.compete.name + '</a>');
+                $$(".data-tabs").append('<ul class="tab active" id="dataTab' + id + '"></ul>');
+            }
+            var num = (index + 1).toString();
+            var pad = "00";
+            if (num.length < 3) {
+                num = pad.substr(0, 3 - num.length) + num;
+            }
+            doc.index = num;
+            doc.date = formatDate(doc._id);
+            var html = compiledTemp(doc);
+            $$("#dataTab" + id).append(html);
+            
         });
         length=toUpload.length;
         $$("#notUploaded").text(length);

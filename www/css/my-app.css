@@ -617,6 +617,10 @@ stopwatch .sm-circle-btn {
     border: none;
 }
 
+.red-color{
+    color:red;
+}
+
 .data-tabs .player-score {
     width: 60%;
     display: inline-block;
