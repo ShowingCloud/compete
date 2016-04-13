@@ -363,21 +363,22 @@ var app = {
     , submitScore: function (drawed) {
         var scoreData = {
             _attachments: {}
-            , scores: {}
+            , score1: {}
+            ,score2:{}
         };
         var remark;
-        //Get scores
+        //Get score1
         $$(".score").each(function (i, obj) {
             var _this = $$(this);
             var value = _this.val();
             var name = _this.attr('name');
             if (value) {
-                scoreData.scores[name] = value;
-                console.log(scoreData.scores[name]);
+                scoreData.score1[name] = value;
+                console.log(scoreData.score1[name]);
             }
         });
 
-        if (Object.keys(scoreData.scores).length < $$(".score").length) {
+        if (Object.keys(scoreData.score1).length < $$(".score").length) {
             myApp.alert("分数未填写完整", "");
             return;
         }
@@ -387,7 +388,7 @@ var app = {
             return;
         }
         //Get remark
-        remark = $$("#remark").val();
+        remark = $$("#remarkInput").val();
         if (remark) {
             scoreData.remark = remark;
         }
@@ -406,6 +407,9 @@ var app = {
         scoreData.judgeid = judgeInfo.userId;
         scoreData.event = temp.event;
         scoreData.compete = temp.compete;
+        scoreData.schedule_name=temp.schedule_name;
+        scoreData.kind=temp.kind;
+        scoreData.th=temp.th;
         scoreData.upload = false;
         scoreDB.put(scoreData).then(function (response) {
             app.uploadScore(response.id,function(){
@@ -419,12 +423,43 @@ var app = {
         });
     }
     , uploadScore: function (doc_id,success) {
-        scoreDB.get(doc_id).then(function(doc) {
-            console.log(doc);
-            doc.upload="Yes";
-            return scoreDB.put(doc);
+        scoreDB.get(doc_id,{attachments: true, binary: true}).then(function(doc) {
+             var toPost = {
+                event_id:doc.event.id,
+                schedule_name:doc.schedule_name,
+                kind:doc.kind,
+                th:doc.th,
+                team1_id:doc.player.code,
+                // team2_id:doc.player.id,
+                score1:doc.score1,
+                score2:doc.score2,
+                note:doc.remark || "",
+                confirm_sign:doc._attachments.signature.data
+            };
+            var form_data = new FormData();
+
+            for ( var key in toPost ) {
+                form_data.append(key, toPost[key]);
+            }
+            
+            $$.ajax({
+                method:"POST",
+                url:"http://dev.domelab.com/api/v1/scores/"+ judgeInfo.authToken,
+                contentType:"multipart/form-data",
+                data:form_data,
+                dataType:"json",
+                success:function(response){
+                    console.log(response);
+                    doc.upload="Yes";
+                    return scoreDB.put(doc); 
+                },
+                error:function(error){
+                    console.log(error);
+                }        
+            });
+            
         }).then(function(response) {
-            if (typeof success === "function") {
+            if(typeof success === "function") {
                 success();
             }
         }).catch(function (err) {
@@ -557,16 +592,20 @@ myApp.onPageInit('stopWatch', function (page) {
 
     });
     var drawed=0;
-
-    $$(".playerInfo").append(temp.playerInfo);
+    
+    if(temp.playerInfo){
+        $$(".playerInfo").append(temp.playerInfo);
+        var mySwiper = myApp.swiper('.swiper-container', {
+            pagination: '.swiper-pagination'
+            , paginationHide: false
+            , paginationClickable: true
+        });
+    }
+    
     $$("#submitScore").on("click", function () {
         app.submitScore(drawed);
     });
-    var mySwiper = myApp.swiper('.swiper-container', {
-        pagination: '.swiper-pagination'
-        , paginationHide: false
-        , paginationClickable: true
-    });
+    
 
     var Stopwatch = function () {
         var startAt = 0;
@@ -669,7 +708,7 @@ myApp.onPageInit('stopWatch', function (page) {
         stop();
         var elements = document.getElementsByClassName("timeScore");
         for (var i = 0; i < elements.length; i++) {
-            if (!elements[i].value) {
+            if (!elements[i].value && $time.innerHTML!=="00:00:00") {
                 elements[i].value = $time.innerHTML;
                 if (i === elements.length - 1) {
                     reset();
