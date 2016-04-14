@@ -46,13 +46,13 @@ if (!HTMLCanvasElement.prototype.toBlob) {
 }
 
 var temp = {
-    compete:{},
-    event:{},
-    schedule_name:"",
-    kind:1,
-    th:1,
-    team1_id:0,
-    team2_id:0
+    compete: {}
+    , event: {}
+    , schedule_name: ""
+    , kind: 1
+    , th: 1
+    , team1_id: 0
+    , team2_id: 0
 };
 
 var judgeInfo = {};
@@ -83,19 +83,19 @@ var app = {
         } else {
             app.login();
         }
-        
-            $$("#asideBar a").on("click",function(e){
-        var href=$$(this).data("href");
-        if(mainView.activePage.name==="stopWatch"){ 
-            if(href !== "stopWatch.html"){
-                        myApp.confirm("是否放弃本次记分？","",function(goto){
-                    mainView.router.loadPage(href);
-                });
+
+        $$("#asideBar a").on("click", function (e) {
+            var href = $$(this).data("href");
+            if (mainView.activePage.name === "stopWatch") {
+                if (href !== "stopWatch.html") {
+                    myApp.confirm("是否放弃本次记分？", "", function (goto) {
+                        mainView.router.loadPage(href);
+                    });
+                }
+            } else {
+                mainView.router.loadPage(href);
             }
-        }else{
-            mainView.router.loadPage(href);
-        }
-    });
+        });
 
     }
     , login: function () {
@@ -186,7 +186,7 @@ var app = {
                             var password = $$("#password").val();
                             if (typeof username === "string" && typeof password === "string") {
                                 //Inject script to inappbrowser to submit the login form
-                                var script = "document.getElementById('user_login').value='" + username + "';" + "document.getElementById('user_password').value='" + password + "';" + "document.getElementById('new_user').submit();"
+                                var script = "document.getElementsByName('user[login]')[0].value='" + username + "';" + "document.getElementsByName('user[password]')[0].value='" + password + "';" + "document.getElementById('new_user').submit();"
                                 ref.executeScript({
                                     code: script
                                 }, function (values) {
@@ -234,21 +234,22 @@ var app = {
                         identifier: playerId
                     }, function (data) {
                         console.log(data);
-                        if (data.user.length === 0) {
-                            myApp.alert("无效的参赛编号", "");
+                        if (!data.result[0]) {
+                            if (typeof data.result[1] === "string")
+                                myApp.alert(data.result[1], "");
                             return;
                         } else {
-                            data.team = "WHT";
+                            var team = data.result[1][0];
                             temp.player = {
-                                name: data.team
+                                name: team.team_name
                                 , code: $$("#playerId").val()
                             };
-                            var player = data;
+                            var player = team;
                             var template, compiledTemp;
                             player.eventName = temp.compete.name + "-" + temp.event.name;
                             player.playCode = $$("#playerId").val();
                             console.log(player);
-                            if (data.user.length === 1) {
+                            if (team.user.length === 1) {
                                 template = $$('#playerTemp').html();
                             } else {
                                 template = $$('#teamTemp').html();
@@ -302,8 +303,8 @@ var app = {
         MessageBus.subscribe(channel, function (d) {
             console.log(d);
             myApp.addNotification({
-                title: '重要通知',
-                message: d.content
+                title: '重要通知'
+                , message: d.content
             });
             msgDB.post(d).then(function (response) {
                 console.log(response);
@@ -341,10 +342,10 @@ var app = {
         var videoSuccess = function (mediaFiles) {
 
             var path = mediaFiles[0].fullPath;
-            var type= mediaFiles[0].type;
+            var type = mediaFiles[0].type;
             myApp.alert("This is a " + type + " file,path:" + path);
             var v = "<video controls='controls'>";
-            v += "<source src='" + path + "' type='"+type+"'>";
+            v += "<source src='" + path + "' type='" + type + "'>";
             v += "</video>";
             $$("video").append(v);
         };
@@ -364,7 +365,7 @@ var app = {
         var scoreData = {
             _attachments: {}
             , score1: {}
-            ,score2:{}
+            , score2: {}
         };
         var remark;
         //Get score1
@@ -407,12 +408,12 @@ var app = {
         scoreData.judgeid = judgeInfo.userId;
         scoreData.event = temp.event;
         scoreData.compete = temp.compete;
-        scoreData.schedule_name=temp.schedule_name;
-        scoreData.kind=temp.kind;
-        scoreData.th=temp.th;
+        scoreData.schedule_name = temp.schedule_name;
+        scoreData.kind = temp.kind;
+        scoreData.th = temp.th;
         scoreData.upload = false;
         scoreDB.put(scoreData).then(function (response) {
-            app.uploadScore(response.id,function(){
+            app.uploadScore(response.id, function () {
                 myApp.hidePreloader();
                 myApp.alert("成绩已上传", "", function () {
                     mainView.router.back();
@@ -422,47 +423,53 @@ var app = {
             console.log(err);
         });
     }
-    , uploadScore: function (doc_id,success) {
-        scoreDB.get(doc_id,{attachments: true, binary: true}).then(function(doc) {
-             var toPost = {
-                event_id:doc.event.id,
-                schedule_name:doc.schedule_name,
-                kind:doc.kind,
-                th:doc.th,
-                team1_id:doc.player.code,
-                // team2_id:doc.player.id,
-                score1:doc.score1,
-                score2:doc.score2,
-                note:doc.remark,
-                confirm_sign:doc._attachments.signature.data
+    , uploadScore: function (doc_id, success) {
+        scoreDB.get(doc_id, {
+            attachments: true
+            , binary: true
+        }).then(function (doc) {
+            var toPost = {
+                event_id: doc.event.id
+                , schedule_name: "chusai"
+                , kind: doc.kind
+                , th: doc.th
+                , team1_id: doc.player.code, // team2_id:doc.player.id,
+                score1: doc.score1
+                , note: doc.remark || ""
+                , confirm_sign: doc._attachments.signature.data
             };
             console.log(toPost);
             var form_data = new FormData();
 
-            for ( var key in toPost ) {
-                form_data.append(key, toPost[key]);
+            for (var key in toPost) {
+                if (key === "score1") {
+                    for (var key1 in toPost.score1) {
+                        form_data.append("score1" + "[" + key1 + "]", toPost[key][key1]);
+                    }
+                } else {
+                    form_data.append(key, toPost[key]);
+                }
+
             }
-            
-            console.log(form_data);
-            
+
             $$.ajax({
-                method:"POST",
-                url:"http://dev.domelab.com/api/v1/scores/"+ judgeInfo.authToken,
-                contentType:"multipart/form-data",
-                data:form_data,
-                dataType:"json",
-                success:function(response){
+                method: "POST"
+                , url: "http://dev.domelab.com/api/v1/scores/" + judgeInfo.authToken + "/score"
+                , contentType: "multipart/form-data"
+                , data: form_data
+                , dataType: "json"
+                , success: function (response) {
                     console.log(response);
-                    doc.upload="Yes";
-                    return scoreDB.put(doc); 
-                },
-                error:function(error){
+                    doc.upload = "Yes";
+                    return scoreDB.put(doc);
+                }
+                , error: function (error) {
                     console.log(error);
-                }        
+                }
             });
-            
-        }).then(function(response) {
-            if(typeof success === "function") {
+
+        }).then(function (response) {
+            if (typeof success === "function") {
                 success();
             }
         }).catch(function (err) {
@@ -502,15 +509,15 @@ myApp.onPageInit('msg', function (page) {
 });
 
 myApp.onPageInit('data', function (page) {
-    function formatDate(d){
-        var myDate= new Date(d);
-        var dateStr=(myDate.getMonth() + 1) + "/" + myDate.getDate() + "/" + myDate.getFullYear();
-        var timeStr=myDate.toTimeString().substr(0,5);
-        return timeStr + "  " +dateStr;
+    function formatDate(d) {
+        var myDate = new Date(d);
+        var dateStr = (myDate.getMonth() + 1) + "/" + myDate.getDate() + "/" + myDate.getFullYear();
+        var timeStr = myDate.toTimeString().substr(0, 5);
+        return timeStr + "  " + dateStr;
     }
     var toUpload = [];
     var compid = [];
-    var length=0;
+    var length = 0;
     scoreDB.allDocs({
         include_docs: true
         , attachments: false
@@ -540,29 +547,30 @@ myApp.onPageInit('data', function (page) {
             doc.date = formatDate(doc._id);
             var html = compiledTemp(doc);
             $$("#dataTab" + id).append(html);
-            
+
         });
-        length=toUpload.length;
+        length = toUpload.length;
         $$("#notUploaded").text(length);
-        $$(".upload-all").on("click",function(){
-            if(length){
+        $$(".upload-all").on("click", function () {
+            if (length) {
                 console.log(toUpload);
-                var newLength=length;
-                function success(){
-                    if(newLength>0){
-                        if(newLength===1){
+                var newLength = length;
+
+                function success() {
+                    if (newLength > 0) {
+                        if (newLength === 1) {
                             myApp.hidePreloader();
                             mainView.router.loadPage('Uploaded.html');
-                        }else{
-                            newLength--; 
+                        } else {
+                            newLength--;
                         }
-                    } 
+                    }
                 }
                 myApp.showPreloader("正在上传");
-                toUpload.forEach(function(i){
-                    app.uploadScore(i,success);
+                toUpload.forEach(function (i) {
+                    app.uploadScore(i, success);
                 });
-                
+
             }
         });
         console.log(toUpload);
@@ -585,7 +593,7 @@ myApp.onPageInit('stopWatch', function (page) {
 
     $$("#takeVideo").on("click", function () {
         if ($$("#video video").length) {
-            myApp.confirm("是否重新拍摄视频，弃用之前的视频",function () {
+            myApp.confirm("是否重新拍摄视频，弃用之前的视频", function () {
                 $$("#video").html("");
                 app.takeVideo();
             });
@@ -594,17 +602,21 @@ myApp.onPageInit('stopWatch', function (page) {
         }
 
     });
-    var drawed=0;
+    var drawed = 0;
 
-    $$(".playerInfo").append(temp.playerInfo);
+    if (temp.playerInfo) {
+        $$(".playerInfo").append(temp.playerInfo);
+        var mySwiper = myApp.swiper('.swiper-container', {
+            pagination: '.swiper-pagination'
+            , paginationHide: false
+            , paginationClickable: true
+        });
+    }
+
     $$("#submitScore").on("click", function () {
         app.submitScore(drawed);
     });
-    var mySwiper = myApp.swiper('.swiper-container', {
-        pagination: '.swiper-pagination'
-        , paginationHide: false
-        , paginationClickable: true
-    });
+
 
     var Stopwatch = function () {
         var startAt = 0;
@@ -707,7 +719,7 @@ myApp.onPageInit('stopWatch', function (page) {
         stop();
         var elements = document.getElementsByClassName("timeScore");
         for (var i = 0; i < elements.length; i++) {
-            if (!elements[i].value) {
+            if (!elements[i].value && $time.innerHTML !== "00:00:00") {
                 elements[i].value = $time.innerHTML;
                 if (i === elements.length - 1) {
                     reset();

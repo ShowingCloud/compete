@@ -650,10 +650,10 @@ stopwatch .sm-circle-btn {
 }
 
 /*uploaded*/
-.uploaded{
+.unploadedWrapper{
     margin:10% auto;
 }
 
-.uploaded img{
+.unploadedWrapper img{
     width: 80%;
 }
