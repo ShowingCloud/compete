@@ -48,7 +48,7 @@ if (!HTMLCanvasElement.prototype.toBlob) {
 var temp = {
     compete: {}
     , event: {}
-    , schedule_name: ""
+    , schedule_name: "初赛"
     , kind: 1
     , th: 1
     , team1_id: 0
@@ -66,6 +66,7 @@ var app = {
             if (xhr.status === 401) {
                 myApp.alert("登陆失效，请重新登陆", "");
                 localStorage.removeItem("judgeInfo");
+                mainView.router.loadPage("index.html");
                 MessageBus.stop();
                 $$("#judge-info").hide();
                 $$("#login-container").show();
@@ -96,6 +97,8 @@ var app = {
                 mainView.router.loadPage(href);
             }
         });
+
+
 
     }
     , login: function () {
@@ -156,7 +159,7 @@ var app = {
                             }, function (d) {
                                 console.log(d);
                                 if ((d instanceof Object)) {
-                                    var judgeInfo = {
+                                    judgeInfo = {
                                         userId: d.id
                                         , email: d.info.email
                                         , nickname: d.extra.nickname
@@ -180,7 +183,7 @@ var app = {
                 if (e.url === "http://dev.domelab.com/account/sign_in") {
                     if (!count) {
                         count++;
-                        myApp.alert("请登录", "");
+                        window.plugins.toast.showShortCenter("请登录");
                         $$("#login-btn").on('click', function () {
                             var username = $$("#username").val();
                             var password = $$("#password").val();
@@ -212,61 +215,8 @@ var app = {
     , onLogin: function (token) {
         //get realtime message
         app.getMessage(token);
-        //logout
-        $$("#logout-btn").on("click", function (token) {
-            var channel = "/channel/" + token;
-            localStorage.removeItem("judgeInfo");
-            MessageBus.unsubscribe(channel, function () {
-                console("unsubscribe");
-            });
-            MessageBus.stop();
-            $$("#judge-info").hide();
-            $$("#login-container").show();
-            app.login();
-        });
 
-        myApp.onPageInit('player', function (page) {
-            $$("#getPlyaer").off("click").on("click", function () {
-                var playerId = $$("#playerId").val();
-                if (playerId) {
-                    var url = "http://dev.domelab.com/api/v1/users/" + token + "/team_players";
-                    $$.getJSON(url, {
-                        identifier: playerId
-                    }, function (data) {
-                        console.log(data);
-                        if (!data.result[0]) {
-                            if (typeof data.result[1] === "string")
-                                myApp.alert(data.result[1], "");
-                            return;
-                        } else {
-                            var team = data.result[1][0];
-                            temp.player = {
-                                name: team.team_name
-                                , code: $$("#playerId").val()
-                            };
-                            var player = team;
-                            var template, compiledTemp;
-                            player.eventName = temp.compete.name + "-" + temp.event.name;
-                            player.playCode = $$("#playerId").val();
-                            console.log(player);
-                            if (team.user.length === 1) {
-                                template = $$('#playerTemp').html();
-                            } else {
-                                template = $$('#teamTemp').html();
-                            }
 
-                            compiledTemp = Template7.compile(template);
-
-                            temp.playerInfo = compiledTemp(player);
-                            console.log(temp);
-                            mainView.router.loadPage('stopWatch.html');
-                        }
-                    });
-                } else {
-                    myApp.alert("请输入选手编号", "");
-                }
-            });
-        });
     }
     , showJudge: function (judge) {
         console.log(judge);
@@ -323,7 +273,7 @@ var app = {
             for (i = 0, len = mediaFiles.length; i < len; i += 1) {
                 path = mediaFiles[i].fullPath;
                 console.log(path);
-                $$("#photos").append('<img scr="' + path + '">');
+                $$("#photos").append('<img src="' + path + '">');
             }
         };
 
@@ -343,11 +293,12 @@ var app = {
 
             var path = mediaFiles[0].fullPath;
             var type = mediaFiles[0].type;
-            myApp.alert("This is a " + type + " file,path:" + path);
+            myApp.alert("This is a " + type + " file,path:" + path, '');
             var v = "<video controls='controls'>";
             v += "<source src='" + path + "' type='" + type + "'>";
             v += "</video>";
-            $$("video").append(v);
+            console.log(v);
+            $$("#video").append(v);
         };
 
         // capture error callback
@@ -430,7 +381,7 @@ var app = {
         }).then(function (doc) {
             var toPost = {
                 event_id: doc.event.id
-                , schedule_name: "chusai"
+                , schedule_name: doc.schedule_name
                 , kind: doc.kind
                 , th: doc.th
                 , team1_id: doc.player.code, // team2_id:doc.player.id,
@@ -478,7 +429,65 @@ var app = {
     }
 };
 
+
+//logout
+$$(document).on("click", "#logout-btn", function () {
+    var channel = "/channel/" + judgeInfo.authToken;
+    localStorage.removeItem("judgeInfo");
+    MessageBus.unsubscribe(channel, function () {
+        console("unsubscribe");
+    });
+    MessageBus.stop();
+    $$("#judge-info").hide();
+    $$("#login-container").show();
+    app.login();
+});
+
+myApp.onPageInit('player', function (page) {
+    $$("#getPlyaer").off("click").on("click", function () {
+        var playerId = $$("#playerId").val();
+        if (playerId) {
+            var url = "http://dev.domelab.com/api/v1/users/" + judgeInfo.authToken + "/team_players";
+            $$.getJSON(url, {
+                identifier: playerId
+            }, function (data) {
+                console.log(data);
+                if (!data.result[0]) {
+                    if (typeof data.result[1] === "string")
+                        myApp.alert(data.result[1], "");
+                    return;
+                } else {
+                    var team = data.result[1][0];
+                    temp.player = {
+                        name: team.team_name
+                        , code: $$("#playerId").val()
+                    };
+                    var player = team;
+                    var template, compiledTemp;
+                    player.eventName = temp.compete.name + "-" + temp.event.name;
+                    player.playCode = $$("#playerId").val();
+                    console.log(player);
+                    if (team.user.length === 1) {
+                        template = $$('#playerTemp').html();
+                    } else {
+                        template = $$('#teamTemp').html();
+                    }
+
+                    compiledTemp = Template7.compile(template);
+
+                    temp.playerInfo = compiledTemp(player);
+                    console.log(temp);
+                    mainView.router.loadPage('stopWatch.html');
+                }
+            });
+        } else {
+            myApp.alert("请输入选手编号", "");
+        }
+    });
+});
+
 myApp.onPageBeforeInit('home', function (page) {
+
     app.showJudge(judgeInfo);
     app.getProcess();
     console.log(page);
@@ -506,6 +515,14 @@ myApp.onPageInit('select', function (page) {
 
 myApp.onPageInit('msg', function (page) {
     $$("#msg").removeClass("newMsg");
+    msgDB.allDocs({
+        include_docs: true
+        , attachments: false
+    }).then(function (result) {
+        console.log(result.rows);
+    }).catch(function (err) {
+        console.log(err);
+    });
 });
 
 myApp.onPageInit('data', function (page) {
@@ -583,17 +600,17 @@ myApp.onPageInit('data', function (page) {
 myApp.onPageInit('stopWatch', function (page) {
 
     $$("#takePhoto").on("click", function () {
-        var quantity = $$("#photo img").length;
+        var quantity = $$("#photos img").length;
         if (quantity === 3) {
             myApp.alert("最多拍三张照片", "");
         } else {
-            app.takePhoto(3 - quantity);
+            app.takePhoto(1);
         }
     });
 
     $$("#takeVideo").on("click", function () {
         if ($$("#video video").length) {
-            myApp.confirm("是否重新拍摄视频，弃用之前的视频", function () {
+            myApp.confirm("是否重新拍摄视频？", function () {
                 $$("#video").html("");
                 app.takeVideo();
             });

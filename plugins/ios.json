@@ -22,9 +22,6 @@
         "cordova-plugin-vibration": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "de.appplant.cordova.plugin.local-notification": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
         "cordova-sqlite-storage": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
@@ -48,15 +45,21 @@
         },
         "cordova-plugin-media-capture": {
             "PACKAGE_NAME": "cn.robodou.compete"
-        }
-    },
-    "dependent_plugins": {
-        "cordova-plugin-app-event": {
+        },
+        "phonegap-plugin-barcodescanner": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-device": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
+        "cordova-plugin-x-toast": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-globalization": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        }
+    },
+    "dependent_plugins": {
         "cordova-plugin-webserver": {
             "PACKAGE_NAME": "cn.robodou.compete"
         }
