@@ -98,6 +98,8 @@ var app = {
             }
         });
 
+
+
     }
     , login: function () {
         $$("#login-btn").off('click');
@@ -213,61 +215,8 @@ var app = {
     , onLogin: function (token) {
         //get realtime message
         app.getMessage(token);
-        //logout
-        $$("#logout-btn").on("click", function (token) {
-            var channel = "/channel/" + token;
-            localStorage.removeItem("judgeInfo");
-            MessageBus.unsubscribe(channel, function () {
-                console("unsubscribe");
-            });
-            MessageBus.stop();
-            $$("#judge-info").hide();
-            $$("#login-container").show();
-            app.login();
-        });
 
-        myApp.onPageInit('player', function (page) {
-            $$("#getPlyaer").off("click").on("click", function () {
-                var playerId = $$("#playerId").val();
-                if (playerId) {
-                    var url = "http://dev.domelab.com/api/v1/users/" + token + "/team_players";
-                    $$.getJSON(url, {
-                        identifier: playerId
-                    }, function (data) {
-                        console.log(data);
-                        if (!data.result[0]) {
-                            if (typeof data.result[1] === "string")
-                                myApp.alert(data.result[1], "");
-                            return;
-                        } else {
-                            var team = data.result[1][0];
-                            temp.player = {
-                                name: team.team_name
-                                , code: $$("#playerId").val()
-                            };
-                            var player = team;
-                            var template, compiledTemp;
-                            player.eventName = temp.compete.name + "-" + temp.event.name;
-                            player.playCode = $$("#playerId").val();
-                            console.log(player);
-                            if (team.user.length === 1) {
-                                template = $$('#playerTemp').html();
-                            } else {
-                                template = $$('#teamTemp').html();
-                            }
 
-                            compiledTemp = Template7.compile(template);
-
-                            temp.playerInfo = compiledTemp(player);
-                            console.log(temp);
-                            mainView.router.loadPage('stopWatch.html');
-                        }
-                    });
-                } else {
-                    myApp.alert("请输入选手编号", "");
-                }
-            });
-        });
     }
     , showJudge: function (judge) {
         console.log(judge);
@@ -480,15 +429,67 @@ var app = {
     }
 };
 
-myApp.onPageBeforeInit('home', function (page) {
-    app.showJudge(judgeInfo);
-    app.getProcess();
-    console.log(page);
+
+//logout
+$$(document).on("click", "#logout-btn", function () {
+    var channel = "/channel/" + judgeInfo.authToken;
+    localStorage.removeItem("judgeInfo");
+    MessageBus.unsubscribe(channel, function () {
+        console("unsubscribe");
+    });
+    MessageBus.stop();
+    $$("#judge-info").hide();
+    $$("#login-container").show();
+    app.login();
 });
 
-myApp.onPageBeforeRemove('home', function (page) {
-    console.log("remove home");
+myApp.onPageInit('player', function (page) {
+    $$("#getPlyaer").off("click").on("click", function () {
+        var playerId = $$("#playerId").val();
+        if (playerId) {
+            var url = "http://dev.domelab.com/api/v1/users/" + judgeInfo.authToken + "/team_players";
+            $$.getJSON(url, {
+                identifier: playerId
+            }, function (data) {
+                console.log(data);
+                if (!data.result[0]) {
+                    if (typeof data.result[1] === "string")
+                        myApp.alert(data.result[1], "");
+                    return;
+                } else {
+                    var team = data.result[1][0];
+                    temp.player = {
+                        name: team.team_name
+                        , code: $$("#playerId").val()
+                    };
+                    var player = team;
+                    var template, compiledTemp;
+                    player.eventName = temp.compete.name + "-" + temp.event.name;
+                    player.playCode = $$("#playerId").val();
+                    console.log(player);
+                    if (team.user.length === 1) {
+                        template = $$('#playerTemp').html();
+                    } else {
+                        template = $$('#teamTemp').html();
+                    }
+
+                    compiledTemp = Template7.compile(template);
+
+                    temp.playerInfo = compiledTemp(player);
+                    console.log(temp);
+                    mainView.router.loadPage('stopWatch.html');
+                }
+            });
+        } else {
+            myApp.alert("请输入选手编号", "");
+        }
+    });
 });
+
+myApp.onPageBeforeInit('home', function (page) {
+    app.getProcess();
+});
+
 
 myApp.onPageInit('select', function (page) {
     $$("#eventsBoard .tab div").on("click", function () {

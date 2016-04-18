@@ -66,6 +66,7 @@ var app = {
             if (xhr.status === 401) {
                 myApp.alert("登陆失效，请重新登陆", "");
                 localStorage.removeItem("judgeInfo");
+                judgeInfo = {};
                 mainView.router.loadPage("index.html");
                 MessageBus.stop();
                 $$("#judge-info").hide();
@@ -97,9 +98,6 @@ var app = {
                 mainView.router.loadPage(href);
             }
         });
-
-
-
     }
     , login: function () {
         $$("#login-btn").off('click');
@@ -240,6 +238,33 @@ var app = {
             $$("#judgeEvent").val(response.events.toString());
         });
     }
+    ,getEvents:function(comp_id){
+        $$.getJSON("http://192.168.1.131:3000/api/v1/competitions/events",{"comp_id":comp_id},function(response){
+            var schoolGroups={
+                1:"小",
+                2:"中",
+                3:"初",
+                4:"高"
+            };
+            response.events.forEach(function(g1,index1){
+                
+                g1.events.forEach(function(g2,index2){
+                    var groupId="group"+g2.id+"-"+g2.group;
+                    var element = $$("#"+groupId);
+                    
+                    $$("#groups").append('<li><a href="#'+groupId+'" class="tab-link">'+g2.name+'('+schoolGroups[g2.group]+')</a></li>');
+                    $$("#eventsBoard .tabs").append('<div class="tab" id="'+groupId+'"><div>');
+                    if(g2.z_e){
+                        g2.z_e.forEach(function(ev) {
+                            console.log(element);
+                          console.log('<div data-id="'+ev.id+'">'+ev.name+'</div>');
+                        });
+                    }
+                    
+                });
+            });
+        });
+    }
     , getMessage: function (token) {
         //Get unread counts
         $$.getJSON("http://dev.domelab.com/api/v1/users/" + token + "/notifications/unread ", function (unread) {
@@ -293,11 +318,9 @@ var app = {
 
             var path = mediaFiles[0].fullPath;
             var type = mediaFiles[0].type;
-            myApp.alert("This is a " + type + " file,path:" + path, '');
             var v = "<video controls='controls'>";
             v += "<source src='" + path + "' type='" + type + "'>";
             v += "</video>";
-            console.log(v);
             $$("#video").append(v);
         };
 
@@ -432,6 +455,7 @@ var app = {
 
 //logout
 $$(document).on("click", "#logout-btn", function () {
+    judgeInfo = {};
     var channel = "/channel/" + judgeInfo.authToken;
     localStorage.removeItem("judgeInfo");
     MessageBus.unsubscribe(channel, function () {
@@ -487,15 +511,12 @@ myApp.onPageInit('player', function (page) {
 });
 
 myApp.onPageBeforeInit('home', function (page) {
-
-    app.showJudge(judgeInfo);
+    if (judgeInfo.hasOwnProperty("userId")) {
+        app.showJudge(judgeInfo);
+    }
     app.getProcess();
-    console.log(page);
 });
 
-myApp.onPageBeforeRemove('home', function (page) {
-    console.log("remove home");
-});
 
 myApp.onPageInit('select', function (page) {
     $$("#eventsBoard .tab div").on("click", function () {
