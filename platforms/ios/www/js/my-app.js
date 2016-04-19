@@ -82,6 +82,7 @@ var app = {
             judgeInfo = JSON.parse(tempStr);
             app.showJudge(judgeInfo);
             app.onLogin(judgeInfo.authToken);
+            
         } else {
             app.login();
         }
@@ -212,9 +213,8 @@ var app = {
     }
     , onLogin: function (token) {
         //get realtime message
-        app.getMessage(token);
-
-
+        app.subscribeMsg(token);
+        app.getResponse("7cecbc1cbc2942f38d8c46e48d41cff9");
     }
     , showJudge: function (judge) {
         console.log(judge);
@@ -232,14 +232,19 @@ var app = {
             $$("#homePage .page-content").append(html);
         });
     }
-    , getResponse: function () {
-        $$.getJSON("./data/response.json", function (response) {
-            $$("#judgeComptition").val(response.compition);
-            $$("#judgeEvent").val(response.events.toString());
+    , getResponse: function (token) {
+        $$.getJSON("http://192.168.1.113:3000/api/v1/users/"+token+"/user_for_event",function (response) {
+            $$("#judgeComptition").text(response.events[0].comp_name);
+            var events=[];
+            response.events.forEach(function(e){
+                events.push(e.name);
+            });
+            $$("#judgeEvent").text(events.toString());
         });
     }
     ,getEvents:function(comp_id){
-        $$.getJSON("http://192.168.1.131:3000/api/v1/competitions/events",{"comp_id":comp_id},function(response){
+        $$.getJSON("http://192.168.1.113:3000/api/v1/competitions/events",{"comp_id":comp_id},function(response){
+            console.log(response);
             var schoolGroups={
                 1:"小",
                 2:"中",
@@ -247,25 +252,91 @@ var app = {
                 4:"高"
             };
             response.events.forEach(function(g1,index1){
-                
                 g1.events.forEach(function(g2,index2){
                     var groupId="group"+g2.id+"-"+g2.group;
-                    var element = $$("#"+groupId);
-                    
-                    $$("#groups").append('<li><a href="#'+groupId+'" class="tab-link">'+g2.name+'('+schoolGroups[g2.group]+')</a></li>');
-                    $$("#eventsBoard .tabs").append('<div class="tab" id="'+groupId+'"><div>');
+                    if(index1===0&&index2===0){
+                        $$("#groups").append('<li><a href="#'+groupId+'" class="tab-link active">'+g2.name+'('+schoolGroups[g2.group]+')</a></li>');
+                    }else{
+                        $$("#groups").append('<li><a href="#'+groupId+'" class="tab-link">'+g2.name+'('+schoolGroups[g2.group]+')</a></li>');
+                    }
+                    $$("#eventsBoard .tabs").append('<div class="tab" id="'+groupId+'"></div>');
                     if(g2.z_e){
                         g2.z_e.forEach(function(ev) {
-                            console.log(element);
-                          console.log('<div data-id="'+ev.id+'">'+ev.name+'</div>');
+                            $$('<div data-id="'+ev.id+'">'+ev.name+'</div>').appendTo("#"+groupId).on("click", function () {
+                                    var compete = {
+                                        id: $$(".compete-select .active").data("id")
+                                        , name: $$(".compete-select .active").text()
+                                    };
+                                    var event = {
+                                        id: $$(this).data("id")
+                                        , name: $$(this).text()
+                                        ,group:g2.group
+                                    }
+                                    temp.compete = compete;
+                                    temp.event = event;
+                                    mainView.router.loadPage('player.html');
+                                });
                         });
+                        if(index1===0&&index2===0){
+                            $$(("#"+groupId)).addClass("active");
+                        }
                     }
-                    
                 });
             });
         });
     }
-    , getMessage: function (token) {
+    ,getScoreAttr:function(event_id){
+        $$.getJSON("http://192.168.1.113:3000/api/v1/events/score_attributes",{"event_id":event_id},function(response){
+            console.log(response);
+        });
+    }
+    ,getTeams:function(ed,group,schedule){
+        var data={
+            "ed":ed,
+            "group":group
+        };
+        if(typeof schedule === "string"){
+            data.schedule=schedule;
+        }
+        
+        $$.getJSON("http://192.168.1.113:3000/api/v1/competitions/event/teams",data,function(response){
+            console.log(response.teams);
+            if(response.teams[0]){
+                var teams=response.teams[1];
+                var allTeamId=[];
+                    teams.forEach(function(t){
+                        allTeamId.push(t.id);
+                        var mobile=t.mobile || "无";
+                        var school = t.school;
+                        var teacher=t.teacher || "无";
+                        var teacher_mobile=t.teacher_mobile || "无";
+                        var status=t.status;
+                        var statusStr,trClass;
+                        if(status===0){
+                            statusStr="未完赛";
+                            trClass="unfinished";
+                        }else if(status===1){
+                            statusStr=" 已完赛";
+                            trClass="finished"
+                        }
+                        $("#playerTable tbody").append("<tr class='"+trClass+"'><td>"+t.name+"</td><td>"+school+"</td><td>"+ mobile +"</td><td>"+ teacher +"<br>"+ teacher_mobile+"</td><td>"+ statusStr+"</td></tr>");
+                    });
+            }
+            
+        });
+        
+    }
+    ,getMsg:function(token,page,per){
+        $$.getJSON("http://192.168.1.113:3000/api/v1/users/" + token + "/notifications/", {"page":page,"per_page":per},function (response) {
+            console.log(response);
+            response.notifications.forEach(function(n){
+                var d=new Date(n.created_at);
+                var time = d.toLocaleString().replace("GMT+8","");
+                $$("#msgBoard ul").append("<li><p class='time'>"+time+"</p><p class='content'>"+n.content+"</p></li>");
+            });
+        });
+    }
+    , subscribeMsg: function (token) {
         //Get unread counts
         $$.getJSON("http://dev.domelab.com/api/v1/users/" + token + "/notifications/unread ", function (unread) {
             console.log(unread);
@@ -411,6 +482,7 @@ var app = {
                 score1: doc.score1
                 , note: doc.remark || ""
                 , confirm_sign: doc._attachments.signature.data
+                ,device_no:device.uuid
             };
             console.log(toPost);
             var form_data = new FormData();
@@ -468,6 +540,20 @@ $$(document).on("click", "#logout-btn", function () {
 });
 
 myApp.onPageInit('player', function (page) {
+    app.getTeams(temp.event.id,temp.event.group);
+    $$("#playerTable select").change(function(){
+        var filter=$(this).val();
+        if(filter==="unfinished"){
+            $$("#playerTable .finished").css("display","none");
+            $$("#playerTable .unfinished").css("display",null);
+        }else if (filter==="finished"){
+            $$("#playerTable .unfinished").css("display","none");
+            $$("#playerTable .finished").css("display",null);
+        }else{
+            $$("#playerTable tr").css("display",null);
+        }
+    });
+    
     $$("#getPlyaer").off("click").on("click", function () {
         var playerId = $$("#playerId").val();
         if (playerId) {
@@ -513,25 +599,28 @@ myApp.onPageInit('player', function (page) {
 myApp.onPageBeforeInit('home', function (page) {
     if (judgeInfo.hasOwnProperty("userId")) {
         app.showJudge(judgeInfo);
+        app.getResponse("7cecbc1cbc2942f38d8c46e48d41cff9");
+    }else{
+        app.login();
     }
     app.getProcess();
 });
 
-
 myApp.onPageInit('select', function (page) {
-    $$("#eventsBoard .tab div").on("click", function () {
-        var compete = {
-            id: $$(".compete-select .active").data("id")
-            , name: $$(".compete-select .active").text()
-        };
-        var event = {
-            id: $$(this).data("id")
-            , name: $$(this).text()
-        }
-        temp.compete = compete;
-        temp.event = event;
-        mainView.router.loadPage('player.html');
-    });
+    app.getEvents(1);
+    // $$("#eventsBoard .tab div").on("click", function () {
+    //     var compete = {
+    //         id: $$(".compete-select .active").data("id")
+    //         , name: $$(".compete-select .active").text()
+    //     };
+    //     var event = {
+    //         id: $$(this).data("id")
+    //         , name: $$(this).text()
+    //     }
+    //     temp.compete = compete;
+    //     temp.event = event;
+    //     mainView.router.loadPage('player.html');
+    // });
 });
 
 myApp.onPageInit('msg', function (page) {
@@ -544,6 +633,8 @@ myApp.onPageInit('msg', function (page) {
     }).catch(function (err) {
         console.log(err);
     });
+    
+    app.getMsg("7cecbc1cbc2942f38d8c46e48d41cff9",1,20)
 });
 
 myApp.onPageInit('data', function (page) {
@@ -794,6 +885,7 @@ myApp.onPageInit('stopWatch', function (page) {
     canvas.addEventListener("touchmove", touchMoveHandler, false);
     canvas.addEventListener("touchend", touchEndHandler, false);
     document.getElementById("clearCanvas").onclick = function () {
+        drawed=0;
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
         clickX = [];
         clickY = [];

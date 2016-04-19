@@ -1,4 +1,14 @@
 /*golble*/
+::-webkit-scrollbar {
+   -webkit-appearance: none;
+   width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+   border-radius: 4px;
+   background-color: rgba(0,0,0,.5);
+   -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
 
 body {
     color: #f7f7f7;
@@ -484,6 +494,10 @@ aside-linker {
 
 .record-page{
     overflow: hidden;
+}
+
+.space{
+    height:30px;
 }
 
 #stopWatch {
