@@ -174,10 +174,19 @@ aside-linker {
 
 .process table {
     width: 90%;
+    color: #e4f1ff;
+    font-size: 1.2em;
 }
 
 
 /*judge page*/
+
+.process-header{
+    font-family: 'Adobe Heiti Std';
+    color: #e4f1ff;
+    font-size: 1.2em;
+    margin:1em 2.3%;
+}
 
 .competeTab1 {
     margin: 20px 2.3%;
@@ -208,7 +217,7 @@ aside-linker {
     -webkit-background-size: cover;
     background-size: cover;
     padding: 20px;
-    height: 30%;
+    height: 35%;
     width: 80%;
     margin: 0 auto;
     font-size: 1.2em;
@@ -228,6 +237,7 @@ aside-linker {
 
 #login-container {
     text-align: center;
+    color: #f7f7f7;
 }
 
 #login-container label {

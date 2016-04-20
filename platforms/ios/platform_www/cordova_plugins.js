@@ -412,6 +412,46 @@ module.exports = [
         "clobbers": [
             "navigator.globalization"
         ]
+    },
+    {
+        "file": "plugins/cocoon-plugin-common/www/cocoon.js",
+        "id": "cocoon-plugin-common.Cocoon",
+        "pluginId": "cocoon-plugin-common",
+        "runs": true
+    },
+    {
+        "file": "plugins/cocoon-plugin-notifications-common/www/cocoon_notifications.js",
+        "id": "cocoon-plugin-notifications-common.Notifications",
+        "pluginId": "cocoon-plugin-notifications-common",
+        "runs": true
+    },
+    {
+        "file": "plugins/cocoon-plugin-notifications-ios-local/www/cocoon_notifications_local.js",
+        "id": "cocoon-plugin-notifications-ios-local.Notifications",
+        "pluginId": "cocoon-plugin-notifications-ios-local",
+        "runs": true
+    },
+    {
+        "file": "plugins/cordova-plugin-ble-central/www/ble.js",
+        "id": "cordova-plugin-ble-central.ble",
+        "pluginId": "cordova-plugin-ble-central",
+        "clobbers": [
+            "ble"
+        ]
+    },
+    {
+        "file": "plugins/es6-promise-plugin/www/promise.js",
+        "id": "es6-promise-plugin.Promise",
+        "pluginId": "es6-promise-plugin",
+        "runs": true
+    },
+    {
+        "file": "plugins/nl-afas-cordova-plugin-securelocalstorage/www/plugins.SecureLocalStorage.js",
+        "id": "nl-afas-cordova-plugin-securelocalstorage.SecureLocalStorage",
+        "pluginId": "nl-afas-cordova-plugin-securelocalstorage",
+        "clobbers": [
+            "cordova.plugins.SecureLocalStorage"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -434,7 +474,14 @@ module.exports.metadata =
     "phonegap-plugin-barcodescanner": "4.1.0",
     "cordova-plugin-device": "1.1.1",
     "cordova-plugin-x-toast": "2.5.0",
-    "cordova-plugin-globalization": "1.0.3"
+    "cordova-plugin-globalization": "1.0.3",
+    "cocoon-plugin-common": "1.0.2",
+    "cocoon-plugin-notifications-common": "1.0.6",
+    "cocoon-plugin-notifications-ios-local": "1.0.2",
+    "cordova-plugin-compat": "1.0.0",
+    "cordova-plugin-ble-central": "1.0.6",
+    "es6-promise-plugin": "3.0.2",
+    "nl-afas-cordova-plugin-securelocalstorage": "0.1.8"
 }
 // BOTTOM OF METADATA
 });

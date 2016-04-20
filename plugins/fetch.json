@@ -142,5 +142,62 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "cocoon-plugin-notifications-ios-local": {
+        "source": {
+            "type": "registry",
+            "id": "cocoon-plugin-notifications-ios-local"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cocoon-plugin-notifications-common": {
+        "source": {
+            "type": "registry",
+            "id": "cocoon-plugin-notifications-common"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "cocoon-plugin-common": {
+        "source": {
+            "type": "registry",
+            "id": "cocoon-plugin-common"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-ble-central": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-ble-central"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-compat": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-compat"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "nl-afas-cordova-plugin-securelocalstorage": {
+        "source": {
+            "type": "registry",
+            "id": "nl-afas-cordova-plugin-securelocalstorage"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "es6-promise-plugin": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/vstirbu/PromisesPlugin.git",
+            "subdir": "."
+        },
+        "is_top_level": false,
+        "variables": {}
     }
 }

@@ -1,8 +1,54 @@
 /*golble*/
+::-webkit-scrollbar {
+   -webkit-appearance: none;
+   width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+   border-radius: 4px;
+   background-color: rgba(0,0,0,.5);
+   -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
 
 body {
     color: #f7f7f7;
     font-family: 'Adobe Heiti Std';
+    background: url(../images/MergedLayers.png) no-repeat center;
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+
+.modal {
+    background: url(../images/modal-img.png) no-repeat center;
+    -webkit-background-size: cover;
+    background-size: cover;
+    height: 200px;
+    width: 400px;
+    color: #c9e3ff;
+}
+
+.modal-inner {
+    padding: 80px 15px 30px 15px;
+    background: none;
+    font-size: 1.3em;
+}
+
+.modal-button{
+    background: none;
+    color: #c9e3ff;
+    width: 30%;
+}
+
+.modal-button.active-state{
+    background: none;
+}
+
+html.ios-gt-8 .modal-button.modal-button-bold{
+    font-weight: inherit;
+}
+
+.statusbar-overlay {
+    background: transparent;
 }
 
 li {
@@ -89,9 +135,7 @@ caption {
 }
 
 .views {
-    background: url(../images/MergedLayers.png) no-repeat center;
-    -webkit-background-size: cover;
-    background-size: cover;
+    background: initial;
 }
 
 .page {
@@ -164,7 +208,7 @@ aside-linker {
     -webkit-background-size: cover;
     background-size: cover;
     padding: 20px;
-    height: 30%;
+    height: 35%;
     width: 80%;
     margin: 0 auto;
     font-size: 1.2em;
@@ -378,7 +422,7 @@ aside-linker {
     -webkit-appearance: none;
 }
 
-#playerTable select option {
+#playerTable option {
     background: none;
     font-size: 1em;
 }
@@ -448,10 +492,19 @@ aside-linker {
 
 /*stopWatch*/
 
+.record-page{
+    overflow: hidden;
+}
+
+.space{
+    height:30px;
+}
+
 #stopWatch {
     height: 100px;
     border-bottom: 1px solid #e4f1ff;
     margin-bottom: 30px;
+    display: table;
 }
 
 #stopWatch span {
@@ -462,6 +515,15 @@ aside-linker {
 #time {
     font-size: 5em;
     letter-spacing: 8px;
+    display: table-cell;
+    font-weight: 100;
+    padding-left: 30px;
+}
+
+.btn-wrapper{
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 20px;
 }
 
 .sm-circle-btn {
@@ -472,9 +534,11 @@ aside-linker {
     background-size: cover;
     display: inline-block;
     padding: 16px;
-    height: 20px;
-    text-align: center;
+    height: 25px;
+    line-height: 25px;
+    margin-left: 20px;
 }
+
 
 /*
 stopwatch .sm-circle-btn {
@@ -493,7 +557,6 @@ stopwatch .sm-circle-btn {
 }
 
 .scores {
-    padding: 10px;
     height: 235px;
 }
 
@@ -517,6 +580,7 @@ stopwatch .sm-circle-btn {
 
 .left-tag {
     width: 120px;
+    margin-left: -6px;
 }
 
 .right-tag {
@@ -524,8 +588,14 @@ stopwatch .sm-circle-btn {
     width: 150px;
 }
 
-.media-capture {
-    margin-left: 50px;
+div.media-capture {
+    margin-left: 40px;
+}
+
+.media-capture span{
+    padding: 5px;
+    display: inline-block;
+    margin-right:20px;
 }
 
 #photo img {

@@ -26,6 +26,8 @@ var appOption = {
     serverHost: "http://dev.domelab.com"
 };
 
+var scoreAttr={};
+
 if (!HTMLCanvasElement.prototype.toBlob) {
     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
         value: function (callback, type, quality) {
@@ -214,7 +216,7 @@ var app = {
     , onLogin: function (token) {
         //get realtime message
         app.subscribeMsg(token);
-        app.getResponse("7cecbc1cbc2942f38d8c46e48d41cff9");
+        app.getResponse("27918d29c6ef4319a7d4bc92228187be");
     }
     , showJudge: function (judge) {
         console.log(judge);
@@ -233,17 +235,18 @@ var app = {
         });
     }
     , getResponse: function (token) {
-        $$.getJSON("http://192.168.1.113:3000/api/v1/users/"+token+"/user_for_event",function (response) {
+        $$.getJSON("http://192.168.1.128:3000/api/v1/users/"+token+"/user_for_event",function (response) {
             $$("#judgeComptition").text(response.events[0].comp_name);
             var events=[];
             response.events.forEach(function(e){
                 events.push(e.name);
+                app.getScoreAttr(e.id);
             });
             $$("#judgeEvent").text(events.toString());
         });
     }
     ,getEvents:function(comp_id){
-        $$.getJSON("http://192.168.1.113:3000/api/v1/competitions/events",{"comp_id":comp_id},function(response){
+        $$.getJSON("http://192.168.1.128:3000/api/v1/competitions/events",{"comp_id":comp_id},function(response){
             console.log(response);
             var schoolGroups={
                 1:"小",
@@ -286,8 +289,9 @@ var app = {
         });
     }
     ,getScoreAttr:function(event_id){
-        $$.getJSON("http://192.168.1.113:3000/api/v1/events/score_attributes",{"event_id":event_id},function(response){
+        $$.getJSON("http://192.168.1.128:3000/api/v1/events/score_attributes",{"event_id":event_id},function(response){
             console.log(response);
+            scoreAttr[event_id]=response;
         });
     }
     ,getTeams:function(ed,group,schedule){
@@ -299,7 +303,7 @@ var app = {
             data.schedule=schedule;
         }
         
-        $$.getJSON("http://192.168.1.113:3000/api/v1/competitions/event/teams",data,function(response){
+        $$.getJSON("http://192.168.1.128:3000/api/v1/competitions/event/teams",data,function(response){
             console.log(response.teams);
             if(response.teams[0]){
                 var teams=response.teams[1];
@@ -327,7 +331,7 @@ var app = {
         
     }
     ,getMsg:function(token,page,per){
-        $$.getJSON("http://192.168.1.113:3000/api/v1/users/" + token + "/notifications/", {"page":page,"per_page":per},function (response) {
+        $$.getJSON("http://192.168.1.128:3000/api/v1/users/" + token + "/notifications/", {"page":page,"per_page":per},function (response) {
             console.log(response);
             response.notifications.forEach(function(n){
                 var d=new Date(n.created_at);
@@ -430,7 +434,7 @@ var app = {
         }
 
         if (!drawed) {
-            myApp.alert("你还没有签名", "");
+            myApp.alert("请让参赛者签名", "");
             return;
         }
         //Get remark
@@ -599,7 +603,7 @@ myApp.onPageInit('player', function (page) {
 myApp.onPageBeforeInit('home', function (page) {
     if (judgeInfo.hasOwnProperty("userId")) {
         app.showJudge(judgeInfo);
-        app.getResponse("7cecbc1cbc2942f38d8c46e48d41cff9");
+        app.getResponse("27918d29c6ef4319a7d4bc92228187be");
     }else{
         app.login();
     }
@@ -634,7 +638,7 @@ myApp.onPageInit('msg', function (page) {
         console.log(err);
     });
     
-    app.getMsg("7cecbc1cbc2942f38d8c46e48d41cff9",1,20)
+    app.getMsg("27918d29c6ef4319a7d4bc92228187be",1,20)
 });
 
 myApp.onPageInit('data', function (page) {

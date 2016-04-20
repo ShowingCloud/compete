@@ -81,6 +81,15 @@
     <feature name="Globalization">
         <param name="ios-package" value="CDVGlobalization" />
     </feature>
+    <feature name="LDNotificationLocalPlugin">
+        <param name="ios-package" value="LDNotificationLocalPlugin" />
+    </feature>
+    <feature name="SecureLocalStorage">
+        <param name="ios-package" value="SecureLocalStorage" />
+    </feature>
+    <feature name="BLE">
+        <param name="ios-package" onload="true" value="BLECentralPlugin" />
+    </feature>
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />
     <name>compete</name>

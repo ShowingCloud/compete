@@ -1,10 +1,12 @@
 <div data-page="stopWatch" class="page">
-    <div class="page-content">
+    <div class="page-content record-page">
         <div id="stopwatch">
-            <span id="time"></span>
-            <span id="reset" class="sm-circle-btn">重置</span>
-            <span id="record" class="sm-circle-btn">录入</span>
-            <span id="start" class="sm-circle-btn">开始</span>
+            <div id="time"></div>
+            <div class="btn-wrapper">
+                <span id="reset" class="sm-circle-btn">重置</span>
+                <span id="record" class="sm-circle-btn">录入</span>
+                <span id="start" class="sm-circle-btn">开始</span>
+            </div>
         </div>
         <div class="scoreBoard">
             <div>
@@ -19,13 +21,13 @@
                 <div class="scores">
 
                     <div>第一次成绩：
-                        <input class="timeScore score score1" name="score1"></input>
+                        <input class="timeScore score score1" name="score1">
                     </div>
                     <div>第二次成绩：
-                        <input class="timeScore score score2" name="score2"></input>
+                        <input class="timeScore score score2" name="score2">
                     </div>
                     <div>两次之和：
-                        <input id="finalScore" class="score score1" name="score3"></input>
+                        <input id="finalScore" class="score score1" name="score3">
                     </div>
                     <div class="remarks">
                         <div>备注：
@@ -45,6 +47,7 @@
                         <canvas width="450" height="150" id="canvas"></canvas>
                         <span id="clearCanvas">清除</span>
                     </div>
+                    <div class="space"></div>
                 </div>
             </div>
 

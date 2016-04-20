@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		0207DA581B56EA530066E2B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0207DA571B56EA530066E2B4 /* Images.xcassets */; };
 		0D4DACB5629F4E2BAB3BA622 /* CDVLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = F22C3331DF19492FB8245ADC /* CDVLogger.m */; };
@@ -57,6 +56,14 @@
 		E22F459D01C94E548BAC42A7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E03F650A6EB842DFB671BABD /* SystemConfiguration.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E24625B041154194B5E77A29 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7DF30DD7E78427C99A106C3 /* CoreTelephony.framework */; };
 		E6B3FEBBC059413CABB0BE4D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7D96B7E07334C55AE47A39E /* AudioToolbox.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		D71DEA5A98BC4480A2B4BAE0 /* LDNotificationPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 12F6461657B24CD4A5405AE4 /* LDNotificationPlugin.m */; };
+		FC106C10AAB746FC930E5474 /* LDNotificationLocalPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C95F721B94FA09B7F84D8 /* LDNotificationLocalPlugin.m */; };
+		F0862CFFD7694935A77C4968 /* BLECentralPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = FEB8F6C446954200A0935426 /* BLECentralPlugin.m */; };
+		94E123DC93C6442D9F3B6669 /* CBPeripheral+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 398BE100ADCD4345A5F7175C /* CBPeripheral+Extensions.m */; };
+		0B5889F664064A67B184FB77 /* BLECommandContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A0CA30B0A44DF96DE689C /* BLECommandContext.m */; };
+		B196F36A4FA34C79A6663BA0 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95C7991C4AC548199229157A /* CoreBluetooth.framework */; };
+		29E5539B37264295BF50F0ED /* SecureLocalStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7928B61BA5463A96157183 /* SecureLocalStorage.m */; };
+		001EB12C376A4BBEA078663D /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA98170D17E482A9D55C173 /* KeychainItemWrapper.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -161,6 +168,21 @@
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = compete/config.xml; sourceTree = "<group>"; };
 		FA45B4EBCC3743C68ECFF891 /* CDVAssetLibraryFilesystem.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = CDVAssetLibraryFilesystem.m; path = "cordova-plugin-file/CDVAssetLibraryFilesystem.m"; sourceTree = "<group>"; };
 		FC0C5E36345D43038738C1DA /* CoreVideo.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		12F6461657B24CD4A5405AE4 /* LDNotificationPlugin.m */ = {isa = PBXFileReference; name = "LDNotificationPlugin.m"; path = "cocoon-plugin-notifications-common/LDNotificationPlugin.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		9944D845AD374A078053F409 /* LDNotificationPlugin.h */ = {isa = PBXFileReference; name = "LDNotificationPlugin.h"; path = "cocoon-plugin-notifications-common/LDNotificationPlugin.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		8B9C95F721B94FA09B7F84D8 /* LDNotificationLocalPlugin.m */ = {isa = PBXFileReference; name = "LDNotificationLocalPlugin.m"; path = "cocoon-plugin-notifications-ios-local/LDNotificationLocalPlugin.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		BD149EB9C0F74F5EB7398A3B /* LDNotificationLocalPlugin.h */ = {isa = PBXFileReference; name = "LDNotificationLocalPlugin.h"; path = "cocoon-plugin-notifications-ios-local/LDNotificationLocalPlugin.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		FEB8F6C446954200A0935426 /* BLECentralPlugin.m */ = {isa = PBXFileReference; name = "BLECentralPlugin.m"; path = "cordova-plugin-ble-central/BLECentralPlugin/BLECentralPlugin.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		398BE100ADCD4345A5F7175C /* CBPeripheral+Extensions.m */ = {isa = PBXFileReference; name = "CBPeripheral+Extensions.m"; path = "cordova-plugin-ble-central/BLECentralPlugin/CBPeripheral+Extensions.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		5B7A0CA30B0A44DF96DE689C /* BLECommandContext.m */ = {isa = PBXFileReference; name = "BLECommandContext.m"; path = "cordova-plugin-ble-central/BLECentralPlugin/BLECommandContext.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		938CA41D199942EF82B8B52F /* BLECentralPlugin.h */ = {isa = PBXFileReference; name = "BLECentralPlugin.h"; path = "cordova-plugin-ble-central/BLECentralPlugin/BLECentralPlugin.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		54E226C8ED794724875F2444 /* CBPeripheral+Extensions.h */ = {isa = PBXFileReference; name = "CBPeripheral+Extensions.h"; path = "cordova-plugin-ble-central/BLECentralPlugin/CBPeripheral+Extensions.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		64F9674298D647ADA0D9C5DD /* BLECommandContext.h */ = {isa = PBXFileReference; name = "BLECommandContext.h"; path = "cordova-plugin-ble-central/BLECentralPlugin/BLECommandContext.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		95C7991C4AC548199229157A /* CoreBluetooth.framework */ = {isa = PBXFileReference; name = "CoreBluetooth.framework"; path = "System/Library/Frameworks/CoreBluetooth.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		4B7928B61BA5463A96157183 /* SecureLocalStorage.m */ = {isa = PBXFileReference; name = "SecureLocalStorage.m"; path = "nl-afas-cordova-plugin-securelocalstorage/SecureLocalStorage.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		2CA98170D17E482A9D55C173 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; name = "KeychainItemWrapper.m"; path = "nl-afas-cordova-plugin-securelocalstorage/KeychainItemWrapper.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		48D9EC93E11744BB8D7A3836 /* SecureLocalStorage.h */ = {isa = PBXFileReference; name = "SecureLocalStorage.h"; path = "nl-afas-cordova-plugin-securelocalstorage/SecureLocalStorage.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		292467B402164C69AA08AD3E /* KeychainItemWrapper.h */ = {isa = PBXFileReference; name = "KeychainItemWrapper.h"; path = "nl-afas-cordova-plugin-securelocalstorage/KeychainItemWrapper.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +205,7 @@
 				DB5E996555DE467A9472E215 /* CoreVideo.framework in Frameworks */,
 				D2761F406B2142ECAD4A3229 /* QuartzCore.framework in Frameworks */,
 				3B377A8213724168A2BA1E4B /* CoreImage.framework in Frameworks */,
+				B196F36A4FA34C79A6663BA0 /* CoreBluetooth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,6 +292,7 @@
 				FC0C5E36345D43038738C1DA /* CoreVideo.framework */,
 				AF2DD1BD36304468A5BD59F6 /* QuartzCore.framework */,
 				51BE893055114C80B4AE86A9 /* CoreImage.framework */,
+				95C7991C4AC548199229157A /* CoreBluetooth.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -342,6 +366,20 @@
 				EC9A7D10A55341EE9AE76848 /* Toast.h */,
 				92E4CFF68F4443AE9EAA7A6F /* CDVGlobalization.m */,
 				3097FBBC809E4F64B7E778E5 /* CDVGlobalization.h */,
+				12F6461657B24CD4A5405AE4 /* LDNotificationPlugin.m */,
+				9944D845AD374A078053F409 /* LDNotificationPlugin.h */,
+				8B9C95F721B94FA09B7F84D8 /* LDNotificationLocalPlugin.m */,
+				BD149EB9C0F74F5EB7398A3B /* LDNotificationLocalPlugin.h */,
+				FEB8F6C446954200A0935426 /* BLECentralPlugin.m */,
+				398BE100ADCD4345A5F7175C /* CBPeripheral+Extensions.m */,
+				5B7A0CA30B0A44DF96DE689C /* BLECommandContext.m */,
+				938CA41D199942EF82B8B52F /* BLECentralPlugin.h */,
+				54E226C8ED794724875F2444 /* CBPeripheral+Extensions.h */,
+				64F9674298D647ADA0D9C5DD /* BLECommandContext.h */,
+				4B7928B61BA5463A96157183 /* SecureLocalStorage.m */,
+				2CA98170D17E482A9D55C173 /* KeychainItemWrapper.m */,
+				48D9EC93E11744BB8D7A3836 /* SecureLocalStorage.h */,
+				292467B402164C69AA08AD3E /* KeychainItemWrapper.h */,
 			);
 			name = Plugins;
 			path = compete/Plugins;
@@ -491,6 +529,13 @@
 				A52FA6A9A387459E9CA27A4A /* Toast+UIView.m in Sources */,
 				298A78D5C8DF462493B8C2D8 /* Toast.m in Sources */,
 				94F0274A07ED42CF92D47BC4 /* CDVGlobalization.m in Sources */,
+				D71DEA5A98BC4480A2B4BAE0 /* LDNotificationPlugin.m in Sources */,
+				FC106C10AAB746FC930E5474 /* LDNotificationLocalPlugin.m in Sources */,
+				F0862CFFD7694935A77C4968 /* BLECentralPlugin.m in Sources */,
+				94E123DC93C6442D9F3B6669 /* CBPeripheral+Extensions.m in Sources */,
+				0B5889F664064A67B184FB77 /* BLECommandContext.m in Sources */,
+				29E5539B37264295BF50F0ED /* SecureLocalStorage.m in Sources */,
+				001EB12C376A4BBEA078663D /* KeychainItemWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
