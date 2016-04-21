@@ -7,16 +7,28 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-plugin-battery-status": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-ble-central": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
         "cordova-plugin-camera": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-console": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
         "cordova-plugin-file": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-globalization": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-inappbrowser": {
@@ -31,9 +43,6 @@
         "cordova-plugin-network-information": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
@@ -43,36 +52,24 @@
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-sqlite-storage": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "phonegap-plugin-barcodescanner": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-device": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
         "cordova-plugin-x-toast": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-plugin-globalization": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cocoon-plugin-notifications-ios-local": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-ble-central": {
+        "cordova-sqlite-storage": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "nl-afas-cordova-plugin-securelocalstorage": {
             "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "phonegap-plugin-barcodescanner": {
+            "PACKAGE_NAME": "cn.robodou.compete"
         }
     },
     "dependent_plugins": {
-        "cordova-plugin-webserver": {
+        "cordova-plugin-compat": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-plugin-compat": {
+        "cordova-plugin-webserver": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "es6-promise-plugin": {

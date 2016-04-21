@@ -506,6 +506,11 @@ aside-linker {
     overflow: hidden;
 }
 
+#raceUp img{
+    width:70%;
+    height: 150px;
+}
+
 .space{
     height:30px;
 }

@@ -30,7 +30,6 @@
         </platform>
         <preference name="DisallowOverscroll" value="true" />
         <preference name="StatusBarOverlaysWebView" value="true" />
-        <preference name="SplashScreen" value="none" />
         <feature name="StatusBar">
             <param name="ios-package" value="CDVStatusBar" onload="true" />
         </feature>

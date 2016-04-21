@@ -26,7 +26,20 @@ var appOption = {
     serverHost: "http://dev.domelab.com"
 };
 
-var scoreAttr = {};
+var scoreAttr = [
+    {
+        name:"第一次",
+        type:"a1"
+    },
+    {
+        name:"第二次",
+        type:"a1"
+    },
+    {
+        name:"总分",
+        type:"b1"
+    }
+];
 
 if (!HTMLCanvasElement.prototype.toBlob) {
     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
@@ -87,7 +100,7 @@ var track = {
         , playing: 0
         , score: 0
     }
-    , arrayToBytes: function () {
+    , arrayToBytes: function (array) {
         var newArray = new Uint8Array(array.length);
         for (var i = 0, l = array.length; i < l; i++) {
             newArray[i] = parseInt(array[i], 10);
@@ -112,30 +125,40 @@ var track = {
         rxCharacteristic: "6e400007-b5a3-f393-e0a9-e50e24dcca9e" // 蓝牙rx UUID
     }
     , scan: function () {
+        window.plugins.toast.showShortCenter("开始搜索");
         track.status.find = 0;
         ble.startScan([track.service.serviceUUID], track.onDiscoverDevice, app.onError);
         setTimeout(function () {
-            ble.stopScan(function () {
-                console.log("Scan complete")
+            
+            if (!track.status.find) {
+                window.plugins.toast.showShortCenter("未找到赛道");
+                ble.stopScan(function () {
+                    console.log("Scan complete")
+                }, function () {
+                    console.log("stopScan failed")
+                });
+            }
+        }, 10000);
+    }
+    , onDiscoverDevice: function (device) {
+        ble.stopScan(function () {
+                console.log("Scan complete");
+                console.log(device);
+                track.connect(device.id);
+                track.status.find = 1;
             }, function () {
                 console.log("stopScan failed")
             });
-            if (!track.status.find) {
-                window.plugins.toast.showShortCenter("未找到赛道");
-            }
-        }, 5000);
-    }
-    , onDiscoverDevice: function (device) {
-        track.connect();
-        track.status.find = 1;
+        
     }
     , connect: function (deviceId) {
         var onConnect = function () {
-            ble.startNotification(deviceId, track.serviceUUID, track.rxCharacteristic, track.onData, track.onError);
-            track.deviceId = deviceId;
+            console.log("connected");
+            ble.startNotification(deviceId, track.service.serviceUUID, track.service.rxCharacteristic, track.onData, track.onError);
+            track.service.deviceId = deviceId;
             track.sendOrder();
         };
-        ble.connect(deviceId, onConnect, track.onError);
+        ble.connect(deviceId, onConnect, function(){myApp.alert("连接赛道失败，请重试","");});
     }
     , onData: function (data) {
         var dataStr=track.printData(data);
@@ -146,10 +169,13 @@ var track = {
             switch (step) {
                 case 2:
                     window.plugins.toast.showShortCenter("闸门已打开");
+                    track.status.playing=1;
                     break;
                 case 5:
                     var time = d[5]+d[4]*256+d[3]*256*256+d[2]*256*256*256;
                     myApp.alert("用时："+time);
+                    track.render(time);
+                    track.reset();
                     break;
                 case 3:
                     window.plugins.toast.showShortCenter("信息错误");
@@ -180,6 +206,7 @@ var track = {
         track.init();
     }
     , reset: function () {
+        track.status.playing=null;
         track.order = [170, 6, 0, 0, 255];
         track.status.sending = "reset";
         track.init();
@@ -187,10 +214,12 @@ var track = {
     , sendOrder: function () {
         if (track.order) {
             var data = track.arrayToBytes(track.order);
-            ble.write(smartLock.deviceId, smartLock.serviceUUID, smartLock.txCharacteristic, data, function () {
+            ble.write(track.service.deviceId, track.service.serviceUUID, track.service.txCharacteristic, data, function () {
                 console.log(track.status.sending + " send success");
+                track.order=null;
             }, function () {
                 console.log(track.status.sending + " send failed");
+                myApp.alert("开始指令发送失败请重试");
             });
         }
 
@@ -203,23 +232,67 @@ var track = {
             window.plugins.toast.showShortCenter("蓝牙未能断开");
         });
     }
-    , onError: function () {
-        myApp.alert("蓝牙通信错误","");
+    ,errorConnect:function(error){
+        if(error){
+            console.log(error);
+        }
+        if(track.status.playing){
+            myApp.alert("蓝牙断开，请重新连上赛道，读取分数","",function(){
+                track.getScore();
+            });
+        }
+    }
+    , onError: function (reason) {
+        myApp.alert(reason,"");
         track.order = null;
     }
     , init: function () {
         ble.isEnabled(
             function () {
-                ble.isConnected(function () {
-                    track.sendOrder();
-                }, function () {
+                if(track.service.deviceId){
+                    ble.isConnected(track.service.deviceId,function () {
+                        track.sendOrder();
+                    }, function () {
+                        track.scan();
+                    });
+                }else{
                     track.scan();
-                });
+                }
             }
             , function () {
-                myApp.alert("请打开蓝牙","");
+                myApp.alert("请打开蓝牙后重试","",function(){track.init()});
             }
         );
+    },
+    check:function(){
+             myApp.modal({
+                title:  '',
+                text: '请至赛道5米范围内，连接赛道',
+                buttons: [
+                {
+                    text: '连接',
+                    onClick: function() {
+                        track.init();
+                    }
+                }
+                ]
+            });
+    },
+    render:function(time){
+            var elements = document.getElementsByClassName("trackScore");
+            for (var i = 0; i < elements.length; i++) {
+                    elements[i].value = time;
+                    if (i === elements.length - 1) {
+                        total = 0;
+                        for (var i = 0; i < elements.length; i++) {
+                            total = total + unformat(elements[i].value);
+                        }
+                        console.log(total);
+                        document.getElementById('finalScore').value = formatTime(total);
+                    }
+                    break;
+
+            }
     }
 }
 
@@ -248,7 +321,6 @@ var app = {
             judgeInfo = JSON.parse(tempStr);
             app.showJudge(judgeInfo);
             app.onLogin(judgeInfo.authToken);
-
         } else {
             app.login();
         }
@@ -459,7 +531,7 @@ var app = {
             "event_id": event_id
         }, function (response) {
             console.log(response);
-            scoreAttr[event_id] = response;
+            //scoreAttr[event_id] = response;
         });
     }
     , getTeams: function (ed, group, schedule) {
@@ -885,6 +957,22 @@ myApp.onPageInit('data', function (page) {
 });
 
 myApp.onPageInit('stopWatch', function (page) {
+    var scoreFrom;
+    var drawed = 0;
+    if(scoreAttr){
+        scoreAttr.forEach(function(sa,index){
+            switch(sa.type){
+                case "a1":
+                    scoreFrom=1;
+                    $$(".scores").prepend('<div>'+ sa.name +'：<input class="timeScore score score1" name="score'+(index+1)+'"></div>');
+                break;
+                case "b1":
+                    $$(".scores").prepend('<div>'+ sa.name +'：<input id="finalScore" class="score score1" name="score'+(index+1)+'"></div>');
+                break;
+            }
+        });
+    }
+
 
     $$("#takePhoto").on("click", function () {
         var quantity = $$("#photos img").length;
@@ -906,7 +994,7 @@ myApp.onPageInit('stopWatch', function (page) {
         }
 
     });
-    var drawed = 0;
+    
 
     if (temp.playerInfo) {
         $$(".playerInfo").append(temp.playerInfo);
@@ -921,7 +1009,7 @@ myApp.onPageInit('stopWatch', function (page) {
         app.submitScore(drawed);
     });
 
-
+    
     var Stopwatch = function () {
         var startAt = 0;
         var lapTime = 0;
@@ -1046,14 +1134,19 @@ myApp.onPageInit('stopWatch', function (page) {
         var a = data.split(":");
         return a[0] * 60 * 1000 + a[1] * 1000 + a[2] * 10;
     }
-
-    show();
-
-    document.getElementById('start').onclick = start;
-    document.getElementById('reset').onclick = reset;
-    document.getElementById('record').onclick = record;
-
-
+    console.log(scoreFrom);
+    
+    if(scoreFrom===1){
+//        $$("#scoreHeader").append();
+        document.getElementById('raceUp').onclick = function(){track.raceUp()};
+    }else if(scoreFrom===2){
+        $$("#scoreHeader").append('<div id="stopwatch"><div id="time"></div><div class="btn-wrapper"><span id="reset" class="sm-circle-btn">重置</span><span id="record" class="sm-circle-btn">录入</span><span id="start" class="sm-circle-btn">开始</span></div></div>');
+        show();
+        document.getElementById('start').onclick = start;
+        document.getElementById('reset').onclick = reset;
+        document.getElementById('record').onclick = record;
+    }
+    
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext("2d");
     canvas.addEventListener("touchstart", touchStartHandler, false);

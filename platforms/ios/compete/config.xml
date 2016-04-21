@@ -37,10 +37,6 @@
     <feature name="NetworkStatus">
         <param name="ios-package" value="CDVConnection" />
     </feature>
-    <feature name="SplashScreen">
-        <param name="ios-package" value="CDVSplashScreen" />
-        <param name="onload" value="true" />
-    </feature>
     <feature name="Vibration">
         <param name="ios-package" value="CDVVibration" />
     </feature>
@@ -72,20 +68,20 @@
     <feature name="BarcodeScanner">
         <param name="ios-package" value="CDVBarcodeScanner" />
     </feature>
-    <feature name="Device">
-        <param name="ios-package" value="CDVDevice" />
-    </feature>
     <feature name="Toast">
         <param name="ios-package" value="Toast" />
     </feature>
     <feature name="Globalization">
         <param name="ios-package" value="CDVGlobalization" />
     </feature>
-    <feature name="LDNotificationLocalPlugin">
-        <param name="ios-package" value="LDNotificationLocalPlugin" />
-    </feature>
     <feature name="SecureLocalStorage">
         <param name="ios-package" value="SecureLocalStorage" />
+    </feature>
+    <feature name="Device">
+        <param name="ios-package" value="CDVDevice" />
+    </feature>
+    <feature name="Battery">
+        <param name="ios-package" value="CDVBattery" />
     </feature>
     <feature name="BLE">
         <param name="ios-package" onload="true" value="BLECentralPlugin" />
@@ -114,5 +110,4 @@
     <allow-intent href="geo:*" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="StatusBarOverlaysWebView" value="true" />
-    <preference name="SplashScreen" value="none" />
 </widget>

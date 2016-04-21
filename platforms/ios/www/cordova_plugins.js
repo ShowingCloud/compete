@@ -43,14 +43,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
-        "id": "cordova-plugin-splashscreen.SplashScreen",
-        "pluginId": "cordova-plugin-splashscreen",
-        "clobbers": [
-            "navigator.splashscreen"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-vibration/www/vibration.js",
         "id": "cordova-plugin-vibration.notification",
         "pluginId": "cordova-plugin-vibration",
@@ -377,14 +369,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-plugin-device/www/device.js",
-        "id": "cordova-plugin-device.device",
-        "pluginId": "cordova-plugin-device",
-        "clobbers": [
-            "device"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-x-toast/www/Toast.js",
         "id": "cordova-plugin-x-toast.Toast",
         "pluginId": "cordova-plugin-x-toast",
@@ -414,32 +398,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cocoon-plugin-common/www/cocoon.js",
-        "id": "cocoon-plugin-common.Cocoon",
-        "pluginId": "cocoon-plugin-common",
-        "runs": true
-    },
-    {
-        "file": "plugins/cocoon-plugin-notifications-common/www/cocoon_notifications.js",
-        "id": "cocoon-plugin-notifications-common.Notifications",
-        "pluginId": "cocoon-plugin-notifications-common",
-        "runs": true
-    },
-    {
-        "file": "plugins/cocoon-plugin-notifications-ios-local/www/cocoon_notifications_local.js",
-        "id": "cocoon-plugin-notifications-ios-local.Notifications",
-        "pluginId": "cocoon-plugin-notifications-ios-local",
-        "runs": true
-    },
-    {
-        "file": "plugins/cordova-plugin-ble-central/www/ble.js",
-        "id": "cordova-plugin-ble-central.ble",
-        "pluginId": "cordova-plugin-ble-central",
-        "clobbers": [
-            "ble"
-        ]
-    },
-    {
         "file": "plugins/es6-promise-plugin/www/promise.js",
         "id": "es6-promise-plugin.Promise",
         "pluginId": "es6-promise-plugin",
@@ -452,6 +410,30 @@ module.exports = [
         "clobbers": [
             "cordova.plugins.SecureLocalStorage"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-ble-central/www/ble.js",
+        "id": "cordova-plugin-ble-central.ble",
+        "pluginId": "cordova-plugin-ble-central",
+        "clobbers": [
+            "ble"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-device/www/device.js",
+        "id": "cordova-plugin-device.device",
+        "pluginId": "cordova-plugin-device",
+        "clobbers": [
+            "device"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-battery-status/www/battery.js",
+        "id": "cordova-plugin-battery-status.battery",
+        "pluginId": "cordova-plugin-battery-status",
+        "clobbers": [
+            "navigator.battery"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -460,7 +442,6 @@ module.exports.metadata =
     "cordova-plugin-console": "1.0.2",
     "cordova-plugin-inappbrowser": "1.3.0",
     "cordova-plugin-network-information": "1.2.0",
-    "cordova-plugin-splashscreen": "3.1.0",
     "cordova-plugin-vibration": "2.1.0",
     "cordova-plugin-webserver": "1.0.3",
     "cordova-sqlite-storage": "1.2.0",
@@ -472,16 +453,14 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.2.1",
     "cordova-plugin-media-capture": "1.2.0",
     "phonegap-plugin-barcodescanner": "4.1.0",
-    "cordova-plugin-device": "1.1.1",
     "cordova-plugin-x-toast": "2.5.0",
     "cordova-plugin-globalization": "1.0.3",
-    "cocoon-plugin-common": "1.0.2",
-    "cocoon-plugin-notifications-common": "1.0.6",
-    "cocoon-plugin-notifications-ios-local": "1.0.2",
+    "es6-promise-plugin": "3.0.2",
+    "nl-afas-cordova-plugin-securelocalstorage": "0.1.8",
     "cordova-plugin-compat": "1.0.0",
     "cordova-plugin-ble-central": "1.0.6",
-    "es6-promise-plugin": "3.0.2",
-    "nl-afas-cordova-plugin-securelocalstorage": "0.1.8"
+    "cordova-plugin-device": "1.1.2",
+    "cordova-plugin-battery-status": "1.1.2"
 }
 // BOTTOM OF METADATA
 });

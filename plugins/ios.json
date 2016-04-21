@@ -16,9 +16,6 @@
         "cordova-plugin-network-information": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
         "cordova-plugin-vibration": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
@@ -49,22 +46,22 @@
         "phonegap-plugin-barcodescanner": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-plugin-device": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
         "cordova-plugin-x-toast": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-globalization": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cocoon-plugin-notifications-ios-local": {
+        "nl-afas-cordova-plugin-securelocalstorage": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-ble-central": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "nl-afas-cordova-plugin-securelocalstorage": {
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-battery-status": {
             "PACKAGE_NAME": "cn.robodou.compete"
         }
     },
@@ -72,16 +69,10 @@
         "cordova-plugin-webserver": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cocoon-plugin-common": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cocoon-plugin-notifications-common": {
+        "es6-promise-plugin": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-compat": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "es6-promise-plugin": {
             "PACKAGE_NAME": "cn.robodou.compete"
         }
     }

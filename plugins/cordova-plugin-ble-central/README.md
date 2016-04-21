@@ -51,6 +51,7 @@ Note that this plugin's id changed from `com.megster.cordova.ble` to `cordova-pl
 
 - [ble.scan](#scan)
 - [ble.startScan](#startscan)
+- [ble.startScanWithOptions](#startscanwithoptions)
 - [ble.stopScan](#stopscan)
 - [ble.connect](#connect)
 - [ble.disconnect](#disconnect)
@@ -61,8 +62,11 @@ Note that this plugin's id changed from `com.megster.cordova.ble` to `cordova-pl
 - [ble.stopNotification](#stopnotification)
 - [ble.isEnabled](#isenabled)
 - [ble.isConnected](#isconnected)
+- [ble.startStateNotifications](#startstatenotifications)
+- [ble.stopStateNotifications](#stopstatenotifications)
 - [ble.showBluetoothSettings](#showbluetoothsettings)
 - [ble.enable](#enable)
+- [ble.readRSSI](#readrssi)
 
 ## scan
 
@@ -132,6 +136,49 @@ Advertising information format varies depending on your platform. See [Advertisi
         function() { console.log("Scan complete"); },
         function() { console.log("stopScan failed"); }
     );
+
+## startScanWithOptions
+
+Scan and discover BLE peripherals, specifying scan options.
+
+    ble.startScan(services, options, success, failure);
+
+### Description
+
+Function `startScanWithOptions` scans for BLE devices. It operates similarly to the `startScan` function, but allows you to specify extra options (like allowing duplicate device reports).  The success callback is called each time a peripheral is discovered. Scanning will continue until `stopScan` is called. 
+
+    {
+        "name": "TI SensorTag",
+        "id": "BD922605-1B07-4D55-8D09-B66653E51BBA",
+        "rssi": -79,
+        "advertising": /* ArrayBuffer or map */
+    }
+
+Advertising information format varies depending on your platform. See [Advertising Data](#advertising-data) for more information.
+
+### Parameters
+
+- __services__: List of services to discover, or [] to find all devices
+- __options__: an object specifying a set of name-value pairs. The currently acceptable options are:
+- _reportDuplicates_: true if duplicate devices should be reported, false (default) if devices should only be reported once. [optional]
+- __success__: Success callback function that is invoked which each discovered device.
+- __failure__: Error callback function, invoked when error occurs. [optional]
+
+### Quick Example
+
+    ble.startScan([], 
+        { reportDuplicates: true }
+        function(device) {
+            console.log(JSON.stringify(device));
+        }, 
+        failure);
+
+    setTimeout(ble.stopScan,
+        5000,
+        function() { console.log("Scan complete"); },
+        function() { console.log("stopScan failed"); }
+    );
+
 
 ## stopScan
 
@@ -227,7 +274,7 @@ Raw data is passed from native code to the callback as an [ArrayBuffer](#typed-a
 
 Writes data to a characteristic.
 
-    ble.write(device_id, service_uuid, characteristic_uuid, value, success, failure);
+    ble.write(device_id, service_uuid, characteristic_uuid, data, success, failure);
 
 ### Description
 
@@ -252,9 +299,9 @@ Use an [ArrayBuffer](#typed-arrays) when writing data.
 
     // send a 3 byte value with RGB color
     var data = new Uint8Array(3);
-    data[0] = 0xFF;  // red
-    data[0] = 0x00; // green
-    data[0] = 0xFF; // blue
+    data[0] = 0xFF; // red
+    data[1] = 0x00; // green
+    data[2] = 0xFF; // blue
     ble.write(device_id, "ccc0", "ccc1", data.buffer, success, failure);
 
     // send a 32 bit integer
@@ -266,7 +313,7 @@ Use an [ArrayBuffer](#typed-arrays) when writing data.
 
 Writes data to a characteristic without confirmation from the peripheral.
 
-    ble.writeWithoutResponse(device_id, service_uuid, characteristic_uuid, value, success, failure);
+    ble.writeWithoutResponse(device_id, service_uuid, characteristic_uuid, data, success, failure);
 
 ### Description
 
@@ -382,6 +429,50 @@ Function `isEnabled` calls the success callback when Bluetooth is enabled and th
         }
     );
 
+## startStateNotifications
+
+Registers to be notified when Bluetooth state changes on the device.
+
+    ble.startStateNotifications(success, failure);
+
+### Description
+
+Function `startStateNotifications` calls the success callback when the Bluetooth is enabled or disabled on the device.
+
+__States__
+
+- "on"
+- "off"
+- "turningOn" (Android Only)
+- "turningOff" (Android Only)
+- "unknown" (iOS Only)
+- "resetting" (iOS Only)
+- "unsupported" (iOS Only)
+- "unauthorized" (iOS Only)
+
+### Parameters
+
+- __success__: Success callback function that is invoked with a string for the Bluetooth state.
+- __failure__: Error callback function, invoked when error occurs. [optional]
+
+### Quick Example
+
+    ble.startStateNotifications(
+        function(state) {
+            console.log("Bluetooth is " + state);
+        }
+    );
+
+## stopStateNotifications
+
+Stops state notifications.
+
+    ble.startStateNotifications(success, failure);
+
+### Description
+
+Function `stopStateNotifications` calls the success callback when Bluetooth state notifications have been stopped.
+
 ## showBluetoothSettings
 
 Show the Bluetooth settings on the device.
@@ -436,6 +527,38 @@ If `enable` is called when Bluetooth is already enabled, the user will not promp
             console.log("The user did *not* enable Bluetooth");
         }
     );
+
+## readRSSI
+
+Read the RSSI value on the device connection.
+
+    ble.readRSSI(device_id, success, failure);
+
+### Description
+
+Samples the RSSI value (a measure of signal strength) on the connection to a bluetooth device. Requires that you have established a connection before invoking (otherwise an error will be raised). 
+
+### Parameters
+
+- __device_id__: device identifier
+- __success__: Success callback function, invoked with the RSSI value (as an integer)
+- __failure__: Error callback function, invoked if there is no current connection or if there is an error reading the RSSI.
+
+### Quick Example
+    var rssiSample;
+    ble.connect(device_id, 
+        function(device) {
+            rssiSample = setInterval(function() {
+                    ble.readRSSI(device_id, function(rssi) {
+                            console.log('read RSSI',rssi,'with device', device_id);
+                        }, function(err) {
+                            console.error('unable to read RSSI',err);
+                            clearInterval(rssiSample);
+                            })
+                }, 5000);
+        },
+        function(err) { console.error('error connecting to device')}
+        );
 
 # Peripheral Data
 

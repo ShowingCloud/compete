@@ -26,7 +26,20 @@ var appOption = {
     serverHost: "http://dev.domelab.com"
 };
 
-var scoreAttr={};
+var scoreAttr = [
+    {
+        name:"第一次",
+        type:"a1"
+    },
+    {
+        name:"第二次",
+        type:"a1"
+    },
+    {
+        name:"总分",
+        type:"b1"
+    }
+];
 
 if (!HTMLCanvasElement.prototype.toBlob) {
     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
@@ -59,6 +72,230 @@ var temp = {
 
 var judgeInfo = {};
 
+function arrayToBytes(array) {
+    var newArray = new Uint8Array(array.length);
+    for (var i = 0, l = array.length; i < l; i++) {
+        newArray[i] = parseInt(array[i], 10);
+    }
+    return newArray.buffer;
+}
+
+function printData(byteArrayData) {
+    var hex = []
+        , h, x, len = byteArrayData.length;
+
+
+    for (var i = 0; i < len; i++) {
+        x = byteArrayData[i];
+        h = x.toString(16);
+        if (x < 16) h = "0" + h;
+        hex.push(h);
+    }
+    return hex.join(' ');
+}
+
+var track = {
+    status: {
+        find: 0
+        , playing: 0
+        , score: 0
+    }
+    , arrayToBytes: function (array) {
+        var newArray = new Uint8Array(array.length);
+        for (var i = 0, l = array.length; i < l; i++) {
+            newArray[i] = parseInt(array[i], 10);
+        }
+        return newArray.buffer;
+    }
+    , printData: function (byteArrayData) {
+        var hex = []
+            , h, x, len = byteArrayData.length;
+        for (var i = 0; i < len; i++) {
+            x = byteArrayData[i];
+            h = x.toString(16);
+            if (x < 16) h = "0" + h;
+            hex.push(h);
+        }
+        return hex.join(' ');
+    }
+    , service: {
+        deviceId: ""
+        , serviceUUID: "6e400005-b5a3-f393-e0a9-e50e24dcca9e", //蓝牙服务UUID
+        txCharacteristic: "6e400006-b5a3-f393-e0a9-e50e24dcca9e", // 蓝牙tx UUID
+        rxCharacteristic: "6e400007-b5a3-f393-e0a9-e50e24dcca9e" // 蓝牙rx UUID
+    }
+    , scan: function () {
+        window.plugins.toast.showShortCenter("开始搜索");
+        track.status.find = 0;
+        ble.startScan([track.service.serviceUUID], track.onDiscoverDevice, app.onError);
+        setTimeout(function () {
+            
+            if (!track.status.find) {
+                window.plugins.toast.showShortCenter("未找到赛道");
+                ble.stopScan(function () {
+                    console.log("Scan complete")
+                }, function () {
+                    console.log("stopScan failed")
+                });
+            }
+        }, 10000);
+    }
+    , onDiscoverDevice: function (device) {
+        ble.stopScan(function () {
+                console.log("Scan complete");
+                console.log(device);
+                track.connect(device.id);
+                track.status.find = 1;
+            }, function () {
+                console.log("stopScan failed")
+            });
+        
+    }
+    , connect: function (deviceId) {
+        var onConnect = function () {
+            console.log("connected");
+            ble.startNotification(deviceId, track.service.serviceUUID, track.service.rxCharacteristic, track.onData, track.onError);
+            track.service.deviceId = deviceId;
+            track.sendOrder();
+        };
+        ble.connect(deviceId, onConnect, function(){myApp.alert("连接赛道失败，请重试","");});
+    }
+    , onData: function (data) {
+        var dataStr=track.printData(data);
+        console.log(dataStr);
+        var d = new Uint8Array(data);
+        var step = d[1];
+        if (d[0] === 170) {
+            switch (step) {
+                case 2:
+                    window.plugins.toast.showShortCenter("闸门已打开");
+                    track.status.playing=1;
+                    break;
+                case 5:
+                    var time = d[5]+d[4]*256+d[3]*256*256+d[2]*256*256*256;
+                    myApp.alert("用时："+time);
+                    track.render(time);
+                    track.reset();
+                    break;
+                case 3:
+                    window.plugins.toast.showShortCenter("信息错误");
+                    break;
+            }
+        } else {
+            myApp.alert("收到奇怪的数据:"+dataStr,"");
+        }
+    }
+    , raceUp: function () {
+        track.order = [170, 1, 0, 0, 255];
+        track.status.sending = "raceUp";
+        track.init();
+    }
+    , getScore: function () {
+        track.order = [170, 4, 0, 0, 255];
+        track.status.sending = "getScore";
+        track.init();
+    }
+    , openDoor: function () {
+        track.order = [170, 7, 0, 0, 255];
+        track.status.sending = "openDoor";
+        track.init();
+    }
+    , closeDoor: function () {
+        track.order = [170, 8, 0, 0, 255];
+        track.status.sending = "closeDoor";
+        track.init();
+    }
+    , reset: function () {
+        track.status.playing=null;
+        track.order = [170, 6, 0, 0, 255];
+        track.status.sending = "reset";
+        track.init();
+    }
+    , sendOrder: function () {
+        if (track.order) {
+            var data = track.arrayToBytes(track.order);
+            ble.write(track.service.deviceId, track.service.serviceUUID, track.service.txCharacteristic, data, function () {
+                console.log(track.status.sending + " send success");
+                track.order=null;
+            }, function () {
+                console.log(track.status.sending + " send failed");
+                myApp.alert("开始指令发送失败请重试");
+            });
+        }
+
+    }
+    , disconnect: function () {
+        ble.disconnect(deviceId, function () {
+            window.plugins.toast.showShortCenter("已断开");
+            track.order = null;
+        }, function () {
+            window.plugins.toast.showShortCenter("蓝牙未能断开");
+        });
+    }
+    ,errorConnect:function(error){
+        if(error){
+            console.log(error);
+        }
+        if(track.status.playing){
+            myApp.alert("蓝牙断开，请重新连上赛道，读取分数","",function(){
+                track.getScore();
+            });
+        }
+    }
+    , onError: function (reason) {
+        myApp.alert(reason,"");
+        track.order = null;
+    }
+    , init: function () {
+        ble.isEnabled(
+            function () {
+                if(track.service.deviceId){
+                    ble.isConnected(track.service.deviceId,function () {
+                        track.sendOrder();
+                    }, function () {
+                        track.scan();
+                    });
+                }else{
+                    track.scan();
+                }
+            }
+            , function () {
+                myApp.alert("请打开蓝牙后重试","",function(){track.init()});
+            }
+        );
+    },
+    check:function(){
+             myApp.modal({
+                title:  '',
+                text: '请至赛道5米范围内，连接赛道',
+                buttons: [
+                {
+                    text: '连接',
+                    onClick: function() {
+                        track.init();
+                    }
+                }
+                ]
+            });
+    },
+    render:function(time){
+            var elements = document.getElementsByClassName("trackScore");
+            for (var i = 0; i < elements.length; i++) {
+                    elements[i].value = time;
+                    if (i === elements.length - 1) {
+                        total = 0;
+                        for (var i = 0; i < elements.length; i++) {
+                            total = total + unformat(elements[i].value);
+                        }
+                        console.log(total);
+                        document.getElementById('finalScore').value = formatTime(total);
+                    }
+                    break;
+
+            }
+    }
+}
+
 var app = {
     init: function () {
         //Globle ajax error handller
@@ -84,7 +321,6 @@ var app = {
             judgeInfo = JSON.parse(tempStr);
             app.showJudge(judgeInfo);
             app.onLogin(judgeInfo.authToken);
-            
         } else {
             app.login();
         }
@@ -235,108 +471,115 @@ var app = {
         });
     }
     , getResponse: function (token) {
-        $$.getJSON("http://192.168.1.128:3000/api/v1/users/"+token+"/user_for_event",function (response) {
+        $$.getJSON("http://192.168.1.128:3000/api/v1/users/" + token + "/user_for_event", function (response) {
             $$("#judgeComptition").text(response.events[0].comp_name);
-            var events=[];
-            response.events.forEach(function(e){
+            var events = [];
+            response.events.forEach(function (e) {
                 events.push(e.name);
                 app.getScoreAttr(e.id);
             });
             $$("#judgeEvent").text(events.toString());
         });
     }
-    ,getEvents:function(comp_id){
-        $$.getJSON("http://192.168.1.128:3000/api/v1/competitions/events",{"comp_id":comp_id},function(response){
+    , getEvents: function (comp_id) {
+        $$.getJSON("http://192.168.1.128:3000/api/v1/competitions/events", {
+            "comp_id": comp_id
+        }, function (response) {
             console.log(response);
-            var schoolGroups={
-                1:"小",
-                2:"中",
-                3:"初",
-                4:"高"
+            var schoolGroups = {
+                1: "小"
+                , 2: "中"
+                , 3: "初"
+                , 4: "高"
             };
-            response.events.forEach(function(g1,index1){
-                g1.events.forEach(function(g2,index2){
-                    var groupId="group"+g2.id+"-"+g2.group;
-                    if(index1===0&&index2===0){
-                        $$("#groups").append('<li><a href="#'+groupId+'" class="tab-link active">'+g2.name+'('+schoolGroups[g2.group]+')</a></li>');
-                    }else{
-                        $$("#groups").append('<li><a href="#'+groupId+'" class="tab-link">'+g2.name+'('+schoolGroups[g2.group]+')</a></li>');
+            response.events.forEach(function (g1, index1) {
+                g1.events.forEach(function (g2, index2) {
+                    var groupId = "group" + g2.id + "-" + g2.group;
+                    if (index1 === 0 && index2 === 0) {
+                        $$("#groups").append('<li><a href="#' + groupId + '" class="tab-link active">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>');
+                    } else {
+                        $$("#groups").append('<li><a href="#' + groupId + '" class="tab-link">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>');
                     }
-                    $$("#eventsBoard .tabs").append('<div class="tab" id="'+groupId+'"></div>');
-                    if(g2.z_e){
-                        g2.z_e.forEach(function(ev) {
-                            $$('<div data-id="'+ev.id+'">'+ev.name+'</div>').appendTo("#"+groupId).on("click", function () {
-                                    var compete = {
-                                        id: $$(".compete-select .active").data("id")
-                                        , name: $$(".compete-select .active").text()
-                                    };
-                                    var event = {
-                                        id: $$(this).data("id")
-                                        , name: $$(this).text()
-                                        ,group:g2.group
-                                    }
-                                    temp.compete = compete;
-                                    temp.event = event;
-                                    mainView.router.loadPage('player.html');
-                                });
+                    $$("#eventsBoard .tabs").append('<div class="tab" id="' + groupId + '"></div>');
+                    if (g2.z_e) {
+                        g2.z_e.forEach(function (ev) {
+                            $$('<div data-id="' + ev.id + '">' + ev.name + '</div>').appendTo("#" + groupId).on("click", function () {
+                                var compete = {
+                                    id: $$(".compete-select .active").data("id")
+                                    , name: $$(".compete-select .active").text()
+                                };
+                                var event = {
+                                    id: $$(this).data("id")
+                                    , name: $$(this).text()
+                                    , group: g2.group
+                                }
+                                temp.compete = compete;
+                                temp.event = event;
+                                mainView.router.loadPage('player.html');
+                            });
                         });
-                        if(index1===0&&index2===0){
-                            $$(("#"+groupId)).addClass("active");
+                        if (index1 === 0 && index2 === 0) {
+                            $$(("#" + groupId)).addClass("active");
                         }
                     }
                 });
             });
         });
     }
-    ,getScoreAttr:function(event_id){
-        $$.getJSON("http://192.168.1.128:3000/api/v1/events/score_attributes",{"event_id":event_id},function(response){
+    , getScoreAttr: function (event_id) {
+        $$.getJSON("http://192.168.1.128:3000/api/v1/events/score_attributes", {
+            "event_id": event_id
+        }, function (response) {
             console.log(response);
-            scoreAttr[event_id]=response;
+            //scoreAttr[event_id] = response;
         });
     }
-    ,getTeams:function(ed,group,schedule){
-        var data={
-            "ed":ed,
-            "group":group
+    , getTeams: function (ed, group, schedule) {
+        var data = {
+            "ed": ed
+            , "group": group
         };
-        if(typeof schedule === "string"){
-            data.schedule=schedule;
+        if (typeof schedule === "string") {
+            data.schedule = schedule;
         }
-        
-        $$.getJSON("http://192.168.1.128:3000/api/v1/competitions/event/teams",data,function(response){
+
+        $$.getJSON("http://192.168.1.128:3000/api/v1/competitions/event/teams", data, function (response) {
             console.log(response.teams);
-            if(response.teams[0]){
-                var teams=response.teams[1];
-                var allTeamId=[];
-                    teams.forEach(function(t){
-                        allTeamId.push(t.id);
-                        var mobile=t.mobile || "无";
-                        var school = t.school;
-                        var teacher=t.teacher || "无";
-                        var teacher_mobile=t.teacher_mobile || "无";
-                        var status=t.status;
-                        var statusStr,trClass;
-                        if(status===0){
-                            statusStr="未完赛";
-                            trClass="unfinished";
-                        }else if(status===1){
-                            statusStr=" 已完赛";
-                            trClass="finished"
-                        }
-                        $("#playerTable tbody").append("<tr class='"+trClass+"'><td>"+t.name+"</td><td>"+school+"</td><td>"+ mobile +"</td><td>"+ teacher +"<br>"+ teacher_mobile+"</td><td>"+ statusStr+"</td></tr>");
-                    });
+            if (response.teams[0]) {
+                var teams = response.teams[1];
+                var allTeamId = [];
+                teams.forEach(function (t) {
+                    allTeamId.push(t.id);
+                    var mobile = t.mobile || "无";
+                    var school = t.school;
+                    var teacher = t.teacher || "无";
+                    var teacher_mobile = t.teacher_mobile || "无";
+                    var status = t.status;
+                    var statusStr, trClass;
+                    if (status === 0) {
+                        statusStr = "未完赛";
+                        trClass = "unfinished";
+                    } else if (status === 1) {
+                        statusStr = " 已完赛";
+                        trClass = "finished"
+                    }
+                    $("#playerTable tbody").append("<tr class='" + trClass + "'><td>" + t.name + "</td><td>" + school + "</td><td>" + mobile + "</td><td>" + teacher + "<br>" + teacher_mobile + "</td><td>" + statusStr + "</td></tr>");
+                });
             }
-            
+
         });
-        
+
     }
-    ,getMsg:function(token,page,per){
-        $$.getJSON("http://192.168.1.128:3000/api/v1/users/" + token + "/notifications/", {"page":page,"per_page":per},function (response) {
+    , getMsg: function (token, page, per) {
+        $$.getJSON("http://192.168.1.128:3000/api/v1/users/" + token + "/notifications/", {
+            "page": page
+            , "per_page": per
+        }, function (response) {
             console.log(response);
-            response.notifications.forEach(function(n){
-                var d=new Date(n.created_at);
-                var time = d.toLocaleString().replace("GMT+8","");
-                $$("#msgBoard ul").append("<li><p class='time'>"+time+"</p><p class='content'>"+n.content+"</p></li>");
+            response.notifications.forEach(function (n) {
+                var d = new Date(n.created_at);
+                var time = d.toLocaleString().replace("GMT+8", "");
+                $$("#msgBoard ul").append("<li><p class='time'>" + time + "</p><p class='content'>" + n.content + "</p></li>");
             });
         });
     }
@@ -486,7 +729,7 @@ var app = {
                 score1: doc.score1
                 , note: doc.remark || ""
                 , confirm_sign: doc._attachments.signature.data
-                ,device_no:device.uuid
+                , device_no: device.uuid
             };
             console.log(toPost);
             var form_data = new FormData();
@@ -544,20 +787,20 @@ $$(document).on("click", "#logout-btn", function () {
 });
 
 myApp.onPageInit('player', function (page) {
-    app.getTeams(temp.event.id,temp.event.group);
-    $$("#playerTable select").change(function(){
-        var filter=$(this).val();
-        if(filter==="unfinished"){
-            $$("#playerTable .finished").css("display","none");
-            $$("#playerTable .unfinished").css("display",null);
-        }else if (filter==="finished"){
-            $$("#playerTable .unfinished").css("display","none");
-            $$("#playerTable .finished").css("display",null);
-        }else{
-            $$("#playerTable tr").css("display",null);
+    app.getTeams(temp.event.id, temp.event.group);
+    $$("#playerTable select").change(function () {
+        var filter = $(this).val();
+        if (filter === "unfinished") {
+            $$("#playerTable .finished").css("display", "none");
+            $$("#playerTable .unfinished").css("display", null);
+        } else if (filter === "finished") {
+            $$("#playerTable .unfinished").css("display", "none");
+            $$("#playerTable .finished").css("display", null);
+        } else {
+            $$("#playerTable tr").css("display", null);
         }
     });
-    
+
     $$("#getPlyaer").off("click").on("click", function () {
         var playerId = $$("#playerId").val();
         if (playerId) {
@@ -604,7 +847,7 @@ myApp.onPageBeforeInit('home', function (page) {
     if (judgeInfo.hasOwnProperty("userId")) {
         app.showJudge(judgeInfo);
         app.getResponse("27918d29c6ef4319a7d4bc92228187be");
-    }else{
+    } else {
         app.login();
     }
     app.getProcess();
@@ -637,8 +880,8 @@ myApp.onPageInit('msg', function (page) {
     }).catch(function (err) {
         console.log(err);
     });
-    
-    app.getMsg("27918d29c6ef4319a7d4bc92228187be",1,20)
+
+    app.getMsg("27918d29c6ef4319a7d4bc92228187be", 1, 20)
 });
 
 myApp.onPageInit('data', function (page) {
@@ -714,6 +957,22 @@ myApp.onPageInit('data', function (page) {
 });
 
 myApp.onPageInit('stopWatch', function (page) {
+    var scoreFrom;
+    var drawed = 0;
+    if(scoreAttr){
+        scoreAttr.forEach(function(sa,index){
+            switch(sa){
+                case "a1":
+                    scoreFrom=1;
+                    $$(".scores").append('<div>'+ sa.name +'：<input class="timeScore score score1" name="score'+(index+1)+'"></div>');
+                break;
+                case "b1":
+                    $$(".scores").append('<div>'+ sa.name +'：<input id="finalScore" class="score score1" name="score'+(index+1)+'"></div>');
+                break;
+            }
+        });
+    }
+
 
     $$("#takePhoto").on("click", function () {
         var quantity = $$("#photos img").length;
@@ -735,7 +994,7 @@ myApp.onPageInit('stopWatch', function (page) {
         }
 
     });
-    var drawed = 0;
+    
 
     if (temp.playerInfo) {
         $$(".playerInfo").append(temp.playerInfo);
@@ -750,7 +1009,7 @@ myApp.onPageInit('stopWatch', function (page) {
         app.submitScore(drawed);
     });
 
-
+    
     var Stopwatch = function () {
         var startAt = 0;
         var lapTime = 0;
@@ -875,21 +1134,26 @@ myApp.onPageInit('stopWatch', function (page) {
         var a = data.split(":");
         return a[0] * 60 * 1000 + a[1] * 1000 + a[2] * 10;
     }
-
-    show();
-
-    document.getElementById('start').onclick = start;
-    document.getElementById('reset').onclick = reset;
-    document.getElementById('record').onclick = record;
-
-
+    console.log(scoreFrom);
+    
+    if(scoreFrom===1){
+//        $$("#scoreHeader").append();
+        document.getElementById('raceUp').onclick = function(){track.raceUp()};
+    }else if(scoreFrom===2){
+        $$("#scoreHeader").append('<div id="stopwatch"><div id="time"></div><div class="btn-wrapper"><span id="reset" class="sm-circle-btn">重置</span><span id="record" class="sm-circle-btn">录入</span><span id="start" class="sm-circle-btn">开始</span></div></div>');
+        show();
+        document.getElementById('start').onclick = start;
+        document.getElementById('reset').onclick = reset;
+        document.getElementById('record').onclick = record;
+    }
+    
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext("2d");
     canvas.addEventListener("touchstart", touchStartHandler, false);
     canvas.addEventListener("touchmove", touchMoveHandler, false);
     canvas.addEventListener("touchend", touchEndHandler, false);
     document.getElementById("clearCanvas").onclick = function () {
-        drawed=0;
+        drawed = 0;
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
         clickX = [];
         clickY = [];

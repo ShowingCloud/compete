@@ -1,6 +1,20 @@
 cordova.define('cordova/plugin_list', function(require, exports, module) {
 module.exports = [
     {
+        "file": "plugins/cordova-plugin-battery-status/www/battery.js",
+        "id": "cordova-plugin-battery-status.battery",
+        "clobbers": [
+            "navigator.battery"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-ble-central/www/ble.js",
+        "id": "cordova-plugin-ble-central.ble",
+        "clobbers": [
+            "ble"
+        ]
+    },
+    {
         "file": "plugins/cordova-plugin-camera/www/CameraConstants.js",
         "id": "cordova-plugin-camera.Camera",
         "clobbers": [
@@ -26,6 +40,13 @@ module.exports = [
         "id": "cordova-plugin-camera.CameraPopoverHandle",
         "clobbers": [
             "CameraPopoverHandle"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-device/www/device.js",
+        "id": "cordova-plugin-device.device",
+        "clobbers": [
+            "device"
         ]
     },
     {
@@ -194,6 +215,20 @@ module.exports = [
         ]
     },
     {
+        "file": "plugins/cordova-plugin-globalization/www/GlobalizationError.js",
+        "id": "cordova-plugin-globalization.GlobalizationError",
+        "clobbers": [
+            "window.GlobalizationError"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-globalization/www/globalization.js",
+        "id": "cordova-plugin-globalization.globalization",
+        "clobbers": [
+            "navigator.globalization"
+        ]
+    },
+    {
         "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
         "id": "cordova-plugin-inappbrowser.inappbrowser",
         "clobbers": [
@@ -280,13 +315,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
-        "id": "cordova-plugin-splashscreen.SplashScreen",
-        "clobbers": [
-            "navigator.splashscreen"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-statusbar/www/statusbar.js",
         "id": "cordova-plugin-statusbar.statusbar",
         "clobbers": [
@@ -307,27 +335,6 @@ module.exports = [
         "runs": true
     },
     {
-        "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
-        "id": "cordova-sqlite-storage.SQLitePlugin",
-        "clobbers": [
-            "SQLitePlugin"
-        ]
-    },
-    {
-        "file": "plugins/phonegap-plugin-barcodescanner/www/barcodescanner.js",
-        "id": "phonegap-plugin-barcodescanner.BarcodeScanner",
-        "clobbers": [
-            "cordova.plugins.barcodeScanner"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-device/www/device.js",
-        "id": "cordova-plugin-device.device",
-        "clobbers": [
-            "device"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-x-toast/www/Toast.js",
         "id": "cordova-plugin-x-toast.Toast",
         "clobbers": [
@@ -339,29 +346,10 @@ module.exports = [
         "id": "cordova-plugin-x-toast.tests"
     },
     {
-        "file": "plugins/cordova-plugin-globalization/www/GlobalizationError.js",
-        "id": "cordova-plugin-globalization.GlobalizationError",
+        "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
+        "id": "cordova-sqlite-storage.SQLitePlugin",
         "clobbers": [
-            "window.GlobalizationError"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-globalization/www/globalization.js",
-        "id": "cordova-plugin-globalization.globalization",
-        "clobbers": [
-            "navigator.globalization"
-        ]
-    },
-    {
-        "file": "plugins/cocoon-plugin-notifications-ios-local/www/cocoon_notifications_local.js",
-        "id": "cocoon-plugin-notifications-ios-local.Notifications",
-        "runs": true
-    },
-    {
-        "file": "plugins/cordova-plugin-ble-central/www/ble.js",
-        "id": "cordova-plugin-ble-central.ble",
-        "clobbers": [
-            "ble"
+            "SQLitePlugin"
         ]
     },
     {
@@ -375,34 +363,40 @@ module.exports = [
         "clobbers": [
             "cordova.plugins.SecureLocalStorage"
         ]
+    },
+    {
+        "file": "plugins/phonegap-plugin-barcodescanner/www/barcodescanner.js",
+        "id": "phonegap-plugin-barcodescanner.BarcodeScanner",
+        "clobbers": [
+            "cordova.plugins.barcodeScanner"
+        ]
     }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
+    "cordova-plugin-battery-status": "1.1.2",
+    "cordova-plugin-compat": "1.0.0",
+    "cordova-plugin-ble-central": "1.0.6",
     "cordova-plugin-camera": "2.1.1",
     "cordova-plugin-console": "1.0.2",
+    "cordova-plugin-device": "1.1.2",
     "cordova-plugin-file": "4.1.1",
     "cordova-plugin-file-transfer": "1.5.0",
+    "cordova-plugin-globalization": "1.0.3",
     "cordova-plugin-inappbrowser": "1.3.0",
     "cordova-plugin-media": "2.2.0",
     "cordova-plugin-media-capture": "1.2.0",
     "cordova-plugin-network-information": "1.2.0",
-    "cordova-plugin-splashscreen": "3.1.0",
     "cordova-plugin-statusbar": "2.1.2",
     "cordova-plugin-vibration": "2.1.0",
     "cordova-plugin-webserver": "1.0.3",
     "cordova-plugin-whitelist": "1.2.1",
-    "cordova-sqlite-storage": "1.2.0",
-    "phonegap-plugin-barcodescanner": "4.1.0",
-    "cordova-plugin-device": "1.1.1",
     "cordova-plugin-x-toast": "2.5.0",
-    "cordova-plugin-globalization": "1.0.3",
-    "cocoon-plugin-notifications-ios-local": "1.0.2",
-    "cordova-plugin-compat": "1.0.0",
-    "cordova-plugin-ble-central": "1.0.6",
+    "cordova-sqlite-storage": "1.2.0",
     "es6-promise-plugin": "3.0.2",
-    "nl-afas-cordova-plugin-securelocalstorage": "0.1.8"
+    "nl-afas-cordova-plugin-securelocalstorage": "0.1.8",
+    "phonegap-plugin-barcodescanner": "4.1.0"
 };
 // BOTTOM OF METADATA
 });
