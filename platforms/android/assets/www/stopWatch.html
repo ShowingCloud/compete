@@ -1,25 +1,58 @@
 <div data-page="stopWatch" class="page">
     <div class="page-content record-page">
-        <div id="stopwatch">
-            <div id="time"></div>
-            <div class="btn-wrapper">
-                <span id="reset" class="sm-circle-btn">重置</span>
-                <span id="record" class="sm-circle-btn">录入</span>
-                <span id="start" class="sm-circle-btn">开始</span>
+        <div id="scoreHeader">
+            <div id="raceUp">
+                <img src="images/raceUp.png">
             </div>
+<!--
+            <div id="stopwatch">
+                <div id="time"></div>
+                <div class="btn-wrapper">
+                    <span id="reset" class="sm-circle-btn">重置</span>
+                    <span id="record" class="sm-circle-btn">录入</span>
+                    <span id="start" class="sm-circle-btn">开始</span>
+                </div>
+            </div>
+-->
         </div>
+
         <div class="scoreBoard">
             <div>
                 <img class="left-tag" src="images/playerInfo.png">
                 <img class="right-tag" src="images/finish.png" id="submitScore">
             </div>
             <div class="scrollable">
-                <div class="playerInfo">
-
-
+                <div id="teams">
+                    <div id="team1" class="team">
+                        <div class="playerInfo"></div>
+                        <div class="scores"></div>
+                        <div class="remarks">
+                            <div>备注：
+                                <input class="remarkInput">
+                            </div>
+                            <div class="media-capture">
+                                <span id="takePhoto">拍照</span>
+                                <span id="takeVideo">视频</span>
+                            </div>
+                            <div class="preview">
+                                <div id="photos"></div>
+                                <div id="video"></div>
+                            </div>
+                        </div>
+                        <div class="canvasWrapper">
+                            <span>签字确认：</span>
+                            <canvas width="450" height="150" id="canvas"></canvas>
+                            <span id="clearCanvas">清除</span>
+                        </div>
+                    </div>
+                    
+                    <div id="team2" class="team">
+                        
+                    </div>
                 </div>
-                <div class="scores">
-
+                
+                
+<!--
                     <div>第一次成绩：
                         <input class="timeScore score score1" name="score1">
                     </div>
@@ -29,26 +62,11 @@
                     <div>两次之和：
                         <input id="finalScore" class="score score1" name="score3">
                     </div>
-                    <div class="remarks">
-                        <div>备注：
-                            <input class="remarkInput score1">
-                        </div>
-                        <div class="media-capture">
-                            <span id="takePhoto">拍照</span>
-                            <span id="takeVideo">视频</span>
-                        </div>
-                        <div class="preview">
-                            <div id="photos"></div>
-                            <div id="video"></div>
-                        </div>
-                    </div>
-                    <div class="canvasWrapper">
-                        <span>签字确认：</span>
-                        <canvas width="450" height="150" id="canvas"></canvas>
-                        <span id="clearCanvas">清除</span>
-                    </div>
-                    <div class="space"></div>
-                </div>
+-->
+                    
+                    
+                
+                <div class="space"></div>
             </div>
 
         </div>

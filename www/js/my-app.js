@@ -61,8 +61,8 @@ if (!HTMLCanvasElement.prototype.toBlob) {
 }
 
 var temp = {
-    compete: {}
-    , event: {}
+    compete: {id:1,name:"机械奥运"}
+    , event: {id:1,name:"机器人短跑"}
     , schedule_name: "初赛"
     , kind: 1
     , th: 1
@@ -95,6 +95,33 @@ function printData(byteArrayData) {
 }
 
 var track = {
+    formatTime:function (time) {
+        function pad(num, size) {
+            var a = num;
+            if (a.toString().length > size) {
+                return a.toString().substring(0, size);
+            } else {
+                var s = "0000" + num;
+                return s.substr(s.length - size);
+            }
+
+        }
+        var h = m = s = ms = 0;
+        var newTime = '';
+
+        time = time % (60 * 60 * 1000);
+        m = Math.floor(time / (60 * 1000));
+        time = time % (60 * 1000);
+        s = Math.floor(time / 1000);
+        ms = time % 1000;
+
+        newTime = pad(m, 2) + ':' + pad(s, 2) + ':' + pad(ms, 2);
+        return newTime;
+    },
+    unformat:function (data) {
+        var a = data.split(":");
+        return a[0] * 60 * 1000 + a[1] * 1000 + a[2] * 10;
+    },
     status: {
         find: 0
         , playing: 0
@@ -125,13 +152,14 @@ var track = {
         rxCharacteristic: "6e400007-b5a3-f393-e0a9-e50e24dcca9e" // 蓝牙rx UUID
     }
     , scan: function () {
-        window.plugins.toast.showShortCenter("开始搜索");
+        myApp.showPreloader("正在搜寻赛道，请靠近赛道");
         track.status.find = 0;
         ble.startScan([track.service.serviceUUID], track.onDiscoverDevice, app.onError);
         setTimeout(function () {
             
             if (!track.status.find) {
                 window.plugins.toast.showShortCenter("未找到赛道");
+                myApp.hidePreloader();
                 ble.stopScan(function () {
                     console.log("Scan complete")
                 }, function () {
@@ -141,6 +169,8 @@ var track = {
         }, 10000);
     }
     , onDiscoverDevice: function (device) {
+        myApp.hidePreloader();
+        window.plugins.toast.showShortCenter("已找到赛道");
         ble.stopScan(function () {
                 console.log("Scan complete");
                 console.log(device);
@@ -153,7 +183,7 @@ var track = {
     }
     , connect: function (deviceId) {
         var onConnect = function () {
-            console.log("connected");
+            window.plugins.toast.showShortCenter("已连接赛道");
             ble.startNotification(deviceId, track.service.serviceUUID, track.service.rxCharacteristic, track.onData, track.onError);
             track.service.deviceId = deviceId;
             track.sendOrder();
@@ -172,10 +202,11 @@ var track = {
                     track.status.playing=1;
                     break;
                 case 5:
-                    var time = d[5]+d[4]*256+d[3]*256*256+d[2]*256*256*256;
-                    myApp.alert("用时："+time);
-                    track.render(time);
                     track.reset();
+                    var time = d[5]+d[4]*256+d[3]*256*256+d[2]*256*256*256;
+                    console.log(time);
+                    // myApp.alert("用时："+time);
+                    track.render(time);
                     break;
                 case 3:
                     window.plugins.toast.showShortCenter("信息错误");
@@ -216,10 +247,11 @@ var track = {
             var data = track.arrayToBytes(track.order);
             ble.write(track.service.deviceId, track.service.serviceUUID, track.service.txCharacteristic, data, function () {
                 console.log(track.status.sending + " send success");
+                window.plugins.toast.showShortCenter("已发送指令");
                 track.order=null;
             }, function () {
                 console.log(track.status.sending + " send failed");
-                myApp.alert("开始指令发送失败请重试");
+                myApp.alert("指令发送失败请重试");
             });
         }
 
@@ -279,19 +311,21 @@ var track = {
             });
     },
     render:function(time){
-            var elements = document.getElementsByClassName("trackScore");
+        
+            var elements = document.getElementsByClassName("track-score");
             for (var i = 0; i < elements.length; i++) {
-                    elements[i].value = time;
+                if (!elements[i].value) {
+                    elements[i].value = track.formatTime(time);
                     if (i === elements.length - 1) {
                         total = 0;
                         for (var i = 0; i < elements.length; i++) {
-                            total = total + unformat(elements[i].value);
+                            total = total + track.unformat(elements[i].value);
                         }
                         console.log(total);
-                        document.getElementById('finalScore').value = formatTime(total);
+                        document.querySelector('.final-score').value = track.formatTime(total);
                     }
                     break;
-
+                }
             }
     }
 }
@@ -964,10 +998,18 @@ myApp.onPageInit('stopWatch', function (page) {
             switch(sa.type){
                 case "a1":
                     scoreFrom=1;
-                    $$(".scores").prepend('<div>'+ sa.name +'：<input class="timeScore score score1" name="score'+(index+1)+'"></div>');
+                    $$("#team1 .scores").append('<div>'+ sa.name +'：<input class="track-score score" name="score'+(index+1)+'"></div>');
+                break;
+                case "a2":
+                    scoreFrom=2;
+                    $$("#team1 .scores").append('<div>'+ sa.name +'：<input class="time-score score" name="score'+(index+1)+'"></div>');
+                break;
+                case "a3":
+                    scoreFrom=3;
+                    $$("#team1 .scores").append('<div>'+ sa.name +'：<input class="score" name="score'+(index+1)+'"></div>');
                 break;
                 case "b1":
-                    $$(".scores").prepend('<div>'+ sa.name +'：<input id="finalScore" class="score score1" name="score'+(index+1)+'"></div>');
+                    $$("#team1 .scores").append('<div>'+ sa.name +'：<input class="final-score score" name="score'+(index+1)+'"></div>');
                 break;
             }
         });
@@ -1109,7 +1151,7 @@ myApp.onPageInit('stopWatch', function (page) {
 
     function record() {
         stop();
-        var elements = document.getElementsByClassName("timeScore");
+        var elements = document.getElementsByClassName("time-score");
         for (var i = 0; i < elements.length; i++) {
             if (!elements[i].value && $time.innerHTML !== "00:00:00") {
                 elements[i].value = $time.innerHTML;
@@ -1122,7 +1164,7 @@ myApp.onPageInit('stopWatch', function (page) {
                         total = total + unformat(elements[i].value);
                     }
                     console.log(total);
-                    document.getElementById('finalScore').value = formatTime(total);
+                    document.querySelector('.final-score').value = formatTime(total);
                 }
                 break;
             }

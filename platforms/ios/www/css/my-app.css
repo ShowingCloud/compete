@@ -1,14 +1,24 @@
 /*golble*/
+/* Webkit Scrollbar */
 ::-webkit-scrollbar {
-   -webkit-appearance: none;
-   width: 7px;
+    width: 15px;
 }
-
+::-webkit-scrollbar-track {
+    background: #ffffff;
+    -webkit-box-shadow: inset 1px 1px 2px #E0E0E0;
+    border: 1px solid #D8D8D8;
+}
 ::-webkit-scrollbar-thumb {
-   border-radius: 4px;
-   background-color: rgba(0,0,0,.5);
-   -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+    background: #febd17;
+    -webkit-box-shadow: inset 1px 1px 2px rgba(155, 155, 155, 0.4);
 }
+::-webkit-scrollbar-thumb:hover {
+    background: #febd18;
+}
+::-webkit-scrollbar-thumb:active {
+    background: #febd17;
+    -webkit-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.3);
+} 
 
 body {
     color: #f7f7f7;
@@ -143,8 +153,8 @@ caption {
 }
 
 .page-content {
-    margin: 18% 10%;
-    height: 70%;
+    margin: 10% 10%;
+    height: 78%;
 }
 
 aside-linker {
@@ -217,9 +227,8 @@ aside-linker {
     -webkit-background-size: cover;
     background-size: cover;
     padding: 20px;
-    height: 35%;
     width: 80%;
-    margin: 0 auto;
+    margin: 55px auto 0 auto;
     font-size: 1.2em;
 }
 
@@ -265,6 +274,7 @@ aside-linker {
 /*score-selcet*/
 
 .title {
+    margin-top: 65px;
     text-align: right;
 }
 
@@ -389,29 +399,36 @@ aside-linker {
 /*player*/
 
 #queryPlayer {
-    margin-top: 5%;
+    margin-top: 65px;
+    font-size: 1.2em;
+    color: #e4f1ff;
 }
 
 #queryPlayer div,
 #queryPlayer span,
 #queryPlayer input,
 #queryPlayer a {
-    margin: 10px;
+    margin: 20px;
 }
 
+#queryPlayer a {
+    color: #9ac9ff;
+}
 #playerTable {
     background: url(../images/player-table.png);
     background-position: center center;
     background-repeat: no-repeat;
     -webkit-background-size: cover;
     background-size: cover;
-    height: 65%;
+    height: 60%;
+    color:#c9e3ff;
 }
 
 #playerTable table {
     border-collapse: collapse;
-    margin-left: 25px;
-    width: 92.5%;
+    margin-left: 15px;
+    width: 95%;
+    color:#c9e3ff;
 }
 
 #playerTable tr:last-child {
@@ -419,17 +436,17 @@ aside-linker {
 }
 
 #playerTable tr {
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid #c9e3ff;
 }
 
 #playerTable select {
-    margin: 35px 20px;
+    margin: 35px 20px 25px 20px;
     border: 0;
     width: 275px;
     font-size: 1.2em;
     background: none;
-    color: white;
     -webkit-appearance: none;
+    color:#c9e3ff;
 }
 
 #playerTable option {
@@ -439,6 +456,10 @@ aside-linker {
 
 #playerTable td {
     padding: 10px;
+}
+
+#playerTable .unfinished td:last-child{
+    color: #f36e6e;
 }
 
 
@@ -453,6 +474,7 @@ aside-linker {
     height: 60%;
     position: absolute;
     width: 100%;
+    margin-top: 55px;
 }
 
 #contact {
@@ -464,7 +486,7 @@ aside-linker {
     width: 80%;
     height: 120px;
     position: absolute;
-    bottom: 10%;
+    bottom: 40px;
 }
 
 #contact p {
@@ -504,6 +526,16 @@ aside-linker {
 
 .record-page{
     overflow: hidden;
+}
+
+div#scoreHeader{
+    margin: 20px auto;
+    border-bottom: 1px solid;
+    padding-bottom: 10px;
+}
+
+div#raceUp{
+    text-align: center;
 }
 
 #raceUp img{
@@ -569,18 +601,10 @@ stopwatch .sm-circle-btn {
 
 .scrollable {
     overflow: scroll;
+    height: 350px;
 }
 
-.scores {
-    height: 235px;
-}
-
-.timeScore {
-    border: none;
-    -webkit-user-select: none;
-}
-
-#finalScore {
+.time-score,.track-score,.final-score {
     border: none;
     -webkit-user-select: none;
 }
@@ -656,6 +680,7 @@ div.media-capture {
 
 .canvasWrapper {
     display: table;
+    margin-top: 20px;
 }
 
 .canvasWrapper span {
@@ -671,7 +696,7 @@ div.media-capture {
 /*Data page*/
 
 #data-top {
-    margin: 0 auto;
+    margin: 65px auto 0 auto;
     text-align: center;
 }
 
@@ -702,7 +727,7 @@ div.media-capture {
 .upload-all {
     width: 180px;
     position: absolute;
-    top: 0;
+    top: 65px;
     right: 0;
 }
 

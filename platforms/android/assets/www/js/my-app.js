@@ -26,7 +26,20 @@ var appOption = {
     serverHost: "http://dev.domelab.com"
 };
 
-var scoreAttr = {};
+var scoreAttr = [
+    {
+        name:"第一次",
+        type:"a1"
+    },
+    {
+        name:"第二次",
+        type:"a1"
+    },
+    {
+        name:"总分",
+        type:"b1"
+    }
+];
 
 if (!HTMLCanvasElement.prototype.toBlob) {
     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
@@ -48,8 +61,8 @@ if (!HTMLCanvasElement.prototype.toBlob) {
 }
 
 var temp = {
-    compete: {}
-    , event: {}
+    compete: {id:1,name:"机械奥运"}
+    , event: {id:1,name:"机器人短跑"}
     , schedule_name: "初赛"
     , kind: 1
     , th: 1
@@ -82,6 +95,33 @@ function printData(byteArrayData) {
 }
 
 var track = {
+    formatTime:function (time) {
+        function pad(num, size) {
+            var a = num;
+            if (a.toString().length > size) {
+                return a.toString().substring(0, size);
+            } else {
+                var s = "0000" + num;
+                return s.substr(s.length - size);
+            }
+
+        }
+        var h = m = s = ms = 0;
+        var newTime = '';
+
+        time = time % (60 * 60 * 1000);
+        m = Math.floor(time / (60 * 1000));
+        time = time % (60 * 1000);
+        s = Math.floor(time / 1000);
+        ms = time % 1000;
+
+        newTime = pad(m, 2) + ':' + pad(s, 2) + ':' + pad(ms, 2);
+        return newTime;
+    },
+    unformat:function (data) {
+        var a = data.split(":");
+        return a[0] * 60 * 1000 + a[1] * 1000 + a[2] * 10;
+    },
     status: {
         find: 0
         , playing: 0
@@ -112,13 +152,14 @@ var track = {
         rxCharacteristic: "6e400007-b5a3-f393-e0a9-e50e24dcca9e" // 蓝牙rx UUID
     }
     , scan: function () {
-        window.plugins.toast.showShortCenter("开始搜索");
+        myApp.showPreloader("正在搜寻赛道，请靠近赛道");
         track.status.find = 0;
         ble.startScan([track.service.serviceUUID], track.onDiscoverDevice, app.onError);
         setTimeout(function () {
             
             if (!track.status.find) {
                 window.plugins.toast.showShortCenter("未找到赛道");
+                myApp.hidePreloader();
                 ble.stopScan(function () {
                     console.log("Scan complete")
                 }, function () {
@@ -128,6 +169,8 @@ var track = {
         }, 10000);
     }
     , onDiscoverDevice: function (device) {
+        myApp.hidePreloader();
+        window.plugins.toast.showShortCenter("已找到赛道");
         ble.stopScan(function () {
                 console.log("Scan complete");
                 console.log(device);
@@ -140,7 +183,7 @@ var track = {
     }
     , connect: function (deviceId) {
         var onConnect = function () {
-            console.log("connected");
+            window.plugins.toast.showShortCenter("已连接赛道");
             ble.startNotification(deviceId, track.service.serviceUUID, track.service.rxCharacteristic, track.onData, track.onError);
             track.service.deviceId = deviceId;
             track.sendOrder();
@@ -156,12 +199,14 @@ var track = {
             switch (step) {
                 case 2:
                     window.plugins.toast.showShortCenter("闸门已打开");
+                    track.status.playing=1;
                     break;
                 case 5:
-                    var time = d[5]+d[4]*256+d[3]*256*256+d[2]*256*256*256;
-                    myApp.alert("用时："+time);
-                    track.render(time);
                     track.reset();
+                    var time = d[5]+d[4]*256+d[3]*256*256+d[2]*256*256*256;
+                    console.log(time);
+                    // myApp.alert("用时："+time);
+                    track.render(time);
                     break;
                 case 3:
                     window.plugins.toast.showShortCenter("信息错误");
@@ -192,6 +237,7 @@ var track = {
         track.init();
     }
     , reset: function () {
+        track.status.playing=null;
         track.order = [170, 6, 0, 0, 255];
         track.status.sending = "reset";
         track.init();
@@ -201,9 +247,11 @@ var track = {
             var data = track.arrayToBytes(track.order);
             ble.write(track.service.deviceId, track.service.serviceUUID, track.service.txCharacteristic, data, function () {
                 console.log(track.status.sending + " send success");
+                window.plugins.toast.showShortCenter("已发送指令");
                 track.order=null;
             }, function () {
                 console.log(track.status.sending + " send failed");
+                myApp.alert("指令发送失败请重试");
             });
         }
 
@@ -215,6 +263,16 @@ var track = {
         }, function () {
             window.plugins.toast.showShortCenter("蓝牙未能断开");
         });
+    }
+    ,errorConnect:function(error){
+        if(error){
+            console.log(error);
+        }
+        if(track.status.playing){
+            myApp.alert("蓝牙断开，请重新连上赛道，读取分数","",function(){
+                track.getScore();
+            });
+        }
     }
     , onError: function (reason) {
         myApp.alert(reason,"");
@@ -253,19 +311,21 @@ var track = {
             });
     },
     render:function(time){
-            var elements = document.getElementsByClassName("trackScore");
+        
+            var elements = document.getElementsByClassName("track-score");
             for (var i = 0; i < elements.length; i++) {
-                    elements[i].value = time;
+                if (!elements[i].value) {
+                    elements[i].value = track.formatTime(time);
                     if (i === elements.length - 1) {
                         total = 0;
                         for (var i = 0; i < elements.length; i++) {
-                            total = total + unformat(elements[i].value);
+                            total = total + track.unformat(elements[i].value);
                         }
                         console.log(total);
-                        document.getElementById('finalScore').value = formatTime(total);
+                        document.querySelector('.final-score').value = track.formatTime(total);
                     }
                     break;
-
+                }
             }
     }
 }
@@ -505,7 +565,7 @@ var app = {
             "event_id": event_id
         }, function (response) {
             console.log(response);
-            scoreAttr[event_id] = response;
+            //scoreAttr[event_id] = response;
         });
     }
     , getTeams: function (ed, group, schedule) {
@@ -931,6 +991,30 @@ myApp.onPageInit('data', function (page) {
 });
 
 myApp.onPageInit('stopWatch', function (page) {
+    var scoreFrom;
+    var drawed = 0;
+    if(scoreAttr){
+        scoreAttr.forEach(function(sa,index){
+            switch(sa.type){
+                case "a1":
+                    scoreFrom=1;
+                    $$("#team1 .scores").append('<div>'+ sa.name +'：<input class="track-score score" name="score'+(index+1)+'"></div>');
+                break;
+                case "a2":
+                    scoreFrom=2;
+                    $$("#team1 .scores").append('<div>'+ sa.name +'：<input class="time-score score" name="score'+(index+1)+'"></div>');
+                break;
+                case "a3":
+                    scoreFrom=3;
+                    $$("#team1 .scores").append('<div>'+ sa.name +'：<input class="score" name="score'+(index+1)+'"></div>');
+                break;
+                case "b1":
+                    $$("#team1 .scores").append('<div>'+ sa.name +'：<input class="final-score score" name="score'+(index+1)+'"></div>');
+                break;
+            }
+        });
+    }
+
 
     $$("#takePhoto").on("click", function () {
         var quantity = $$("#photos img").length;
@@ -952,7 +1036,7 @@ myApp.onPageInit('stopWatch', function (page) {
         }
 
     });
-    var drawed = 0;
+    
 
     if (temp.playerInfo) {
         $$(".playerInfo").append(temp.playerInfo);
@@ -967,7 +1051,7 @@ myApp.onPageInit('stopWatch', function (page) {
         app.submitScore(drawed);
     });
 
-
+    
     var Stopwatch = function () {
         var startAt = 0;
         var lapTime = 0;
@@ -1067,7 +1151,7 @@ myApp.onPageInit('stopWatch', function (page) {
 
     function record() {
         stop();
-        var elements = document.getElementsByClassName("timeScore");
+        var elements = document.getElementsByClassName("time-score");
         for (var i = 0; i < elements.length; i++) {
             if (!elements[i].value && $time.innerHTML !== "00:00:00") {
                 elements[i].value = $time.innerHTML;
@@ -1080,7 +1164,7 @@ myApp.onPageInit('stopWatch', function (page) {
                         total = total + unformat(elements[i].value);
                     }
                     console.log(total);
-                    document.getElementById('finalScore').value = formatTime(total);
+                    document.querySelector('.final-score').value = formatTime(total);
                 }
                 break;
             }
@@ -1092,16 +1176,18 @@ myApp.onPageInit('stopWatch', function (page) {
         var a = data.split(":");
         return a[0] * 60 * 1000 + a[1] * 1000 + a[2] * 10;
     }
+    console.log(scoreFrom);
     
-    // show();
-    // document.getElementById('start').onclick = start;
-    // document.getElementById('reset').onclick = reset;
-    // document.getElementById('record').onclick = record;
-    
-
-    document.getElementById('start').onclick = function(){track.raceUp()};
-    
-
+    if(scoreFrom===1){
+//        $$("#scoreHeader").append();
+        document.getElementById('raceUp').onclick = function(){track.raceUp()};
+    }else if(scoreFrom===2){
+        $$("#scoreHeader").append('<div id="stopwatch"><div id="time"></div><div class="btn-wrapper"><span id="reset" class="sm-circle-btn">重置</span><span id="record" class="sm-circle-btn">录入</span><span id="start" class="sm-circle-btn">开始</span></div></div>');
+        show();
+        document.getElementById('start').onclick = start;
+        document.getElementById('reset').onclick = reset;
+        document.getElementById('record').onclick = record;
+    }
     
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext("2d");
