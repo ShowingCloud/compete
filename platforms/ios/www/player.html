@@ -7,17 +7,26 @@
                 <a id="getPlyaer">确定</a>
             </div>
             <div>
-                <span>请输入选手参赛号码</span>
+                <span>也可扫描选手二维码</span>
                 <a id="QR">扫一扫</a>
             </div>
         </div>
 
         <div id="playerTable">
-            <select>
+            <!--<select>
                 <option value="all">所有选手</option>
                 <option value="finished">已完赛</option>
                 <option value="unfinished">未完赛</option>
-            </select>
+            </select>-->
+            <div class="wrapper－dropdown">
+                <span>所有队伍</span>
+                <div class="up-arrow"></div>
+                <ul class="dropdown">
+                    <li name="all">所有队伍</li>
+                    <li name="finished">已完赛</li>
+                    <li name="unfinished">未完赛</li>
+                </ul>
+            </div>
             <table>
                 <tr>
                     <td>队伍</td>
@@ -26,7 +35,7 @@
                     <td>指导老师</td>
                     <td>状态</td>
                 </tr>
-                <tr class="unfinished">
+                <tr class="finished">
                     <td>某某某</td>
                     <td>上海</td>
                     <td>18888888888</td>
@@ -34,7 +43,7 @@
                         <br>19999999</td>
                     <td>已完赛</td>
                 </tr>
-                <!--
+                
                 <tr class="finished">
                     <td>某某某</td>
                     <td>上海</td>
@@ -50,7 +59,7 @@
                     <td>某老师
                         <br>19999999</td>
                     <td>未完赛</td>
-                </tr>-->
+                </tr>
             </table>
         </div>
     </div>

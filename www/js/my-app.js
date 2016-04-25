@@ -1,3 +1,4 @@
+// "use strict";
 // Initialize the app
 var myApp = new Framework7();
 
@@ -11,12 +12,12 @@ var mainView = myApp.addView('.view-main', {
 
 //Initialize PouchDB
 var scoreDB = new PouchDB("score", {
-    adapter: 'websql'
-    , location: 2
+    adapter: 'websql',
+    location: 2
 });
 var msgDB = new PouchDB("msg", {
-    adapter: 'websql'
-    , location: 2
+    adapter: 'websql',
+    location: 2
 });
 //Not use remote PouchDb server
 var remoteCouch = false;
@@ -26,28 +27,24 @@ var appOption = {
     serverHost: "http://dev.domelab.com"
 };
 
-var scoreAttr = [
-    {
-        name:"第一次",
-        type:"a1"
-    },
-    {
-        name:"第二次",
-        type:"a1"
-    },
-    {
-        name:"总分",
-        type:"b1"
-    }
-];
+var scoreAttr = [{
+    name: "第一次",
+    type: "a1"
+}, {
+    name: "第二次",
+    type: "a1"
+}, {
+    name: "总分",
+    type: "b1"
+}];
 
 if (!HTMLCanvasElement.prototype.toBlob) {
     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
-        value: function (callback, type, quality) {
+        value: function(callback, type, quality) {
 
-            var binStr = atob(this.toDataURL(type, quality).split(',')[1])
-                , len = binStr.length
-                , arr = new Uint8Array(len);
+            var binStr = atob(this.toDataURL(type, quality).split(',')[1]),
+                len = binStr.length,
+                arr = new Uint8Array(len);
 
             for (var i = 0; i < len; i++) {
                 arr[i] = binStr.charCodeAt(i);
@@ -61,13 +58,19 @@ if (!HTMLCanvasElement.prototype.toBlob) {
 }
 
 var temp = {
-    compete: {id:1,name:"机械奥运"}
-    , event: {id:1,name:"机器人短跑"}
-    , schedule_name: "初赛"
-    , kind: 1
-    , th: 1
-    , team1_id: 0
-    , team2_id: 0
+    compete: {
+        id: 1,
+        name: "机械奥运"
+    },
+    event: {
+        id: 1,
+        name: "机器人短跑"
+    },
+    schedule_name: "初赛",
+    kind: 1,
+    th: 1,
+    team1_id: 0,
+    team2_id: 0
 };
 
 var judgeInfo = {};
@@ -81,8 +84,8 @@ function arrayToBytes(array) {
 }
 
 function printData(byteArrayData) {
-    var hex = []
-        , h, x, len = byteArrayData.length;
+    var hex = [],
+        h, x, len = byteArrayData.length;
 
 
     for (var i = 0; i < len; i++) {
@@ -95,7 +98,7 @@ function printData(byteArrayData) {
 }
 
 var track = {
-    formatTime:function (time) {
+    formatTime: function(time) {
         function pad(num, size) {
             var a = num;
             if (a.toString().length > size) {
@@ -118,25 +121,25 @@ var track = {
         newTime = pad(m, 2) + ':' + pad(s, 2) + ':' + pad(ms, 2);
         return newTime;
     },
-    unformat:function (data) {
+    unformat: function(data) {
         var a = data.split(":");
         return a[0] * 60 * 1000 + a[1] * 1000 + a[2] * 10;
     },
     status: {
-        find: 0
-        , playing: 0
-        , score: 0
-    }
-    , arrayToBytes: function (array) {
+        find: 0,
+        playing: 0,
+        score: 0
+    },
+    arrayToBytes: function(array) {
         var newArray = new Uint8Array(array.length);
         for (var i = 0, l = array.length; i < l; i++) {
             newArray[i] = parseInt(array[i], 10);
         }
         return newArray.buffer;
-    }
-    , printData: function (byteArrayData) {
-        var hex = []
-            , h, x, len = byteArrayData.length;
+    },
+    printData: function(byteArrayData) {
+        var hex = [],
+            h, x, len = byteArrayData.length;
         for (var i = 0; i < len; i++) {
             x = byteArrayData[i];
             h = x.toString(16);
@@ -144,54 +147,56 @@ var track = {
             hex.push(h);
         }
         return hex.join(' ');
-    }
-    , service: {
-        deviceId: ""
-        , serviceUUID: "6e400005-b5a3-f393-e0a9-e50e24dcca9e", //蓝牙服务UUID
+    },
+    service: {
+        deviceId: "",
+        serviceUUID: "6e400005-b5a3-f393-e0a9-e50e24dcca9e", //蓝牙服务UUID
         txCharacteristic: "6e400006-b5a3-f393-e0a9-e50e24dcca9e", // 蓝牙tx UUID
         rxCharacteristic: "6e400007-b5a3-f393-e0a9-e50e24dcca9e" // 蓝牙rx UUID
-    }
-    , scan: function () {
+    },
+    scan: function() {
         myApp.showPreloader("正在搜寻赛道，请靠近赛道");
         track.status.find = 0;
         ble.startScan([track.service.serviceUUID], track.onDiscoverDevice, app.onError);
-        setTimeout(function () {
-            
+        setTimeout(function() {
+
             if (!track.status.find) {
                 window.plugins.toast.showShortCenter("未找到赛道");
                 myApp.hidePreloader();
-                ble.stopScan(function () {
+                ble.stopScan(function() {
                     console.log("Scan complete")
-                }, function () {
+                }, function() {
                     console.log("stopScan failed")
                 });
             }
         }, 10000);
-    }
-    , onDiscoverDevice: function (device) {
+    },
+    onDiscoverDevice: function(device) {
         myApp.hidePreloader();
         window.plugins.toast.showShortCenter("已找到赛道");
-        ble.stopScan(function () {
-                console.log("Scan complete");
-                console.log(device);
-                track.connect(device.id);
-                track.status.find = 1;
-            }, function () {
-                console.log("stopScan failed")
-            });
-        
-    }
-    , connect: function (deviceId) {
-        var onConnect = function () {
+        ble.stopScan(function() {
+            console.log("Scan complete");
+            console.log(device);
+            track.connect(device.id);
+            track.status.find = 1;
+        }, function() {
+            console.log("stopScan failed")
+        });
+
+    },
+    connect: function(deviceId) {
+        var onConnect = function() {
             window.plugins.toast.showShortCenter("已连接赛道");
             ble.startNotification(deviceId, track.service.serviceUUID, track.service.rxCharacteristic, track.onData, track.onError);
             track.service.deviceId = deviceId;
             track.sendOrder();
         };
-        ble.connect(deviceId, onConnect, function(){myApp.alert("连接赛道失败，请重试","");});
-    }
-    , onData: function (data) {
-        var dataStr=track.printData(data);
+        ble.connect(deviceId, onConnect, function() {
+            myApp.alert("连接赛道失败，请重试", "");
+        });
+    },
+    onData: function(data) {
+        var dataStr = track.printData(data);
         console.log(dataStr);
         var d = new Uint8Array(data);
         var step = d[1];
@@ -199,11 +204,11 @@ var track = {
             switch (step) {
                 case 2:
                     window.plugins.toast.showShortCenter("闸门已打开");
-                    track.status.playing=1;
+                    track.status.playing = 1;
                     break;
                 case 5:
                     track.reset();
-                    var time = d[5]+d[4]*256+d[3]*256*256+d[2]*256*256*256;
+                    var time = d[5] + d[4] * 256 + d[3] * 256 * 256 + d[2] * 256 * 256 * 256;
                     console.log(time);
                     // myApp.alert("用时："+time);
                     track.render(time);
@@ -213,127 +218,127 @@ var track = {
                     break;
             }
         } else {
-            myApp.alert("收到奇怪的数据:"+dataStr,"");
+            myApp.alert("收到奇怪的数据:" + dataStr, "");
         }
-    }
-    , raceUp: function () {
+    },
+    raceUp: function() {
         track.order = [170, 1, 0, 0, 255];
         track.status.sending = "raceUp";
         track.init();
-    }
-    , getScore: function () {
+    },
+    getScore: function() {
         track.order = [170, 4, 0, 0, 255];
         track.status.sending = "getScore";
         track.init();
-    }
-    , openDoor: function () {
+    },
+    openDoor: function() {
         track.order = [170, 7, 0, 0, 255];
         track.status.sending = "openDoor";
         track.init();
-    }
-    , closeDoor: function () {
+    },
+    closeDoor: function() {
         track.order = [170, 8, 0, 0, 255];
         track.status.sending = "closeDoor";
         track.init();
-    }
-    , reset: function () {
-        track.status.playing=null;
+    },
+    reset: function() {
+        track.status.playing = null;
         track.order = [170, 6, 0, 0, 255];
         track.status.sending = "reset";
         track.init();
-    }
-    , sendOrder: function () {
+    },
+    sendOrder: function() {
         if (track.order) {
             var data = track.arrayToBytes(track.order);
-            ble.write(track.service.deviceId, track.service.serviceUUID, track.service.txCharacteristic, data, function () {
+            ble.write(track.service.deviceId, track.service.serviceUUID, track.service.txCharacteristic, data, function() {
                 console.log(track.status.sending + " send success");
                 window.plugins.toast.showShortCenter("已发送指令");
-                track.order=null;
-            }, function () {
+                track.order = null;
+            }, function() {
                 console.log(track.status.sending + " send failed");
                 myApp.alert("指令发送失败请重试");
             });
         }
 
-    }
-    , disconnect: function () {
-        ble.disconnect(deviceId, function () {
+    },
+    disconnect: function() {
+        ble.disconnect(deviceId, function() {
             window.plugins.toast.showShortCenter("已断开");
             track.order = null;
-        }, function () {
+        }, function() {
             window.plugins.toast.showShortCenter("蓝牙未能断开");
         });
-    }
-    ,errorConnect:function(error){
-        if(error){
+    },
+    errorConnect: function(error) {
+        if (error) {
             console.log(error);
         }
-        if(track.status.playing){
-            myApp.alert("蓝牙断开，请重新连上赛道，读取分数","",function(){
+        if (track.status.playing) {
+            myApp.alert("蓝牙断开，请重新连上赛道，读取分数", "", function() {
                 track.getScore();
             });
         }
-    }
-    , onError: function (reason) {
-        myApp.alert(reason,"");
+    },
+    onError: function(reason) {
+        myApp.alert(reason, "");
         track.order = null;
-    }
-    , init: function () {
+    },
+    init: function() {
         ble.isEnabled(
-            function () {
-                if(track.service.deviceId){
-                    ble.isConnected(track.service.deviceId,function () {
+            function() {
+                if (track.service.deviceId) {
+                    ble.isConnected(track.service.deviceId, function() {
                         track.sendOrder();
-                    }, function () {
+                    }, function() {
                         track.scan();
                     });
-                }else{
+                } else {
                     track.scan();
                 }
-            }
-            , function () {
-                myApp.alert("请打开蓝牙后重试","",function(){track.init()});
+            },
+            function() {
+                myApp.alert("请打开蓝牙后重试", "", function() {
+                    track.init()
+                });
             }
         );
     },
-    check:function(){
-             myApp.modal({
-                title:  '',
-                text: '请至赛道5米范围内，连接赛道',
-                buttons: [
-                {
-                    text: '连接',
-                    onClick: function() {
-                        track.init();
-                    }
+    check: function() {
+        myApp.modal({
+            title: '',
+            text: '请至赛道5米范围内，连接赛道',
+            buttons: [{
+                text: '连接',
+                onClick: function() {
+                    track.init();
                 }
-                ]
-            });
+            }]
+        });
     },
-    render:function(time){
-        
-            var elements = document.getElementsByClassName("track-score");
-            for (var i = 0; i < elements.length; i++) {
-                if (!elements[i].value) {
-                    elements[i].value = track.formatTime(time);
-                    if (i === elements.length - 1) {
-                        total = 0;
-                        for (var i = 0; i < elements.length; i++) {
-                            total = total + track.unformat(elements[i].value);
-                        }
-                        console.log(total);
-                        document.querySelector('.final-score').value = track.formatTime(total);
+    render: function(time) {
+
+        var elements = document.getElementsByClassName("track-score");
+        for (var i = 0; i < elements.length; i++) {
+            if (!elements[i].value) {
+                elements[i].value = track.formatTime(time);
+                if (i === elements.length - 1) {
+                    total = 0;
+                    for (var i = 0; i < elements.length; i++) {
+                        total = total + track.unformat(elements[i].value);
                     }
-                    break;
+                    console.log(total);
+                    document.querySelector('.final-score').value = track.formatTime(total);
                 }
+                break;
             }
+        }
     }
 }
 
 var app = {
-    init: function () {
+    init: function() {
         //Globle ajax error handller
-        $$(document).on('ajaxError', function (e) {
+        $$(document).on('ajaxError', function(e) {
             var xhr = e.detail.xhr;
             console.log(xhr);
             if (xhr.status === 401) {
@@ -351,7 +356,7 @@ var app = {
         //Check local judge data exciting
         var tempStr;
         tempStr = localStorage.getItem("judgeInfo");
-        if (typeof (tempStr) === "string") {
+        if (typeof(tempStr) === "string") {
             judgeInfo = JSON.parse(tempStr);
             app.showJudge(judgeInfo);
             app.onLogin(judgeInfo.authToken);
@@ -359,11 +364,11 @@ var app = {
             app.login();
         }
 
-        $$("#asideBar a").on("click", function (e) {
+        $$("#asideBar a").on("click", function(e) {
             var href = $$(this).data("href");
             if (mainView.activePage.name === "stopWatch") {
                 if (href !== "stopWatch.html") {
-                    myApp.confirm("是否放弃本次记分？", "", function (goto) {
+                    myApp.confirm("是否放弃本次记分？", "", function(goto) {
                         mainView.router.loadPage(href);
                     });
                 }
@@ -371,10 +376,10 @@ var app = {
                 mainView.router.loadPage(href);
             }
         });
-    }
-    , login: function () {
+    },
+    login: function() {
         $$("#login-btn").off('click');
-        String.prototype.getParam = function (str) {
+        String.prototype.getParam = function(str) {
                 str = str.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
                 var regex = new RegExp("[\\?&]*" + str + "=([^&#]*)");
                 var results = regex.exec(this);
@@ -385,26 +390,26 @@ var app = {
                 }
             }
             //Oauth2 job 
-        document.addEventListener("deviceready", function () {
+        document.addEventListener("deviceready", function() {
             var options = {
-                auth_url: 'http://dev.domelab.com/auth/login/authorize'
-                , token_url: 'http://dev.domelab.com/auth/login/access_token'
-                , client_id: '1'
-                , client_secret: '123456'
-                , redirect_uri: 'http://dev.domelab.com'
+                auth_url: 'http://dev.domelab.com/auth/login/authorize',
+                token_url: 'http://dev.domelab.com/auth/login/access_token',
+                client_id: '1',
+                client_secret: '123456',
+                redirect_uri: 'http://dev.domelab.com'
             }
 
             //Generate Login URL
             var paramObj = {
-                client_id: options.client_id
-                , redirect_uri: options.redirect_uri
-                , response_type: options.response_type
+                client_id: options.client_id,
+                redirect_uri: options.redirect_uri,
+                response_type: options.response_type
             };
             var login_url = options.auth_url + '?' + $$.serializeObject(paramObj);
             //Open an inappbrowser but not show it to user
             var ref = window.open(login_url, "_blank", "hidden=yes,clearcache=yes");
             var count = 0;
-            ref.addEventListener('loadstart', function (e) {
+            ref.addEventListener('loadstart', function(e) {
                 var url = e.url;
                 url = url.split("#")[0];
 
@@ -413,28 +418,28 @@ var app = {
                     ref.close();
                     //Get access token
                     $$.ajax({
-                        url: options.token_url
-                        , data: {
-                            code: code
-                            , client_id: options.client_id
-                            , client_secret: options.client_secret
-                            , redirect_uri: options.redirect_uri
-                            , grant_type: "authorization_code"
-                        }
-                        , method: 'POST'
-                        , success: function (data) {
+                        url: options.token_url,
+                        data: {
+                            code: code,
+                            client_id: options.client_id,
+                            client_secret: options.client_secret,
+                            redirect_uri: options.redirect_uri,
+                            grant_type: "authorization_code"
+                        },
+                        method: 'POST',
+                        success: function(data) {
                             //Get userInfo
                             var dataObj = JSON.parse(data);
                             $$.getJSON('http://dev.domelab.com/auth/login/user', {
                                 oauth_token: dataObj.access_token
-                            }, function (d) {
+                            }, function(d) {
                                 console.log(d);
                                 if ((d instanceof Object)) {
                                     judgeInfo = {
-                                        userId: d.id
-                                        , email: d.info.email
-                                        , nickname: d.extra.nickname
-                                        , authToken: d.info.private_token
+                                        userId: d.id,
+                                        email: d.info.email,
+                                        nickname: d.extra.nickname,
+                                        authToken: d.info.private_token
                                     };
                                     localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
                                     console.log('userInfo saved!');
@@ -443,19 +448,19 @@ var app = {
 
                                 }
                             });
-                        }
-                        , error: function (error) {
+                        },
+                        error: function(error) {
                             console.log(error);
                         }
                     });
                 }
             });
-            ref.addEventListener('loadstop', function (e) {
+            ref.addEventListener('loadstop', function(e) {
                 if (e.url === "http://dev.domelab.com/account/sign_in") {
                     if (!count) {
                         count++;
                         window.plugins.toast.showShortCenter("请登录");
-                        $$("#login-btn").on('click', function () {
+                        $$("#login-btn").on('click', function() {
                             var username = $$("#username").val();
                             var password = $$("#password").val();
                             if (typeof username === "string" && typeof password === "string") {
@@ -463,7 +468,7 @@ var app = {
                                 var script = "document.getElementsByName('user[login]')[0].value='" + username + "';" + "document.getElementsByName('user[password]')[0].value='" + password + "';" + "document.getElementById('new_user').submit();"
                                 ref.executeScript({
                                     code: script
-                                }, function (values) {
+                                }, function(values) {
                                     console.log(values);
                                 });
                             } else {
@@ -478,56 +483,56 @@ var app = {
             });
 
         });
-    }
-    , bind: function () {
+    },
+    bind: function() {
 
 
-    }
-    , onLogin: function (token) {
+    },
+    onLogin: function(token) {
         //get realtime message
         app.subscribeMsg(token);
         app.getResponse("27918d29c6ef4319a7d4bc92228187be");
-    }
-    , showJudge: function (judge) {
+    },
+    showJudge: function(judge) {
         console.log(judge);
         $$("#judgeId").text(judge.userId);
         $$("#judgeName").text(judge.nickname);
         $$("#login-container").hide();
         $$("#judge-info").show();
-    }
-    , getProcess: function () {
-        $$.getJSON("http://dev.domelab.com/api/v1/competitions", function (process) {
+    },
+    getProcess: function() {
+        $$.getJSON("http://dev.domelab.com/api/v1/competitions", function(process) {
             console.log(process);
             var processTemp = $$('#processTemp').html();
             var compiledTemp = Template7.compile(processTemp);
             var html = compiledTemp(process);
             $$("#homePage .page-content").append(html);
         });
-    }
-    , getResponse: function (token) {
-        $$.getJSON("http://192.168.1.128:3000/api/v1/users/" + token + "/user_for_event", function (response) {
+    },
+    getResponse: function(token) {
+        $$.getJSON("http://192.168.1.128:3000/api/v1/users/" + token + "/user_for_event", function(response) {
             $$("#judgeComptition").text(response.events[0].comp_name);
             var events = [];
-            response.events.forEach(function (e) {
+            response.events.forEach(function(e) {
                 events.push(e.name);
                 app.getScoreAttr(e.id);
             });
             $$("#judgeEvent").text(events.toString());
         });
-    }
-    , getEvents: function (comp_id) {
+    },
+    getEvents: function(comp_id) {
         $$.getJSON("http://192.168.1.128:3000/api/v1/competitions/events", {
             "comp_id": comp_id
-        }, function (response) {
+        }, function(response) {
             console.log(response);
             var schoolGroups = {
-                1: "小"
-                , 2: "中"
-                , 3: "初"
-                , 4: "高"
+                1: "小",
+                2: "中",
+                3: "初",
+                4: "高"
             };
-            response.events.forEach(function (g1, index1) {
-                g1.events.forEach(function (g2, index2) {
+            response.events.forEach(function(g1, index1) {
+                g1.events.forEach(function(g2, index2) {
                     var groupId = "group" + g2.id + "-" + g2.group;
                     if (index1 === 0 && index2 === 0) {
                         $$("#groups").append('<li><a href="#' + groupId + '" class="tab-link active">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>');
@@ -536,16 +541,16 @@ var app = {
                     }
                     $$("#eventsBoard .tabs").append('<div class="tab" id="' + groupId + '"></div>');
                     if (g2.z_e) {
-                        g2.z_e.forEach(function (ev) {
-                            $$('<div data-id="' + ev.id + '">' + ev.name + '</div>').appendTo("#" + groupId).on("click", function () {
+                        g2.z_e.forEach(function(ev) {
+                            $$('<div data-id="' + ev.id + '">' + ev.name + '</div>').appendTo("#" + groupId).on("click", function() {
                                 var compete = {
-                                    id: $$(".compete-select .active").data("id")
-                                    , name: $$(".compete-select .active").text()
+                                    id: $$(".compete-select .active").data("id"),
+                                    name: $$(".compete-select .active").text()
                                 };
                                 var event = {
-                                    id: $$(this).data("id")
-                                    , name: $$(this).text()
-                                    , group: g2.group
+                                    id: $$(this).data("id"),
+                                    name: $$(this).text(),
+                                    group: g2.group
                                 }
                                 temp.compete = compete;
                                 temp.event = event;
@@ -559,30 +564,30 @@ var app = {
                 });
             });
         });
-    }
-    , getScoreAttr: function (event_id) {
+    },
+    getScoreAttr: function(event_id) {
         $$.getJSON("http://192.168.1.128:3000/api/v1/events/score_attributes", {
             "event_id": event_id
-        }, function (response) {
+        }, function(response) {
             console.log(response);
             //scoreAttr[event_id] = response;
         });
-    }
-    , getTeams: function (ed, group, schedule) {
+    },
+    getTeams: function(ed, group, schedule) {
         var data = {
-            "ed": ed
-            , "group": group
+            "ed": ed,
+            "group": group
         };
         if (typeof schedule === "string") {
             data.schedule = schedule;
         }
 
-        $$.getJSON("http://192.168.1.128:3000/api/v1/competitions/event/teams", data, function (response) {
+        $$.getJSON("http://192.168.1.128:3000/api/v1/competitions/event/teams", data, function(response) {
             console.log(response.teams);
             if (response.teams[0]) {
                 var teams = response.teams[1];
                 var allTeamId = [];
-                teams.forEach(function (t) {
+                teams.forEach(function(t) {
                     allTeamId.push(t.id);
                     var mobile = t.mobile || "无";
                     var school = t.school;
@@ -603,23 +608,23 @@ var app = {
 
         });
 
-    }
-    , getMsg: function (token, page, per) {
+    },
+    getMsg: function(token, page, per) {
         $$.getJSON("http://192.168.1.128:3000/api/v1/users/" + token + "/notifications/", {
-            "page": page
-            , "per_page": per
-        }, function (response) {
+            "page": page,
+            "per_page": per
+        }, function(response) {
             console.log(response);
-            response.notifications.forEach(function (n) {
+            response.notifications.forEach(function(n) {
                 var d = new Date(n.created_at);
                 var time = d.toLocaleString().replace("GMT+8", "");
                 $$("#msgBoard ul").append("<li><p class='time'>" + time + "</p><p class='content'>" + n.content + "</p></li>");
             });
         });
-    }
-    , subscribeMsg: function (token) {
+    },
+    subscribeMsg: function(token) {
         //Get unread counts
-        $$.getJSON("http://dev.domelab.com/api/v1/users/" + token + "/notifications/unread ", function (unread) {
+        $$.getJSON("http://dev.domelab.com/api/v1/users/" + token + "/notifications/unread ", function(unread) {
             console.log(unread);
             $$("#msg").addClass("newMsg");
         });
@@ -627,15 +632,15 @@ var app = {
         var channel = "/channel/" + token;
         MessageBus.start();
         MessageBus.callbackInterval = 500;
-        MessageBus.subscribe(channel, function (d) {
+        MessageBus.subscribe(channel, function(d) {
             console.log(d);
             myApp.addNotification({
-                title: '重要通知'
-                , message: d.content
+                title: '重要通知',
+                message: d.content
             });
-            msgDB.post(d).then(function (response) {
+            msgDB.post(d).then(function(response) {
                 console.log(response);
-            }).catch(function (err) {
+            }).catch(function(err) {
                 console.log(err);
             });;
             // $$("#msgBoard ul").append("<li><p class='time'>" + d.time + "</p><p class='content'>" +
@@ -643,9 +648,9 @@ var app = {
             $$("#msg").addClass("newMsg");
         });
 
-    }
-    , takePhoto: function (limit) {
-        var photoSuccess = function (mediaFiles) {
+    },
+    takePhoto: function(limit) {
+        var photoSuccess = function(mediaFiles) {
             var i, path, len;
             for (i = 0, len = mediaFiles.length; i < len; i += 1) {
                 path = mediaFiles[i].fullPath;
@@ -655,7 +660,7 @@ var app = {
         };
 
         // capture error callback
-        var photoError = function (error) {
+        var photoError = function(error) {
             myApp.alert('Error code: ' + error.code, null, 'Capture Error');
         };
 
@@ -663,10 +668,10 @@ var app = {
         navigator.device.capture.captureImage(photoSuccess, photoError, {
             limit: limit
         });
-    }
-    , takeVideo: function () {
+    },
+    takeVideo: function() {
         // capture callback
-        var videoSuccess = function (mediaFiles) {
+        var videoSuccess = function(mediaFiles) {
 
             var path = mediaFiles[0].fullPath;
             var type = mediaFiles[0].type;
@@ -677,25 +682,25 @@ var app = {
         };
 
         // capture error callback
-        var videoError = function (error) {
+        var videoError = function(error) {
             myApp.alert('Error code: ' + error.code, null, 'Capture Error');
         };
 
         // start video capture
         navigator.device.capture.captureVideo(videoSuccess, videoError, {
-            limit: 1
-            , duration: 300
+            limit: 1,
+            duration: 300
         });
-    }
-    , submitScore: function (drawed) {
+    },
+    submitScore: function(drawed) {
         var scoreData = {
-            _attachments: {}
-            , score1: {}
-            , score2: {}
+            _attachments: {},
+            score1: {},
+            score2: {}
         };
         var remark;
         //Get score1
-        $$(".score").each(function (i, obj) {
+        $$(".score").each(function(i, obj) {
             var _this = $$(this);
             var value = _this.val();
             var name = _this.attr('name');
@@ -722,10 +727,10 @@ var app = {
         //Get signature
         var CanvasElement = document.getElementById("canvas");
 
-        CanvasElement.toBlob(function (blob) {
+        CanvasElement.toBlob(function(blob) {
             var signature = {
-                content_type: "image/jpeg"
-                , data: blob
+                content_type: "image/jpeg",
+                data: blob
             };
             scoreData._attachments.signature = signature;
         }, "image/jpeg", 0.95);
@@ -738,32 +743,32 @@ var app = {
         scoreData.kind = temp.kind;
         scoreData.th = temp.th;
         scoreData.upload = false;
-        scoreDB.put(scoreData).then(function (response) {
-            app.uploadScore(response.id, function () {
+        scoreDB.put(scoreData).then(function(response) {
+            app.uploadScore(response.id, function() {
                 myApp.hidePreloader();
-                myApp.alert("成绩已上传", "", function () {
+                myApp.alert("成绩已上传", "", function() {
                     mainView.router.back();
                 });
             });
-        }).catch(function (err) {
+        }).catch(function(err) {
             console.log(err);
         });
-    }
-    , uploadScore: function (doc_id, success) {
+    },
+    uploadScore: function(doc_id, success) {
         scoreDB.get(doc_id, {
-            attachments: true
-            , binary: true
-        }).then(function (doc) {
+            attachments: true,
+            binary: true
+        }).then(function(doc) {
             var toPost = {
-                event_id: doc.event.id
-                , schedule_name: doc.schedule_name
-                , kind: doc.kind
-                , th: doc.th
-                , team1_id: doc.player.code, // team2_id:doc.player.id,
-                score1: doc.score1
-                , note: doc.remark || ""
-                , confirm_sign: doc._attachments.signature.data
-                , device_no: device.uuid
+                event_id: doc.event.id,
+                schedule_name: doc.schedule_name,
+                kind: doc.kind,
+                th: doc.th,
+                team1_id: doc.player.code, // team2_id:doc.player.id,
+                score1: doc.score1,
+                note: doc.remark || "",
+                confirm_sign: doc._attachments.signature.data,
+                device_no: device.uuid
             };
             console.log(toPost);
             var form_data = new FormData();
@@ -780,26 +785,26 @@ var app = {
             }
 
             $$.ajax({
-                method: "POST"
-                , url: "http://dev.domelab.com/api/v1/scores/" + judgeInfo.authToken + "/score"
-                , contentType: "multipart/form-data"
-                , data: form_data
-                , dataType: "json"
-                , success: function (response) {
+                method: "POST",
+                url: "http://dev.domelab.com/api/v1/scores/" + judgeInfo.authToken + "/score",
+                contentType: "multipart/form-data",
+                data: form_data,
+                dataType: "json",
+                success: function(response) {
                     console.log(response);
                     doc.upload = "Yes";
                     return scoreDB.put(doc);
-                }
-                , error: function (error) {
+                },
+                error: function(error) {
                     console.log(error);
                 }
             });
 
-        }).then(function (response) {
+        }).then(function(response) {
             if (typeof success === "function") {
                 success();
             }
-        }).catch(function (err) {
+        }).catch(function(err) {
             console.log(err);
         });
     }
@@ -807,11 +812,11 @@ var app = {
 
 
 //logout
-$$(document).on("click", "#logout-btn", function () {
+$$(document).on("click", "#logout-btn", function() {
     judgeInfo = {};
     var channel = "/channel/" + judgeInfo.authToken;
     localStorage.removeItem("judgeInfo");
-    MessageBus.unsubscribe(channel, function () {
+    MessageBus.unsubscribe(channel, function() {
         console("unsubscribe");
     });
     MessageBus.stop();
@@ -820,9 +825,9 @@ $$(document).on("click", "#logout-btn", function () {
     app.login();
 });
 
-myApp.onPageInit('player', function (page) {
+myApp.onPageInit('player', function(page) {
     app.getTeams(temp.event.id, temp.event.group);
-    $$("#playerTable select").change(function () {
+    $$("#playerTable select").change(function() {
         var filter = $(this).val();
         if (filter === "unfinished") {
             $$("#playerTable .finished").css("display", "none");
@@ -835,13 +840,13 @@ myApp.onPageInit('player', function (page) {
         }
     });
 
-    $$("#getPlyaer").off("click").on("click", function () {
+    $$("#getPlyaer").off("click").on("click", function() {
         var playerId = $$("#playerId").val();
         if (playerId) {
             var url = "http://dev.domelab.com/api/v1/users/" + judgeInfo.authToken + "/team_players";
             $$.getJSON(url, {
                 identifier: playerId
-            }, function (data) {
+            }, function(data) {
                 console.log(data);
                 if (!data.result[0]) {
                     if (typeof data.result[1] === "string")
@@ -850,8 +855,8 @@ myApp.onPageInit('player', function (page) {
                 } else {
                     var team = data.result[1][0];
                     temp.player = {
-                        name: team.team_name
-                        , code: $$("#playerId").val()
+                        name: team.team_name,
+                        code: $$("#playerId").val()
                     };
                     var player = team;
                     var template, compiledTemp;
@@ -877,7 +882,7 @@ myApp.onPageInit('player', function (page) {
     });
 });
 
-myApp.onPageBeforeInit('home', function (page) {
+myApp.onPageBeforeInit('home', function(page) {
     if (judgeInfo.hasOwnProperty("userId")) {
         app.showJudge(judgeInfo);
         app.getResponse("27918d29c6ef4319a7d4bc92228187be");
@@ -887,7 +892,7 @@ myApp.onPageBeforeInit('home', function (page) {
     app.getProcess();
 });
 
-myApp.onPageInit('select', function (page) {
+myApp.onPageInit('select', function(page) {
     app.getEvents(1);
     // $$("#eventsBoard .tab div").on("click", function () {
     //     var compete = {
@@ -904,21 +909,42 @@ myApp.onPageInit('select', function (page) {
     // });
 });
 
-myApp.onPageInit('msg', function (page) {
+myApp.onPageInit('msg', function(page) {
     $$("#msg").removeClass("newMsg");
     msgDB.allDocs({
-        include_docs: true
-        , attachments: false
-    }).then(function (result) {
+        include_docs: true,
+        attachments: false
+    }).then(function(result) {
         console.log(result.rows);
-    }).catch(function (err) {
+    }).catch(function(err) {
         console.log(err);
     });
 
     app.getMsg("27918d29c6ef4319a7d4bc92228187be", 1, 20)
 });
 
-myApp.onPageInit('data', function (page) {
+myApp.onPageInit('player',function(){
+
+    $$(".wrapper－dropdown").on('click',function(event){
+       $$(this).toggleClass("active");
+       event.stopPropagation(); 
+    });
+    $$(".wrapper－dropdown li").on('click',function(){
+       var filter=$$(this).attr("name");
+       $$(".wrapper－dropdown span").text($$(this).text());
+        if (filter === "unfinished") {
+            $$("#playerTable .finished").css("display", "none");
+            $$("#playerTable .unfinished").css("display", null);
+        } else if (filter === "finished") {
+            $$("#playerTable .unfinished").css("display", "none");
+            $$("#playerTable .finished").css("display", null);
+        } else {
+            $$("#playerTable tr").css("display", null);
+        }
+    });
+});
+
+myApp.onPageInit('data', function(page) {
     function formatDate(d) {
         var myDate = new Date(d);
         var dateStr = (myDate.getMonth() + 1) + "/" + myDate.getDate() + "/" + myDate.getFullYear();
@@ -929,13 +955,13 @@ myApp.onPageInit('data', function (page) {
     var compid = [];
     var length = 0;
     scoreDB.allDocs({
-        include_docs: true
-        , attachments: false
-    }).then(function (result) {
+        include_docs: true,
+        attachments: false
+    }).then(function(result) {
         console.log(result);
         var template = $$("#data-item").html();
         var compiledTemp = Template7.compile(template);
-        result.rows.forEach(function (element, index) {
+        result.rows.forEach(function(element, index) {
             console.log(element);
             var doc = element.doc;
             //ToDo render score items
@@ -961,62 +987,60 @@ myApp.onPageInit('data', function (page) {
         });
         length = toUpload.length;
         $$("#notUploaded").text(length);
-        $$(".upload-all").on("click", function () {
+        $$(".upload-all").on("click", function() {
             if (length) {
                 console.log(toUpload);
                 var newLength = length;
-
-                function success() {
-                    if (newLength > 0) {
-                        if (newLength === 1) {
-                            myApp.hidePreloader();
-                            mainView.router.loadPage('Uploaded.html');
-                        } else {
-                            newLength--;
-                        }
-                    }
-                }
                 myApp.showPreloader("正在上传");
-                toUpload.forEach(function (i) {
-                    app.uploadScore(i, success);
+                toUpload.forEach(function(i) {
+                    app.uploadScore(i, function() {
+                        if (newLength > 0) {
+                            if (newLength === 1) {
+                                myApp.hidePreloader();
+                                mainView.router.loadPage('Uploaded.html');
+                            } else {
+                                newLength--;
+                            }
+                        }
+                    });
                 });
 
             }
         });
         console.log(toUpload);
 
-    }).catch(function (err) {
+    }).catch(function(err) {
         console.log(err);
     });
 });
 
-myApp.onPageInit('stopWatch', function (page) {
+myApp.onPageInit('stopWatch', function(page) {
     var scoreFrom;
     var drawed = 0;
-    if(scoreAttr){
-        scoreAttr.forEach(function(sa,index){
-            switch(sa.type){
+    if (scoreAttr) {
+        scoreAttr.forEach(function(sa, index) {
+            switch (sa.type) {
                 case "a1":
-                    scoreFrom=1;
-                    $$("#team1 .scores").append('<div>'+ sa.name +'：<input class="track-score score" name="score'+(index+1)+'"></div>');
-                break;
+                    scoreFrom = 1;
+                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="track-score score" name="score' + (index + 1) + '"></div>');
+                    break;
                 case "a2":
-                    scoreFrom=2;
-                    $$("#team1 .scores").append('<div>'+ sa.name +'：<input class="time-score score" name="score'+(index+1)+'"></div>');
-                break;
+                    scoreFrom = 2;
+                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="time-score score" name="score' + (index + 1) + '"></div>');
+                    break;
                 case "a3":
-                    scoreFrom=3;
-                    $$("#team1 .scores").append('<div>'+ sa.name +'：<input class="score" name="score'+(index+1)+'"></div>');
-                break;
+                    scoreFrom = 3;
+                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="score" name="score' + (index + 1) + '"></div>');
+                    break;
                 case "b1":
-                    $$("#team1 .scores").append('<div>'+ sa.name +'：<input class="final-score score" name="score'+(index+1)+'"></div>');
-                break;
+                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="final-score score" name="score' + (index + 1) + '"></div>');
+                    break;
             }
         });
     }
 
 
-    $$("#takePhoto").on("click", function () {
+    $$("#takePhoto").on("click", function() {
         var quantity = $$("#photos img").length;
         if (quantity === 3) {
             myApp.alert("最多拍三张照片", "");
@@ -1025,9 +1049,9 @@ myApp.onPageInit('stopWatch', function (page) {
         }
     });
 
-    $$("#takeVideo").on("click", function () {
+    $$("#takeVideo").on("click", function() {
         if ($$("#video video").length) {
-            myApp.confirm("是否重新拍摄视频？", function () {
+            myApp.confirm("是否重新拍摄视频？", function() {
                 $$("#video").html("");
                 app.takeVideo();
             });
@@ -1036,44 +1060,44 @@ myApp.onPageInit('stopWatch', function (page) {
         }
 
     });
-    
+
 
     if (temp.playerInfo) {
         $$(".playerInfo").append(temp.playerInfo);
         var mySwiper = myApp.swiper('.swiper-container', {
-            pagination: '.swiper-pagination'
-            , paginationHide: false
-            , paginationClickable: true
+            pagination: '.swiper-pagination',
+            paginationHide: false,
+            paginationClickable: true
         });
     }
 
-    $$("#submitScore").on("click", function () {
+    $$("#submitScore").on("click", function() {
         app.submitScore(drawed);
     });
 
-    
-    var Stopwatch = function () {
+
+    var Stopwatch = function() {
         var startAt = 0;
         var lapTime = 0;
 
-        var now = function () {
+        var now = function() {
             return (new Date()).getTime();
         };
 
-        this.start = function () {
+        this.start = function() {
             startAt = startAt ? startAt : now();
         };
 
-        this.stop = function () {
+        this.stop = function() {
             lapTime = startAt ? lapTime + now() - startAt : lapTime;
             startAt = 0;
         };
 
-        this.reset = function () {
+        this.reset = function() {
             lapTime = startAt = 0;
         };
 
-        this.time = function () {
+        this.time = function() {
             return lapTime + (startAt ? now() - startAt : 0);
         };
     };
@@ -1083,7 +1107,7 @@ myApp.onPageInit('stopWatch', function (page) {
     var total;
     var timeLimit = 5000;
 
-    var timeoutHander = function () {
+    var timeoutHander = function() {
         myApp.alert("已超时", "");
     };
 
@@ -1177,24 +1201,26 @@ myApp.onPageInit('stopWatch', function (page) {
         return a[0] * 60 * 1000 + a[1] * 1000 + a[2] * 10;
     }
     console.log(scoreFrom);
-    
-    if(scoreFrom===1){
-//        $$("#scoreHeader").append();
-        document.getElementById('raceUp').onclick = function(){track.raceUp()};
-    }else if(scoreFrom===2){
+
+    if (scoreFrom === 1) {
+        //        $$("#scoreHeader").append();
+        document.getElementById('raceUp').onclick = function() {
+            track.raceUp()
+        };
+    } else if (scoreFrom === 2) {
         $$("#scoreHeader").append('<div id="stopwatch"><div id="time"></div><div class="btn-wrapper"><span id="reset" class="sm-circle-btn">重置</span><span id="record" class="sm-circle-btn">录入</span><span id="start" class="sm-circle-btn">开始</span></div></div>');
         show();
         document.getElementById('start').onclick = start;
         document.getElementById('reset').onclick = reset;
         document.getElementById('record').onclick = record;
     }
-    
+
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext("2d");
     canvas.addEventListener("touchstart", touchStartHandler, false);
     canvas.addEventListener("touchmove", touchMoveHandler, false);
     canvas.addEventListener("touchend", touchEndHandler, false);
-    document.getElementById("clearCanvas").onclick = function () {
+    document.getElementById("clearCanvas").onclick = function() {
         drawed = 0;
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
         clickX = [];
@@ -1258,5 +1284,8 @@ myApp.onPageInit('stopWatch', function (page) {
 
 
 });
+    $(document).click(function() {
+        $('.wrapper－dropdown').removeClass('active');
+    });
 
 app.init();

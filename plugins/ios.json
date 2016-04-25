@@ -7,40 +7,10 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-console": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-plugin-network-information": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-vibration": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-sqlite-storage": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-camera": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-media": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-file-transfer": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
         "cordova-plugin-file": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-media-capture": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "phonegap-plugin-barcodescanner": {
@@ -62,6 +32,36 @@
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-battery-status": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-vibration": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-media-capture": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-media": {
             "PACKAGE_NAME": "cn.robodou.compete"
         }
     },

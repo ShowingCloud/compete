@@ -1,24 +1,22 @@
 /*golble*/
-/* Webkit Scrollbar */
-::-webkit-scrollbar {
-    width: 15px;
+.scrollable::-webkit-scrollbar {
+    -webkit-appearance: none;
 }
-::-webkit-scrollbar-track {
-    background: #ffffff;
-    -webkit-box-shadow: inset 1px 1px 2px #E0E0E0;
-    border: 1px solid #D8D8D8;
+.scrollable::-webkit-scrollbar:vertical {
+    width: 5px;
 }
-::-webkit-scrollbar-thumb {
-    background: #febd17;
-    -webkit-box-shadow: inset 1px 1px 2px rgba(155, 155, 155, 0.4);
+.scrollable::-webkit-scrollbar:horizontal {
+    height: 5px;
 }
-::-webkit-scrollbar-thumb:hover {
-    background: #febd18;
+.scrollable::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    border: 1px solid rgb(132, 132, 132);
+    background-color: rgba(131, 131, 131, 0.6);
 }
-::-webkit-scrollbar-thumb:active {
-    background: #febd17;
-    -webkit-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.3);
-} 
+
+.page-content{
+    -webkit-overflow-scrolling: auto;
+}
 
 body {
     color: #f7f7f7;
@@ -420,15 +418,17 @@ aside-linker {
     background-repeat: no-repeat;
     -webkit-background-size: cover;
     background-size: cover;
-    height: 60%;
+    height: 58%;
     color:#c9e3ff;
+    margin-top: 40px;
 }
 
 #playerTable table {
+    margin-top: 30px;
     border-collapse: collapse;
-    margin-left: 15px;
-    width: 95%;
-    color:#c9e3ff;
+    margin-left: 25px;
+    width: 92%;
+    color: #c9e3ff;
 }
 
 #playerTable tr:last-child {
@@ -447,6 +447,52 @@ aside-linker {
     background: none;
     -webkit-appearance: none;
     color:#c9e3ff;
+}
+
+#playerTable .wrapper－dropdown {
+    position: relative;
+    border: 0;
+    width: 253px;
+    margin-left: 25px;
+    font-size: 1.2em;
+    background: none;
+    color:#c9e3ff;
+    padding-top: 35px;
+    padding-left: 20px;
+}
+
+.dropdown{
+    position: absolute;
+    display: none;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgb(59, 30, 48);
+    border-radius: 0 0 20px 20px;
+    margin: 10px 0;
+    /*text-align: center;
+    padding-left: 0px;*/
+}
+
+.dropdown li{
+    padding:10px 0;
+}
+
+#playerTable .wrapper－dropdown.active ul{
+    display:block;
+}
+
+#playerTable .wrapper－dropdown.active .up-arrow{
+    display:block;
+}
+.up-arrow{
+    width: 0; 
+	height: 0; 
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid rgb(59, 30, 48);
+    display: none;
+    position: absolute;
 }
 
 #playerTable option {
