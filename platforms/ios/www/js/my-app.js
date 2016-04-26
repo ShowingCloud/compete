@@ -27,16 +27,32 @@ var appOption = {
     serverHost: "http://dev.domelab.com"
 };
 
-var scoreAttr = [{
-    name: "第一次",
-    type: "a1"
-}, {
-    name: "第二次",
-    type: "a1"
-}, {
-    name: "总分",
-    type: "b1"
-}];
+var scoreAttr = [
+    // {
+    //     name: "第一次",
+    //     type: "a1"
+    // }, {
+    //     name: "第二次",
+    //     type: "a1"
+    // }, {
+    //     name: "总分",
+    //         type: "b1"
+    // },
+    {
+        name: "第一次",
+        type: "a3"
+    }, {
+        name: "第二次",
+        type: "a3"
+    }, {
+        name: "总分",
+        type: "b1"
+    }
+];
+
+document.addEventListener("offline", function(){
+    myApp.alert("请打开你的网络","");
+}, false);
 
 if (!HTMLCanvasElement.prototype.toBlob) {
     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
@@ -64,7 +80,8 @@ var temp = {
     },
     event: {
         id: 1,
-        name: "机器人短跑"
+        name: "机器人短跑",
+        time_limit: 20
     },
     schedule_name: "初赛",
     kind: 1,
@@ -210,8 +227,13 @@ var track = {
                     track.reset();
                     var time = d[5] + d[4] * 256 + d[3] * 256 * 256 + d[2] * 256 * 256 * 256;
                     console.log(time);
-                    // myApp.alert("用时："+time);
-                    track.render(time);
+                    if(time>temp.event.limit*1000){
+                        myApp.alert("已超时："+track.formatTime(time)+"秒","");
+                        racke.render(temp.event.limit*1000);
+                    }else{
+                        track.render(time);
+                    }
+                    
                     break;
                 case 3:
                     window.plugins.toast.showShortCenter("信息错误");
@@ -316,7 +338,6 @@ var track = {
         });
     },
     render: function(time) {
-
         var elements = document.getElementsByClassName("track-score");
         for (var i = 0; i < elements.length; i++) {
             if (!elements[i].value) {
@@ -501,13 +522,19 @@ var app = {
         $$("#judge-info").show();
     },
     getProcess: function() {
-        $$.getJSON("http://dev.domelab.com/api/v1/competitions", function(process) {
-            console.log(process);
-            var processTemp = $$('#processTemp').html();
-            var compiledTemp = Template7.compile(processTemp);
-            var html = compiledTemp(process);
-            $$("#homePage .page-content").append(html);
-        });
+        if (typeof temp.process === 'string') {
+            $$("#schedule").html(temp.process);
+        } else {
+            $$.getJSON("http://dev.domelab.com/api/v1/competitions", function(process) {
+                console.log(process);
+                var processTemp = $$('#processTemp').html();
+                var compiledTemp = Template7.compile(processTemp);
+                var html = compiledTemp(process);
+                temp.process = html;
+                $$("#schedule").html(html);
+            });
+        }
+
     },
     getResponse: function(token) {
         $$.getJSON("http://192.168.1.128:3000/api/v1/users/" + token + "/user_for_event", function(response) {
@@ -602,7 +629,7 @@ var app = {
                         statusStr = " 已完赛";
                         trClass = "finished"
                     }
-                    $("#playerTable tbody").append("<tr class='" + trClass + "'><td>" + t.name + "</td><td>" + school + "</td><td>" + mobile + "</td><td>" + teacher + "<br>" + teacher_mobile + "</td><td>" + statusStr + "</td></tr>");
+                    $("#playerTable tbody").html("<tr class='" + trClass + "'><td>" + t.name + "</td><td>" + school + "</td><td>" + mobile + "</td><td>" + teacher + "<br>" + teacher_mobile + "</td><td>" + statusStr + "</td></tr>");
                 });
             }
 
@@ -923,15 +950,15 @@ myApp.onPageInit('msg', function(page) {
     app.getMsg("27918d29c6ef4319a7d4bc92228187be", 1, 20)
 });
 
-myApp.onPageInit('player',function(){
+myApp.onPageInit('player', function() {
 
-    $$(".wrapper－dropdown").on('click',function(event){
-       $$(this).toggleClass("active");
-       event.stopPropagation(); 
+    $$(".wrapper－dropdown").on('click', function(event) {
+        $$(this).toggleClass("active");
+        event.stopPropagation();
     });
-    $$(".wrapper－dropdown li").on('click',function(){
-       var filter=$$(this).attr("name");
-       $$(".wrapper－dropdown span").text($$(this).text());
+    $$(".wrapper－dropdown li").on('click', function() {
+        var filter = $$(this).attr("name");
+        $$(".wrapper－dropdown span").text($$(this).text());
         if (filter === "unfinished") {
             $$("#playerTable .finished").css("display", "none");
             $$("#playerTable .unfinished").css("display", null);
@@ -1030,6 +1057,8 @@ myApp.onPageInit('stopWatch', function(page) {
                     break;
                 case "a3":
                     scoreFrom = 3;
+                    $$(".scrollable").css("height","500px");
+                    $$("#scoreHeader").hide();
                     $$("#team1 .scores").append('<div>' + sa.name + '：<input class="score" name="score' + (index + 1) + '"></div>');
                     break;
                 case "b1":
@@ -1074,145 +1103,146 @@ myApp.onPageInit('stopWatch', function(page) {
     $$("#submitScore").on("click", function() {
         app.submitScore(drawed);
     });
-
-
-    var Stopwatch = function() {
-        var startAt = 0;
-        var lapTime = 0;
-
-        var now = function() {
-            return (new Date()).getTime();
-        };
-
-        this.start = function() {
-            startAt = startAt ? startAt : now();
-        };
-
-        this.stop = function() {
-            lapTime = startAt ? lapTime + now() - startAt : lapTime;
-            startAt = 0;
-        };
-
-        this.reset = function() {
-            lapTime = startAt = 0;
-        };
-
-        this.time = function() {
-            return lapTime + (startAt ? now() - startAt : 0);
-        };
-    };
-    var x = new Stopwatch();
-    var $time;
-    var clocktimer;
-    var total;
-    var timeLimit = 5000;
-
-    var timeoutHander = function() {
-        myApp.alert("已超时", "");
-    };
-
-    function pad(num, size) {
-        var a = num;
-        if (a.toString().length > size) {
-            return a.toString().substring(0, size);
-        } else {
-            var s = "0000" + num;
-            return s.substr(s.length - size);
-        }
-
-    }
-
-    function formatTime(time) {
-        var h = m = s = ms = 0;
-        var newTime = '';
-
-        time = time % (60 * 60 * 1000);
-        m = Math.floor(time / (60 * 1000));
-        time = time % (60 * 1000);
-        s = Math.floor(time / 1000);
-        ms = time % 1000;
-
-        newTime = pad(m, 2) + ':' + pad(s, 2) + ':' + pad(ms, 2);
-        return newTime;
-    }
-
-    function show() {
-        $time = document.getElementById('time');
-        update();
-    }
-
-    function update() {
-        var timeNow = x.time();
-
-        if (timeNow >= timeLimit) {
-            stop();
-            $time.innerHTML = formatTime(timeLimit);
-            timeoutHander();
-        } else {
-            $time.innerHTML = formatTime(timeNow);
-        }
-    }
-
-    function start() {
-        clocktimer = setInterval(update, 1);
-        x.start();
-        $$("#start").text("停止");
-        document.getElementById('start').onclick = stop;
-    }
-
-    function stop() {
-        x.stop();
-        clearInterval(clocktimer);
-        document.getElementById('start').onclick = start;
-        $$("#start").text("开始");
-    }
-
-    function reset() {
-        stop();
-        x.reset();
-        update();
-    }
-
-    function record() {
-        stop();
-        var elements = document.getElementsByClassName("time-score");
-        for (var i = 0; i < elements.length; i++) {
-            if (!elements[i].value && $time.innerHTML !== "00:00:00") {
-                elements[i].value = $time.innerHTML;
-                if (i === elements.length - 1) {
-                    reset();
-                    document.getElementById('start').onclick = document.getElementById('reset').onclick = document.getElementById('record').onclick = null;
-
-                    total = 0;
-                    for (var i = 0; i < elements.length; i++) {
-                        total = total + unformat(elements[i].value);
-                    }
-                    console.log(total);
-                    document.querySelector('.final-score').value = formatTime(total);
-                }
-                break;
-            }
-        }
-        x.reset();
-    }
-
-    function unformat(data) {
-        var a = data.split(":");
-        return a[0] * 60 * 1000 + a[1] * 1000 + a[2] * 10;
-    }
     console.log(scoreFrom);
-
     if (scoreFrom === 1) {
-        //        $$("#scoreHeader").append();
+        $$("#scoreHeader").html('<div id="raceUp"><img src="images/raceUp.png"></div>');
         document.getElementById('raceUp').onclick = function() {
             track.raceUp()
         };
+
     } else if (scoreFrom === 2) {
-        $$("#scoreHeader").append('<div id="stopwatch"><div id="time"></div><div class="btn-wrapper"><span id="reset" class="sm-circle-btn">重置</span><span id="record" class="sm-circle-btn">录入</span><span id="start" class="sm-circle-btn">开始</span></div></div>');
+        $$("#scoreHeader").html('<div id="stopwatch"><div id="time"></div><div class="btn-wrapper"><span id="reset" class="sm-circle-btn">重置</span> <span id="record" class="sm-circle-btn">录入</span><span id="start" class="sm-circle-btn">开始</span></div></div>');
+       (function(){
+           var Stopwatch = function() {
+            var startAt = 0;
+            var lapTime = 0;
+
+            var now = function() {
+                return (new Date()).getTime();
+            };
+
+            this.start = function() {
+                startAt = startAt ? startAt : now();
+            };
+
+            this.stop = function() {
+                lapTime = startAt ? lapTime + now() - startAt : lapTime;
+                startAt = 0;
+            };
+
+            this.reset = function() {
+                lapTime = startAt = 0;
+            };
+
+            this.time = function() {
+                return lapTime + (startAt ? now() - startAt : 0);
+            };
+        };
+        var x = new Stopwatch();
+        var $time;
+        var clocktimer;
+        var total;
+        var timeLimit = temp.event.time_limit * 1000;
+
+        var timeoutHander = function() {
+            myApp.alert("已超时", "");
+        };
+
+        function pad(num, size) {
+            var a = num;
+            if (a.toString().length > size) {
+                return a.toString().substring(0, size);
+            } else {
+                var s = "0000" + num;
+                return s.substr(s.length - size);
+            }
+
+        }
+
+        function formatTime(time) {
+            var h = m = s = ms = 0;
+            var newTime = '';
+
+            time = time % (60 * 60 * 1000);
+            m = Math.floor(time / (60 * 1000));
+            time = time % (60 * 1000);
+            s = Math.floor(time / 1000);
+            ms = time % 1000;
+
+            newTime = pad(m, 2) + ':' + pad(s, 2) + ':' + pad(ms, 2);
+            return newTime;
+        }
+
+        function show() {
+            $time = document.getElementById('time');
+            update();
+        }
+
+        function update() {
+            var timeNow = x.time();
+
+            if (timeNow >= timeLimit) {
+                stop();
+                $time.innerHTML = formatTime(timeLimit);
+                timeoutHander();
+            } else {
+                $time.innerHTML = formatTime(timeNow);
+            }
+        }
+
+        function start() {
+            clocktimer = setInterval(update, 1);
+            x.start();
+            $$("#start").text("停止");
+            document.getElementById('start').onclick = stop;
+        }
+
+        function stop() {
+            x.stop();
+            clearInterval(clocktimer);
+            document.getElementById('start').onclick = start;
+            $$("#start").text("开始");
+        }
+
+        function reset() {
+            stop();
+            x.reset();
+            update();
+        }
+
+        function record() {
+            stop();
+            var elements = document.getElementsByClassName("time-score");
+            for (var i = 0; i < elements.length; i++) {
+                if (!elements[i].value && $time.innerHTML !== "00:00:00") {
+                    elements[i].value = $time.innerHTML;
+                    if (i === elements.length - 1) {
+                        reset();
+                        document.getElementById('start').onclick = document.getElementById('reset').onclick = document.getElementById('record').onclick = null;
+
+                        total = 0;
+                        for (var i = 0; i < elements.length; i++) {
+                            total = total + unformat(elements[i].value);
+                        }
+                        console.log(total);
+                        document.querySelector('.final-score').value = formatTime(total);
+                    }
+                    break;
+                }
+            }
+            x.reset();
+        }
+
+        function unformat(data) {
+            var a = data.split(":");
+            return a[0] * 60 * 1000 + a[1] * 1000 + a[2] * 10;
+        }
         show();
         document.getElementById('start').onclick = start;
         document.getElementById('reset').onclick = reset;
         document.getElementById('record').onclick = record;
+       }());
+        
     }
 
     var canvas = document.getElementById('canvas');
@@ -1284,8 +1314,8 @@ myApp.onPageInit('stopWatch', function(page) {
 
 
 });
-    $(document).click(function() {
-        $('.wrapper－dropdown').removeClass('active');
-    });
+$(document).click(function() {
+    $('.wrapper－dropdown').removeClass('active');
+});
 
 app.init();

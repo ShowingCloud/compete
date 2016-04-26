@@ -5,9 +5,9 @@
 .scrollable::-webkit-scrollbar:vertical {
     width: 5px;
 }
-.scrollable::-webkit-scrollbar:horizontal {
+/*.scrollable::-webkit-scrollbar:horizontal {
     height: 5px;
-}
+}*/
 .scrollable::-webkit-scrollbar-thumb {
     border-radius: 6px;
     border: 1px solid rgb(132, 132, 132);
@@ -575,7 +575,7 @@ aside-linker {
 }
 
 div#scoreHeader{
-    margin: 20px auto;
+    margin: 20px auto 0 auto;
     border-bottom: 1px solid;
     padding-bottom: 10px;
 }
@@ -611,6 +611,7 @@ div#raceUp{
     display: table-cell;
     font-weight: 100;
     padding-left: 30px;
+    column-width: 200px;
 }
 
 .btn-wrapper{
@@ -660,6 +661,7 @@ stopwatch .sm-circle-btn {
 }
 
 .scoreBoard {
+    margin-top:20px;
     margin-left: 30px;
 }
 
@@ -729,13 +731,18 @@ div.media-capture {
     margin-top: 20px;
 }
 
-.canvasWrapper span {
+.canvasWrapper div {
     display: table-cell;
     vertical-align: top;
 }
 
 .canvasWrapper canvas {
     display: table-cell;
+}
+
+#clearCanvas{
+    display: block;
+    padding:5px;
 }
 
 
