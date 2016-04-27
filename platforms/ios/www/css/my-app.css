@@ -24,6 +24,8 @@ body {
     background: url(../images/MergedLayers.png) no-repeat center;
     -webkit-background-size: cover;
     background-size: cover;
+    -webkit-user-select: none;        
+    user-select: none;
 }
 
 .modal {

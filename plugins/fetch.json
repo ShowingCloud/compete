@@ -1,12 +1,4 @@
 {
-    "cordova-plugin-webserver": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-webserver"
-        },
-        "is_top_level": false,
-        "variables": {}
-    },
     "cordova-plugin-inappbrowser": {
         "source": {
             "type": "registry",
@@ -53,14 +45,6 @@
             "id": "cordova-plugin-compat"
         },
         "is_top_level": false,
-        "variables": {}
-    },
-    "nl-afas-cordova-plugin-securelocalstorage": {
-        "source": {
-            "type": "registry",
-            "id": "nl-afas-cordova-plugin-securelocalstorage"
-        },
-        "is_top_level": true,
         "variables": {}
     },
     "es6-promise-plugin": {
@@ -173,6 +157,14 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-media"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-secure-storage": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-secure-storage"
         },
         "is_top_level": true,
         "variables": {}

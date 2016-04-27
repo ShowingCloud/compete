@@ -44,9 +44,6 @@
     <feature name="Globalization">
         <param name="ios-package" value="CDVGlobalization" />
     </feature>
-    <feature name="SecureLocalStorage">
-        <param name="ios-package" value="SecureLocalStorage" />
-    </feature>
     <feature name="Device">
         <param name="ios-package" value="CDVDevice" />
     </feature>
@@ -83,6 +80,9 @@
     <feature name="Media">
         <param name="ios-package" value="CDVSound" />
     </feature>
+    <feature name="SecureStorage">
+        <param name="ios-package" value="SecureStorage" />
+    </feature>
     <feature name="BLE">
         <param name="ios-package" onload="true" value="BLECentralPlugin" />
     </feature>
@@ -96,10 +96,10 @@
             Apache Cordova Team
         </author>
     <preference name="Orientation" value="landscape" />
-    <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="*://*.domelab.com/*" />
     <allow-navigation href="*://*.robodou.cn/*" />
+    <allow-navigation href="http://localhost:*/*" />
     <access origin="http://*.domelab.com" />
     <access origin="http://*.robodou.cn" />
     <allow-intent href="http://*/*" />

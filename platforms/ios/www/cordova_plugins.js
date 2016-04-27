@@ -220,20 +220,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/es6-promise-plugin/www/promise.js",
-        "id": "es6-promise-plugin.Promise",
-        "pluginId": "es6-promise-plugin",
-        "runs": true
-    },
-    {
-        "file": "plugins/nl-afas-cordova-plugin-securelocalstorage/www/plugins.SecureLocalStorage.js",
-        "id": "nl-afas-cordova-plugin-securelocalstorage.SecureLocalStorage",
-        "pluginId": "nl-afas-cordova-plugin-securelocalstorage",
-        "clobbers": [
-            "cordova.plugins.SecureLocalStorage"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-ble-central/www/ble.js",
         "id": "cordova-plugin-ble-central.ble",
         "pluginId": "cordova-plugin-ble-central",
@@ -434,19 +420,30 @@ module.exports = [
         "clobbers": [
             "window.Media"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-secure-storage/www/securestorage.js",
+        "id": "cordova-plugin-secure-storage.SecureStorage",
+        "pluginId": "cordova-plugin-secure-storage",
+        "clobbers": [
+            "SecureStorage"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-secure-storage/www/sjcl_ss.js",
+        "id": "cordova-plugin-secure-storage.sjcl_ss",
+        "pluginId": "cordova-plugin-secure-storage",
+        "runs": true
     }
 ];
 module.exports.metadata = 
 // TOP OF METADATA
 {
     "cordova-plugin-inappbrowser": "1.3.0",
-    "cordova-plugin-webserver": "1.0.3",
     "cordova-plugin-file": "4.1.1",
     "phonegap-plugin-barcodescanner": "4.1.0",
     "cordova-plugin-x-toast": "2.5.0",
     "cordova-plugin-globalization": "1.0.3",
-    "es6-promise-plugin": "3.0.2",
-    "nl-afas-cordova-plugin-securelocalstorage": "0.1.8",
     "cordova-plugin-compat": "1.0.0",
     "cordova-plugin-ble-central": "1.0.6",
     "cordova-plugin-device": "1.1.2",
@@ -460,7 +457,8 @@ module.exports.metadata =
     "cordova-sqlite-storage": "1.2.1",
     "cordova-plugin-file-transfer": "1.5.1",
     "cordova-plugin-media-capture": "1.3.0",
-    "cordova-plugin-media": "2.3.0"
+    "cordova-plugin-media": "2.3.0",
+    "cordova-plugin-secure-storage": "2.2.1"
 }
 // BOTTOM OF METADATA
 });
