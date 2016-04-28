@@ -68,9 +68,6 @@
         <param name="onload" value="true" />
     </feature>
     <preference name="StatusBarStyle" value="lightcontent" />
-    <feature name="SQLitePlugin">
-        <param name="ios-package" value="SQLitePlugin" />
-    </feature>
     <feature name="FileTransfer">
         <param name="ios-package" value="CDVFileTransfer" />
     </feature>
@@ -82,6 +79,9 @@
     </feature>
     <feature name="SecureStorage">
         <param name="ios-package" value="SecureStorage" />
+    </feature>
+    <feature name="SQLitePlugin">
+        <param name="ios-package" value="SQLitePlugin" />
     </feature>
     <feature name="BLE">
         <param name="ios-package" onload="true" value="BLECentralPlugin" />
@@ -99,7 +99,7 @@
     <access origin="*" />
     <allow-navigation href="*://*.domelab.com/*" />
     <allow-navigation href="*://*.robodou.cn/*" />
-    <allow-navigation href="http://localhost:*/*" />
+    <allow-navigation href="http://localhost/*" />
     <access origin="http://*.domelab.com" />
     <access origin="http://*.robodou.cn" />
     <allow-intent href="http://*/*" />

@@ -129,14 +129,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-sqlite-storage": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-sqlite-storage"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-file-transfer": {
         "source": {
             "type": "registry",
@@ -165,6 +157,14 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-secure-storage"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-sqlite-2": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-sqlite-2"
         },
         "is_top_level": true,
         "variables": {}

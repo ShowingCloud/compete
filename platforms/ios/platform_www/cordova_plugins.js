@@ -326,14 +326,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
-        "id": "cordova-sqlite-storage.SQLitePlugin",
-        "pluginId": "cordova-sqlite-storage",
-        "clobbers": [
-            "SQLitePlugin"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-file-transfer/www/FileTransferError.js",
         "id": "cordova-plugin-file-transfer.FileTransferError",
         "pluginId": "cordova-plugin-file-transfer",
@@ -434,6 +426,14 @@ module.exports = [
         "id": "cordova-plugin-secure-storage.sjcl_ss",
         "pluginId": "cordova-plugin-secure-storage",
         "runs": true
+    },
+    {
+        "file": "plugins/cordova-plugin-sqlite-2/dist/sqlite-plugin.js",
+        "id": "cordova-plugin-sqlite-2.sqlitePlugin",
+        "pluginId": "cordova-plugin-sqlite-2",
+        "clobbers": [
+            "sqlitePlugin"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -454,11 +454,11 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.2.2",
     "cordova-plugin-camera": "2.2.0",
     "cordova-plugin-statusbar": "2.1.3",
-    "cordova-sqlite-storage": "1.2.1",
     "cordova-plugin-file-transfer": "1.5.1",
     "cordova-plugin-media-capture": "1.3.0",
     "cordova-plugin-media": "2.3.0",
-    "cordova-plugin-secure-storage": "2.2.1"
+    "cordova-plugin-secure-storage": "2.2.1",
+    "cordova-plugin-sqlite-2": "1.0.3"
 }
 // BOTTOM OF METADATA
 });

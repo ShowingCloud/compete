@@ -69,10 +69,6 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"SQLitePlugin\"><param name=\"ios-package\" value=\"SQLitePlugin\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"FileTransfer\"><param name=\"ios-package\" value=\"CDVFileTransfer\" /></feature>",
                             "count": 1
                         },
@@ -86,6 +82,10 @@
                         },
                         {
                             "xml": "<feature name=\"SecureStorage\"><param name=\"ios-package\" value=\"SecureStorage\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"SQLitePlugin\"><param name=\"ios-package\" value=\"SQLitePlugin\" /></feature>",
                             "count": 1
                         }
                     ],
@@ -155,9 +155,6 @@
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-sqlite-storage": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
         "cordova-plugin-file-transfer": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
@@ -168,6 +165,9 @@
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-secure-storage": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-sqlite-2": {
             "PACKAGE_NAME": "cn.robodou.compete"
         }
     },
@@ -499,14 +499,6 @@
             ]
         },
         {
-            "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
-            "id": "cordova-sqlite-storage.SQLitePlugin",
-            "pluginId": "cordova-sqlite-storage",
-            "clobbers": [
-                "SQLitePlugin"
-            ]
-        },
-        {
             "file": "plugins/cordova-plugin-file-transfer/www/FileTransferError.js",
             "id": "cordova-plugin-file-transfer.FileTransferError",
             "pluginId": "cordova-plugin-file-transfer",
@@ -607,6 +599,14 @@
             "id": "cordova-plugin-secure-storage.sjcl_ss",
             "pluginId": "cordova-plugin-secure-storage",
             "runs": true
+        },
+        {
+            "file": "plugins/cordova-plugin-sqlite-2/dist/sqlite-plugin.js",
+            "id": "cordova-plugin-sqlite-2.sqlitePlugin",
+            "pluginId": "cordova-plugin-sqlite-2",
+            "clobbers": [
+                "sqlitePlugin"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -625,10 +625,10 @@
         "cordova-plugin-whitelist": "1.2.2",
         "cordova-plugin-camera": "2.2.0",
         "cordova-plugin-statusbar": "2.1.3",
-        "cordova-sqlite-storage": "1.2.1",
         "cordova-plugin-file-transfer": "1.5.1",
         "cordova-plugin-media-capture": "1.3.0",
         "cordova-plugin-media": "2.3.0",
-        "cordova-plugin-secure-storage": "2.2.1"
+        "cordova-plugin-secure-storage": "2.2.1",
+        "cordova-plugin-sqlite-2": "1.0.3"
     }
 }

@@ -12,7 +12,7 @@
     <access origin="*" />
     <allow-navigation href="*://*.domelab.com/*" />
     <allow-navigation href="*://*.robodou.cn/*" />
-    <allow-navigation href="http://localhost:*/*" />
+    <allow-navigation href="http://localhost/*" />
     <access origin="http://*.domelab.com" />
     <access origin="http://*.robodou.cn" />
     <allow-intent href="http://*/*" />

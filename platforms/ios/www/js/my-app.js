@@ -48,12 +48,10 @@ var mainView = myApp.addView('.view-main', {
 
 //Initialize PouchDB
 var scoreDB = new PouchDB("score", {
-    adapter: 'websql',
-    location: 2
+    adapter: 'websql'
 });
 var msgDB = new PouchDB("msg", {
-    adapter: 'websql',
-    location: 2
+    adapter: 'websql'
 });
 //Not use remote PouchDb server
 var remoteCouch = false;
@@ -65,10 +63,10 @@ var appOption = {
 
 var scoreAttr = [{
     name: "第一次",
-    type: "a1"
+    type: "a2"
 }, {
     name: "第二次",
-    type: "a1"
+    type: "a2"
 }, {
     name: "总分",
     type: "b1"
@@ -510,7 +508,7 @@ var app = {
                             var password = $$("#password").val();
                             if (typeof username === "string" && typeof password === "string") {
                                 //Inject script to inappbrowser to submit the login form
-                                var script = "document.getElementsByName('user[login]')[0].value='" + username + "';" + "document.getElementsByName('user[password]')[0].value='" + password + "';" + "document.getElementById('new_user').submit();"
+                                var script = "document.getElementsByName('user[login]')[0].value='" + username.replace(/\s+/g, '') + "';" + "document.getElementsByName('user[password]')[0].value='" + password.replace(/\s+/g, '') + "';" + "document.getElementById('new_user').submit();"
                                 ref.executeScript({
                                     code: script
                                 }, function(values) {
