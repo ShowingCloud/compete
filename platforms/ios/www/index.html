@@ -75,9 +75,10 @@
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
                     <p>姓名：{{username}}</p>
-                    <p>参赛编号：{{playCode}}</p>
+                    <p>参赛编号：{{@root.playCode}}</p>
+                    <p>性别：{{#js_compare "this.gender === 1"}}男{{else}}女{{/js_compare}} </p>
                     <p>学校：{{school}}</p>
-                    <p class="play-event">参赛项目：{{this.eventName}}</p>
+                    <p class="play-event">参赛项目：{{@root.eventName}}</p>
                 </div>
             </div>
             {{/each}}
@@ -87,11 +88,13 @@
     </script>
 
     <script id="playerTemp" type="text/template7">
-        <p>姓名：{{user.0.username}}</p>
-        <p>参赛编号：{{playCode}}</p>
-        <p>学校：{{user.0.school}}</p>
-        <p> 性别：{{user.0.gender}}</p>
-        <p class="play-event">参赛项目：{{eventName}}</p>
+        {{#each user}}
+            <p>姓名：{{username}}</p>
+            <p>参赛编号：{{@root.playCode}}</p>
+            <p>性别：{{#js_compare "this.gender === 1"}}男{{else}}女{{/js_compare}} </p>
+            <p>学校：{{school}}</p>
+            <p class="play-event">参赛项目：{{@root.eventName}}</p>
+        {{/each}}
     </script>
 
     <script id="data-item" type="text/template7">

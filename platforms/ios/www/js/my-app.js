@@ -896,7 +896,6 @@ myApp.onPageInit('player', function(page) {
             $$.getJSON(url, {
                 identifier: playerId
             }, function(data) {
-                console.log(data);
                 if (!data.result[0]) {
                     if (typeof data.result[1] === "string")
                         myApp.alert(data.result[1], "");
