@@ -6,38 +6,6 @@ var myApp = new Framework7({
 
 var uuid;
 
-document.addEventListener("deviceready",function(){
-    var ss = new cordova.plugins.SecureStorage(
-    function() {
-        console.log('Success')
-    },
-    function(error) {
-        console.log('Error ' + error);
-    },
-    'robodou');
-
-    ss.get(
-        function(value) {
-            console.log('Success, got ' + value);
-            uuid=value;
-        },
-        function(error) {
-            console.log('Error ' + error);
-            ss.set(
-                function(key) {
-                    console.log('Set ' + key);
-                    uuid=key;
-                },
-                function(error) {
-                    console.log('Error ' + error);
-                },
-                'uuid', device.uuid);
-        },
-        'uuid');
-});
-
-
-
 // Export selectors engine
 var $$ = Dom7;
 
@@ -71,10 +39,6 @@ var scoreAttr = [{
     name: "总分",
     type: "b1"
 }];
-
-document.addEventListener("offline", function() {
-    myApp.alert("请打开你的网络", "");
-}, false);
 
 if (!HTMLCanvasElement.prototype.toBlob) {
     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
@@ -380,21 +344,7 @@ var track = {
 
 var app = {
     init: function() {
-        //Globle ajax error handller
-        $$(document).on('ajaxError', function(e) {
-            var xhr = e.detail.xhr;
-            console.log(xhr);
-            if (xhr.status === 401) {
-                myApp.alert("登陆失效，请重新登陆", "");
-                localStorage.removeItem("judgeInfo");
-                judgeInfo = {};
-                mainView.router.loadPage("index.html");
-                MessageBus.stop();
-                $$("#judge-info").hide();
-                $$("#login-container").show();
-                app.login();
-            }
-        });
+        app.bind();
         app.getProcess();
         //Check local judge data exciting
         var tempStr;
@@ -528,7 +478,109 @@ var app = {
         });
     },
     bind: function() {
+        //Globle ajax error handller
+        $$(document).on('ajaxError', function(e) {
+            var xhr = e.detail.xhr;
+            console.log(xhr);
+            if (xhr.status === 401) {
+                myApp.alert("登陆失效，请重新登陆", "");
+                localStorage.removeItem("judgeInfo");
+                judgeInfo = {};
+                mainView.router.loadPage("index.html");
+                MessageBus.stop();
+                $$("#judge-info").hide();
+                $$("#login-container").show();
+                app.login();
+            }
+        });
 
+        //Save uuid in keychain
+        document.addEventListener("deviceready", function() {
+            var ss = new cordova.plugins.SecureStorage(
+                function() {
+                    console.log('Success')
+                },
+                function(error) {
+                    console.log('Error ' + error);
+                },
+                'robodou');
+
+            ss.get(
+                function(value) {
+                    console.log('Success, got ' + value);
+                    uuid = value;
+                },
+                function(error) {
+                    console.log('Error ' + error);
+                    ss.set(
+                        function(key) {
+                            console.log('Set ' + key);
+                            uuid = key;
+                        },
+                        function(error) {
+                            console.log('Error ' + error);
+                        },
+                        'uuid', device.uuid);
+                },
+                'uuid');
+        });
+
+        //Listening network status
+        document.addEventListener("offline", function() {
+            myApp.alert("请打开你的网络", "");
+        }, false);
+
+        
+        $$(document).click(function() {
+            $('.wrapper－dropdown').removeClass('active');
+        });
+
+        //Check uuid
+        $$('#msg').on('taphold', function() {
+            myApp.alert(uuid, '');
+        });
+
+        //Handling logout
+        $$(document).on("click", "#logout-btn", function() {
+            judgeInfo = {};
+            var channel = "/channel/" + judgeInfo.authToken;
+            localStorage.removeItem("judgeInfo");
+            MessageBus.unsubscribe(channel, function() {
+                console("unsubscribe");
+            });
+            MessageBus.stop();
+            $$("#judge-info").hide();
+            $$("#login-container").show();
+            app.login();
+        });
+        
+        $$(document).on("click", "#getPlyaer", function() {
+            var playerId = $$("#playerId").val();
+            if (playerId) {
+                app.teamInfo(playerId);
+            } else {
+                myApp.alert("请输入选手编号", "");
+            }
+        });
+
+        $$(document).on("click", "#QR", function() {
+            cordova.plugins.barcodeScanner.scan(
+                function(result) {
+
+                    if (result.text) {
+                        myApp.alert("获得二维码: " + result.text);
+                        app.teamInfo(result.text);
+                    } else {
+                        myApp.alert("请输入选手编号", "");
+                    }
+
+                },
+                function(error) {
+                    myApp.alert("扫描失败: " + error);
+                }
+            );
+
+        });
 
     },
     onLogin: function(token) {
@@ -657,6 +709,44 @@ var app = {
 
         });
 
+    },
+    teamInfo: function(playerId) {
+        if (typeof playerId === "string") {
+            var url = "http://dev.domelab.com/api/v1/users/" + judgeInfo.authToken + "/team_players";
+            $$.getJSON(url, {
+                identifier: playerId
+            }, function(data) {
+                if (!data.result[0]) {
+                    if (typeof data.result[1] === "string")
+                        myApp.alert(data.result[1], "");
+                    return;
+                } else {
+                    var team = data.result[1][0];
+                    temp.player = {
+                        name: team.team_name,
+                        code: $$("#playerId").val()
+                    };
+                    var player = team;
+                    var template, compiledTemp;
+                    player.eventName = temp.compete.name + "-" + temp.event.name;
+                    player.playCode = $$("#playerId").val();
+                    console.log(player);
+                    if (team.user.length === 1) {
+                        template = $$('#playerTemp').html();
+                    } else {
+                        template = $$('#teamTemp').html();
+                    }
+
+                    compiledTemp = Template7.compile(template);
+
+                    temp.playerInfo = compiledTemp(player);
+                    console.log(temp);
+                    mainView.router.loadPage('stopWatch.html');
+                }
+            });
+        } else {
+            console.log("no playerId");
+        }
     },
     getMsg: function(token, page, per) {
         $$.getJSON("http://192.168.1.128:3000/api/v1/users/" + token + "/notifications/", {
@@ -859,21 +949,6 @@ var app = {
     }
 };
 
-
-//logout
-$$(document).on("click", "#logout-btn", function() {
-    judgeInfo = {};
-    var channel = "/channel/" + judgeInfo.authToken;
-    localStorage.removeItem("judgeInfo");
-    MessageBus.unsubscribe(channel, function() {
-        console("unsubscribe");
-    });
-    MessageBus.stop();
-    $$("#judge-info").hide();
-    $$("#login-container").show();
-    app.login();
-});
-
 myApp.onPageInit('player', function(page) {
     app.getTeams(temp.event.id, temp.event.group);
     $$("#playerTable select").change(function() {
@@ -889,45 +964,6 @@ myApp.onPageInit('player', function(page) {
         }
     });
 
-    $$("#getPlyaer").off("click").on("click", function() {
-        var playerId = $$("#playerId").val();
-        if (playerId) {
-            var url = "http://dev.domelab.com/api/v1/users/" + judgeInfo.authToken + "/team_players";
-            $$.getJSON(url, {
-                identifier: playerId
-            }, function(data) {
-                if (!data.result[0]) {
-                    if (typeof data.result[1] === "string")
-                        myApp.alert(data.result[1], "");
-                    return;
-                } else {
-                    var team = data.result[1][0];
-                    temp.player = {
-                        name: team.team_name,
-                        code: $$("#playerId").val()
-                    };
-                    var player = team;
-                    var template, compiledTemp;
-                    player.eventName = temp.compete.name + "-" + temp.event.name;
-                    player.playCode = $$("#playerId").val();
-                    console.log(player);
-                    if (team.user.length === 1) {
-                        template = $$('#playerTemp').html();
-                    } else {
-                        template = $$('#teamTemp').html();
-                    }
-
-                    compiledTemp = Template7.compile(template);
-
-                    temp.playerInfo = compiledTemp(player);
-                    console.log(temp);
-                    mainView.router.loadPage('stopWatch.html');
-                }
-            });
-        } else {
-            myApp.alert("请输入选手编号", "");
-        }
-    });
 });
 
 myApp.onPageBeforeInit('home', function(page) {
@@ -1334,13 +1370,6 @@ myApp.onPageInit('stopWatch', function(page) {
     }
 
 
-});
-$(document).click(function() {
-    $('.wrapper－dropdown').removeClass('active');
-});
-
-$$('#msg').on('taphold', function() {
-    myApp.alert(uuid,'');
 });
 
 app.init();
