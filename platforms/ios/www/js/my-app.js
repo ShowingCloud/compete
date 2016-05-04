@@ -354,6 +354,7 @@ var app = {
             app.showJudge(judgeInfo);
             app.onLogin(judgeInfo.authToken);
         } else {
+            $$("#login-container").show();
             app.login();
         }
 
@@ -532,7 +533,7 @@ var app = {
 
         
         $$(document).click(function() {
-            $('.wrapper－dropdown').removeClass('active');
+            $$('.wrapper－dropdown').removeClass('active');
         });
 
         //Check uuid
@@ -971,6 +972,8 @@ myApp.onPageBeforeInit('home', function(page) {
         app.showJudge(judgeInfo);
         app.getResponse("27918d29c6ef4319a7d4bc92228187be");
     } else {
+        $$("#login-container").show();
+        $$("#judge-info").hide();
         app.login();
     }
     app.getProcess();

@@ -354,6 +354,7 @@ var app = {
             app.showJudge(judgeInfo);
             app.onLogin(judgeInfo.authToken);
         } else {
+            $$("#login-container").show();
             app.login();
         }
 
@@ -532,7 +533,7 @@ var app = {
 
         
         $$(document).click(function() {
-            $('.wrapper－dropdown').removeClass('active');
+            $$('.wrapper－dropdown').removeClass('active');
         });
 
         //Check uuid
@@ -682,6 +683,12 @@ var app = {
         if (typeof schedule === "string") {
             data.schedule = schedule;
         }
+        
+        function htmlToElement(html) {
+            var template = document.createElement('template');
+            template.innerHTML = html;
+            return template.content.firstChild;
+        }
 
         $$.getJSON("http://192.168.1.128:3000/api/v1/competitions/event/teams", data, function(response) {
             console.log(response.teams);
@@ -703,7 +710,7 @@ var app = {
                         statusStr = " 已完赛";
                         trClass = "finished"
                     }
-                    $("#playerTable tbody").html("<tr class='" + trClass + "'><td>" + t.name + "</td><td>" + school + "</td><td>" + mobile + "</td><td>" + teacher + "<br>" + teacher_mobile + "</td><td>" + statusStr + "</td></tr>");
+                    $$("#playerTable tbody").append(htmlToElement("<tr class='" + trClass + "'><td>" + t.name + "</td><td>" + school + "</td><td>" + mobile + "</td><td>" + teacher + "<br>" + teacher_mobile + "</td><td>" + statusStr + "</td></tr>"));
                 });
             }
 
@@ -971,6 +978,8 @@ myApp.onPageBeforeInit('home', function(page) {
         app.showJudge(judgeInfo);
         app.getResponse("27918d29c6ef4319a7d4bc92228187be");
     } else {
+        $$("#login-container").show();
+        $$("#judge-info").hide();
         app.login();
     }
     app.getProcess();
