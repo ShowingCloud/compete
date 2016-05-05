@@ -18,6 +18,10 @@
     -webkit-overflow-scrolling: auto;
 }
 
+.hidden{
+    display: none;
+}
+
 body {
     color: #f7f7f7;
     font-family: 'Adobe Heiti Std';
@@ -478,6 +482,11 @@ aside-linker {
 
 .dropdown li{
     padding:10px 0;
+}
+
+#table-wrapper{
+    height: 240px;
+    overflow-y: scroll;
 }
 
 #playerTable .wrapper－dropdown.active ul{

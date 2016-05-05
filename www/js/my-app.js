@@ -344,34 +344,42 @@ var track = {
 
 var app = {
     init: function() {
-        app.bind();
-        app.getProcess();
-        //Check local judge data exciting
-        var tempStr;
-        tempStr = localStorage.getItem("judgeInfo");
-        if (typeof(tempStr) === "string") {
-            judgeInfo = JSON.parse(tempStr);
-            app.showJudge(judgeInfo);
-            app.onLogin(judgeInfo.authToken);
-        } else {
-            $$("#login-container").show();
-            app.login();
-        }
-
-        $$("#asideBar a").on("click", function(e) {
-            var href = $$(this).data("href");
-            if (mainView.activePage.name === "stopWatch") {
-                if (href !== "stopWatch.html") {
-                    myApp.confirm("是否放弃本次记分？", "", function(goto) {
-                        mainView.router.loadPage(href);
-                    });
-                }
+        document.addEventListener('DOMContentLoaded', function() {
+            app.bind();
+            app.getProcess();
+            //Check local judge data exciting
+            var tempStr;
+            tempStr = localStorage.getItem("judgeInfo");
+            if (typeof(tempStr) === "string") {
+                judgeInfo = JSON.parse(tempStr);
+                app.showJudge(judgeInfo);
+                app.onLogin(judgeInfo.authToken);
             } else {
-                mainView.router.loadPage(href);
+
+                app.login();
             }
-        });
+
+            $$("#asideBar a").on("click", function(e) {
+                var href = $$(this).data("href");
+                if (mainView.activePage.name === "stopWatch") {
+                    if (href !== "stopWatch.html") {
+                        myApp.confirm("是否放弃本次记分？", "", function(goto) {
+                            mainView.router.loadPage(href);
+                            if(track.status.playing){
+                                track.reset();
+                            }
+                        });
+                    }
+                } else {
+                    mainView.router.loadPage(href);
+                }
+            });
+        }, false);
+
     },
     login: function() {
+        $$("#login-container").show();
+        $$("#judge-info").hide();
         $$("#login-btn").off('click');
         String.prototype.getParam = function(str) {
                 str = str.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -483,15 +491,15 @@ var app = {
         $$(document).on('ajaxError', function(e) {
             var xhr = e.detail.xhr;
             console.log(xhr);
-            if (xhr.status === 401) {
-                myApp.alert("登陆失效，请重新登陆", "");
-                localStorage.removeItem("judgeInfo");
-                judgeInfo = {};
-                mainView.router.loadPage("index.html");
-                MessageBus.stop();
-                $$("#judge-info").hide();
-                $$("#login-container").show();
-                app.login();
+            if (xhr.status === 401 ) {
+                if((new URL(xhr.requestUrl)).hostname==="dev.domelab.com"){
+                    myApp.alert("登陆失效，请重新登陆", "");
+                    localStorage.removeItem("judgeInfo");
+                    judgeInfo = {};
+                    mainView.router.loadPage("index.html");
+                    MessageBus.stop();
+                    app.login();
+                }
             }
         });
 
@@ -531,7 +539,7 @@ var app = {
             myApp.alert("请打开你的网络", "");
         }, false);
 
-        
+
         $$(document).click(function() {
             $$('.wrapper－dropdown').removeClass('active');
         });
@@ -550,11 +558,10 @@ var app = {
                 console("unsubscribe");
             });
             MessageBus.stop();
-            $$("#judge-info").hide();
-            $$("#login-container").show();
+
             app.login();
         });
-        
+
         $$(document).on("click", "#getPlyaer", function() {
             var playerId = $$("#playerId").val();
             if (playerId) {
@@ -617,7 +624,7 @@ var app = {
             var events = [];
             response.events.forEach(function(e) {
                 events.push(e.name);
-                app.getScoreAttr(e.id);
+                //app.getScoreAttr(e.id);
             });
             $$("#judgeEvent").text(events.toString());
         });
@@ -657,6 +664,7 @@ var app = {
                                 temp.compete = compete;
                                 temp.event = event;
                                 mainView.router.loadPage('player.html');
+                                app.getScoreAttr(event.id);
                             });
                         });
                         if (index1 === 0 && index2 === 0) {
@@ -673,6 +681,7 @@ var app = {
         }, function(response) {
             console.log(response);
             //scoreAttr[event_id] = response;
+            scoreAttr = response;
         });
     },
     getTeams: function(ed, group, schedule) {
@@ -683,7 +692,7 @@ var app = {
         if (typeof schedule === "string") {
             data.schedule = schedule;
         }
-        
+
         function htmlToElement(html) {
             var template = document.createElement('template');
             template.innerHTML = html;
@@ -695,6 +704,8 @@ var app = {
             if (response.teams[0]) {
                 var teams = response.teams[1];
                 var allTeamId = [];
+                var tbody = $$("#playerTable tbody");
+                tbody.html("");
                 teams.forEach(function(t) {
                     allTeamId.push(t.id);
                     var mobile = t.mobile || "无";
@@ -710,7 +721,7 @@ var app = {
                         statusStr = " 已完赛";
                         trClass = "finished"
                     }
-                    $$("#playerTable tbody").append(htmlToElement("<tr class='" + trClass + "'><td>" + t.name + "</td><td>" + school + "</td><td>" + mobile + "</td><td>" + teacher + "<br>" + teacher_mobile + "</td><td>" + statusStr + "</td></tr>"));
+                    tbody.append(htmlToElement("<tr class='" + trClass + "'><td>" + t.name + "</td><td>" + school + "</td><td>" + mobile + "</td><td>" + teacher + "<br>" + teacher_mobile + "</td><td>" + statusStr + "</td></tr>"));
                 });
             }
 
@@ -978,8 +989,7 @@ myApp.onPageBeforeInit('home', function(page) {
         app.showJudge(judgeInfo);
         app.getResponse("27918d29c6ef4319a7d4bc92228187be");
     } else {
-        $$("#login-container").show();
-        $$("#judge-info").hide();
+
         app.login();
     }
     app.getProcess();
