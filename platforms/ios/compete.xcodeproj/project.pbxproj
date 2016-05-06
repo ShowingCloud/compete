@@ -63,6 +63,9 @@
 		76F81DAC2E794811B13C7E10 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = B9761DA903CB4A3DBBC8253E /* SSKeychainQuery.m */; };
 		8A088DF573824811964C5B5F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C15E356A9F84FF19D561BC0 /* Security.framework */; };
 		DC2DB9E2C264439E84EDDDBF /* SQLitePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 38E08D2CE6874EA089129C7A /* SQLitePlugin.m */; };
+		286D8EEA808246C8BECD8A56 /* VideoEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A8376B15C4348F2BE95509E /* VideoEditor.m */; };
+		0906A763E21E4D0B8D4F752D /* SDAVAssetExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB6C95531E049CC9062620E /* SDAVAssetExportSession.m */; };
+		A0668612168C4F2BBEB7B713 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D26B94335B7144239CC18B3D /* MediaPlayer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -179,6 +182,11 @@
 		6C15E356A9F84FF19D561BC0 /* Security.framework */ = {isa = PBXFileReference; name = "Security.framework"; path = "System/Library/Frameworks/Security.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		38E08D2CE6874EA089129C7A /* SQLitePlugin.m */ = {isa = PBXFileReference; name = "SQLitePlugin.m"; path = "cordova-plugin-sqlite-2/SQLitePlugin.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 		8995AE6F1E6B4839A8CD00DC /* SQLitePlugin.h */ = {isa = PBXFileReference; name = "SQLitePlugin.h"; path = "cordova-plugin-sqlite-2/SQLitePlugin.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		3A8376B15C4348F2BE95509E /* VideoEditor.m */ = {isa = PBXFileReference; name = "VideoEditor.m"; path = "cordova-plugin-video-editor/VideoEditor.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		CEB6C95531E049CC9062620E /* SDAVAssetExportSession.m */ = {isa = PBXFileReference; name = "SDAVAssetExportSession.m"; path = "cordova-plugin-video-editor/SDAVAssetExportSession.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		5841949D408D42D0ABC55B36 /* VideoEditor.h */ = {isa = PBXFileReference; name = "VideoEditor.h"; path = "cordova-plugin-video-editor/VideoEditor.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		C85ED3F171C34279B95C32F2 /* SDAVAssetExportSession.h */ = {isa = PBXFileReference; name = "SDAVAssetExportSession.h"; path = "cordova-plugin-video-editor/SDAVAssetExportSession.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		D26B94335B7144239CC18B3D /* MediaPlayer.framework */ = {isa = PBXFileReference; name = "MediaPlayer.framework"; path = "System/Library/Frameworks/MediaPlayer.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,6 +211,7 @@
 				B196F36A4FA34C79A6663BA0 /* CoreBluetooth.framework in Frameworks */,
 				C99AB4C0A9DA400EA0A8C7D1 /* WebKit.framework in Frameworks */,
 				8A088DF573824811964C5B5F /* Security.framework in Frameworks */,
+				A0668612168C4F2BBEB7B713 /* MediaPlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,6 +300,7 @@
 				95C7991C4AC548199229157A /* CoreBluetooth.framework */,
 				3F25B6BEC5CD4A5A935CFFF5 /* WebKit.framework */,
 				6C15E356A9F84FF19D561BC0 /* Security.framework */,
+				D26B94335B7144239CC18B3D /* MediaPlayer.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -374,6 +384,10 @@
 				37C33978E0FD4C9FAC614641 /* SSKeychainQuery.h */,
 				38E08D2CE6874EA089129C7A /* SQLitePlugin.m */,
 				8995AE6F1E6B4839A8CD00DC /* SQLitePlugin.h */,
+				3A8376B15C4348F2BE95509E /* VideoEditor.m */,
+				CEB6C95531E049CC9062620E /* SDAVAssetExportSession.m */,
+				5841949D408D42D0ABC55B36 /* VideoEditor.h */,
+				C85ED3F171C34279B95C32F2 /* SDAVAssetExportSession.h */,
 			);
 			name = Plugins;
 			path = compete/Plugins;
@@ -528,6 +542,8 @@
 				24F01480B2244948B4361AA8 /* SSKeychain.m in Sources */,
 				76F81DAC2E794811B13C7E10 /* SSKeychainQuery.m in Sources */,
 				DC2DB9E2C264439E84EDDDBF /* SQLitePlugin.m in Sources */,
+				286D8EEA808246C8BECD8A56 /* VideoEditor.m in Sources */,
+				0906A763E21E4D0B8D4F752D /* SDAVAssetExportSession.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

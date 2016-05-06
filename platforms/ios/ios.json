@@ -87,6 +87,10 @@
                         {
                             "xml": "<feature name=\"SQLitePlugin\"><param name=\"ios-package\" value=\"SQLitePlugin\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"VideoEditor\"><param name=\"ios-package\" value=\"VideoEditor\" /></feature>",
+                            "count": 1
                         }
                     ],
                     "/widget": [
@@ -168,6 +172,9 @@
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-sqlite-2": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-video-editor": {
             "PACKAGE_NAME": "cn.robodou.compete"
         }
     },
@@ -607,6 +614,22 @@
             "clobbers": [
                 "sqlitePlugin"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-video-editor/www/VideoEditor.js",
+            "id": "cordova-plugin-video-editor.VideoEditor",
+            "pluginId": "cordova-plugin-video-editor",
+            "clobbers": [
+                "VideoEditor"
+            ]
+        },
+        {
+            "file": "plugins/cordova-plugin-video-editor/www/VideoEditorOptions.js",
+            "id": "cordova-plugin-video-editor.VideoEditorOptions",
+            "pluginId": "cordova-plugin-video-editor",
+            "clobbers": [
+                "VideoEditorOptions"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -629,6 +652,7 @@
         "cordova-plugin-media-capture": "1.3.0",
         "cordova-plugin-media": "2.3.0",
         "cordova-plugin-secure-storage": "2.2.1",
-        "cordova-plugin-sqlite-2": "1.0.3"
+        "cordova-plugin-sqlite-2": "1.0.3",
+        "cordova-plugin-video-editor": "1.0.8"
     }
 }

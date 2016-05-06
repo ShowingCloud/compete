@@ -434,6 +434,22 @@ module.exports = [
         "clobbers": [
             "sqlitePlugin"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-video-editor/www/VideoEditor.js",
+        "id": "cordova-plugin-video-editor.VideoEditor",
+        "pluginId": "cordova-plugin-video-editor",
+        "clobbers": [
+            "VideoEditor"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-video-editor/www/VideoEditorOptions.js",
+        "id": "cordova-plugin-video-editor.VideoEditorOptions",
+        "pluginId": "cordova-plugin-video-editor",
+        "clobbers": [
+            "VideoEditorOptions"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -458,7 +474,8 @@ module.exports.metadata =
     "cordova-plugin-media-capture": "1.3.0",
     "cordova-plugin-media": "2.3.0",
     "cordova-plugin-secure-storage": "2.2.1",
-    "cordova-plugin-sqlite-2": "1.0.3"
+    "cordova-plugin-sqlite-2": "1.0.3",
+    "cordova-plugin-video-editor": "1.0.8"
 }
 // BOTTOM OF METADATA
 });

@@ -832,10 +832,33 @@ var app = {
 
             var path = mediaFiles[0].fullPath;
             var type = mediaFiles[0].type;
-            var v = "<video controls='controls'>";
-            v += "<source src='" + path + "' type='" + type + "'>";
-            v += "</video>";
-            $$("#video").append(v);
+            console.log("video path:"+path);
+            VideoEditor.createThumbnail(
+                function(result){
+                    console.log("Thumbnail path:"+result,"");
+                    var v = "<video controls='controls' poster='"+result+"' >";
+                    v += "<source src='" + path + "' type='" + type + "'>";
+                    v += "</video>";
+                    $$("#video").append(v);
+                }, // success cb 
+                function(e){
+                    var v = "<video controls='controls'>";
+                    v += "<source src='" + path + "' type='" + type + "'>";
+                    v += "</video>";
+                    $$("#video").append(v);
+                    console.log(e);
+                }, // error cb 
+                {
+                    fileUri: path, // the path to the video on the device 
+                    outputFileName: 'thumbnail', // the file name for the JPEG image 
+                    atTime: 2, // optional, location in the video to create the thumbnail (in seconds) 
+                    width: 320, // optional, width of the thumbnail 
+                    height: 480, // optional, height of the thumbnail 
+                    quality: 100 // optional, quality of the thumbnail (between 1 and 100) 
+                }
+            );
+            
+            
         };
 
         // capture error callback

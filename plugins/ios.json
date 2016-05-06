@@ -63,6 +63,9 @@
         },
         "cordova-plugin-sqlite-2": {
             "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-video-editor": {
+            "PACKAGE_NAME": "cn.robodou.compete"
         }
     },
     "dependent_plugins": {
