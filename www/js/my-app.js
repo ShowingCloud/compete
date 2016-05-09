@@ -365,7 +365,7 @@ var app = {
                     if (href !== "stopWatch.html") {
                         myApp.confirm("是否放弃本次记分？", "", function(goto) {
                             mainView.router.loadPage(href);
-                            if(track.status.playing){
+                            if (track.status.playing) {
                                 track.reset();
                             }
                         });
@@ -491,8 +491,8 @@ var app = {
         $$(document).on('ajaxError', function(e) {
             var xhr = e.detail.xhr;
             console.log(xhr);
-            if (xhr.status === 401 ) {
-                if((new URL(xhr.requestUrl)).hostname==="dev.domelab.com"){
+            if (xhr.status === 401) {
+                if ((new URL(xhr.requestUrl)).hostname === "dev.domelab.com") {
                     myApp.alert("登陆失效，请重新登陆", "");
                     localStorage.removeItem("judgeInfo");
                     judgeInfo = {};
@@ -829,19 +829,19 @@ var app = {
     takeVideo: function() {
         // capture callback
         var videoSuccess = function(mediaFiles) {
-
+            console.log(mediaFiles);
             var path = mediaFiles[0].fullPath;
             var type = mediaFiles[0].type;
-            console.log("video path:"+path);
+            console.log("video path:" + path);
             VideoEditor.createThumbnail(
-                function(result){
-                    console.log("Thumbnail path:"+result,"");
-                    var v = "<video controls='controls' poster='"+result+"' >";
+                function(result) {
+                    console.log("Thumbnail path:" + result, "");
+                    var v = "<video controls='controls' poster='" + result + "' >";
                     v += "<source src='" + path + "' type='" + type + "'>";
                     v += "</video>";
                     $$("#video").append(v);
                 }, // success cb 
-                function(e){
+                function(e) {
                     var v = "<video controls='controls'>";
                     v += "<source src='" + path + "' type='" + type + "'>";
                     v += "</video>";
@@ -857,8 +857,8 @@ var app = {
                     quality: 100 // optional, quality of the thumbnail (between 1 and 100) 
                 }
             );
-            
-            
+
+
         };
 
         // capture error callback
@@ -923,7 +923,60 @@ var app = {
         scoreData.kind = temp.kind;
         scoreData.th = temp.th;
         scoreData.upload = false;
-        scoreDB.put(scoreData).then(function(response) {
+        if ($$("#video source").length) {
+            myApp.showPreloader("视频转码中，请稍等。。。");
+            VideoEditor.transcodeVideo(
+                videoTranscodeSuccess,
+                videoTranscodeError, {
+                    fileUri: $$("#video source").attr("src"),
+                    outputFileName: new Date().toISOString(),
+                    outputFileType: VideoEditorOptions.OutputFileType.MPEG4,
+                    optimizeForNetworkUse: VideoEditorOptions.OptimizeForNetworkUse.YES,
+                    saveToLibrary: true,
+                    maintainAspectRatio: true,
+                    width: 480,
+                    height: 360,
+                    videoBitrate: 720000,
+                    audioChannels: 2,
+                    audioSampleRate: 44100,
+                    audioBitrate: 128000, // 128 kilobits
+                    progress: function(info) {
+                        console.log('transcodeVideo progress callback, info: ' + info);
+                    }
+                }
+            );
+
+            function videoTranscodeSuccess(result) {
+                myApp.hidePreloader();
+                scoreData.video = result;
+                scoreDB.put(scoreData).then(function(response) {
+                    app.uploadScore(response.id, function() {
+                        myApp.hidePreloader();
+                        myApp.alert("成绩已上传", "", function() {
+                            mainView.router.back();
+                        });
+                    });
+                }).catch(function(err) {
+                    console.log(err);
+                });
+                VideoEditor.getVideoInfo(
+                    function (info) {
+                    console.log('getVideoInfoSuccess, info: ' + JSON.stringify(info, null, 2));
+                },
+                    function (error) {
+                    console.log(error);
+                }, {
+                        fileUri: result
+                    }
+                );
+            }
+
+            function videoTranscodeError(err) {
+                myApp.hidePreloader();
+                console.log('videoTranscodeError, err: ' + err);
+            }
+        }else{
+            scoreDB.put(scoreData).then(function(response) {
             app.uploadScore(response.id, function() {
                 myApp.hidePreloader();
                 myApp.alert("成绩已上传", "", function() {
@@ -933,6 +986,10 @@ var app = {
         }).catch(function(err) {
             console.log(err);
         });
+        }
+
+        
+        
     },
     uploadScore: function(doc_id, success) {
         scoreDB.get(doc_id, {
