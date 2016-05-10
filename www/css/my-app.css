@@ -801,7 +801,7 @@ div.media-capture {
 }
 
 .data-tabs .tab li {
-    background: url(images/data-border.png);
+    background: url(../images/data-border.png);
     -webkit-background-size: cover;
     background-size: cover;
     margin: 0 auto;
