@@ -18,9 +18,9 @@ var mainView = myApp.addView('.view-main', {
 var scoreDB = new PouchDB("score", {
     adapter: 'websql'
 });
-var msgDB = new PouchDB("msg", {
-    adapter: 'websql'
-});
+// var msgDB = new PouchDB("msg", {
+//     adapter: 'websql'
+// });
 //Not use remote PouchDb server
 var remoteCouch = false;
 
@@ -31,10 +31,10 @@ var appOption = {
 
 var scoreAttr = [{
     name: "第一次",
-    type: "a2"
+    type: "a1"
 }, {
     name: "第二次",
-    type: "a2"
+    type: "a1"
 }, {
     name: "总分",
     type: "b1"
@@ -67,16 +67,35 @@ var temp = {
     event: {
         id: 1,
         name: "机器人短跑",
-        time_limit: 20
+        time_limit: 120
     },
     schedule_name: "初赛",
     kind: 1,
     th: 1,
     team1_id: 0,
-    team2_id: 0
+    team2_id: 0,
+    unread:{count:0,ids:[]}
 };
 
 var judgeInfo = {};
+
+function listDir(path){
+  window.resolveLocalFileSystemURL(path,
+    function (fileSystem) {
+      var reader = fileSystem.createReader();
+      reader.readEntries(
+        function (entries) {
+          console.log(entries);
+        },
+        function (err) {
+          console.log(err);
+        }
+      );
+    }, function (err) {
+      console.log(err);
+    }
+  );
+}
 
 function arrayToBytes(array) {
     var newArray = new Uint8Array(array.length);
@@ -101,6 +120,13 @@ function printData(byteArrayData) {
 }
 
 var track = {
+    action:{
+        "raceUp":"开始",
+        "openDoor":"开门",
+        "closeDoor":"关门",
+        "reset":"重置",
+        "getScore":"拿分"
+    },
     formatTime: function(time) {
         function pad(num, size) {
             var a = num;
@@ -211,8 +237,8 @@ var track = {
                     break;
                 case 5:
                     track.reset();
+                    track.status.playing = 0;
                     var time = d[5] + d[4] * 256 + d[3] * 256 * 256 + d[2] * 256 * 256 * 256;
-                    console.log(time);
                     if (time > temp.event.limit * 1000) {
                         myApp.alert("已超时：" + track.formatTime(time) + "秒", "");
                         racke.render(temp.event.limit * 1000);
@@ -260,7 +286,16 @@ var track = {
             var data = track.arrayToBytes(track.order);
             ble.write(track.service.deviceId, track.service.serviceUUID, track.service.txCharacteristic, data, function() {
                 console.log(track.status.sending + " send success");
-                window.plugins.toast.showShortCenter("已发送指令");
+                window.plugins.toast.showShortCenter(track.action[track.status.sending]+"指令已发送");
+                if(track.status.sending==="raceUp"){
+                    track.status.playing = 1;
+                    setTimeout(function(){
+                        if(track.status.playing){
+                            myApp.alert("已超时,未完成","");
+                            racke.render(temp.event.limit * 1000);
+                        }
+                    },temp.event.time_limit*1000+3000);
+                }
                 track.order = null;
             }, function() {
                 console.log(track.status.sending + " send failed");
@@ -365,7 +400,7 @@ var app = {
                     if (href !== "stopWatch.html") {
                         myApp.confirm("是否放弃本次记分？", "", function(goto) {
                             mainView.router.loadPage(href);
-                            if(track.status.playing){
+                            if (track.status.playing) {
                                 track.reset();
                             }
                         });
@@ -491,14 +526,17 @@ var app = {
         $$(document).on('ajaxError', function(e) {
             var xhr = e.detail.xhr;
             console.log(xhr);
-            if (xhr.status === 401 ) {
-                if((new URL(xhr.requestUrl)).hostname==="dev.domelab.com"){
-                    myApp.alert("登陆失效，请重新登陆", "");
+            if (xhr.status === 401) {
+                
+                if ((new URL(xhr.requestUrl)).hostname === "dev.domelab.com") {
                     localStorage.removeItem("judgeInfo");
-                    judgeInfo = {};
                     mainView.router.loadPage("index.html");
+                    judgeInfo = {};
                     MessageBus.stop();
-                    app.login();
+                    myApp.alert("登陆失效，请重新登陆","",function(){
+                        //app.login();
+                    });
+                    
                 }
             }
         });
@@ -772,11 +810,21 @@ var app = {
             "per_page": per
         }, function(response) {
             console.log(response);
+            
             response.notifications.forEach(function(n) {
                 var d = new Date(n.created_at);
                 var time = d.toLocaleString().replace("GMT+8", "");
                 $$("#msgBoard ul").append("<li><p class='time'>" + time + "</p><p class='content'>" + n.content + "</p></li>");
+                if(n.read===0){
+                    temp.unread.ids.push(n.id);
+                }
             });
+        });
+    },
+    
+    setRead:function(msgid){
+        $$.post('http://dev.domelab.com/api/v1/', {msgid:msgid}, function (data) {
+            console.log(data);
         });
     },
     subscribeMsg: function(token) {
@@ -811,7 +859,7 @@ var app = {
             var i, path, len;
             for (i = 0, len = mediaFiles.length; i < len; i += 1) {
                 path = mediaFiles[i].fullPath;
-                console.log(path);
+                console.log(mediaFiles[i]);
                 $$("#photos").append('<img src="' + path + '">');
             }
         };
@@ -829,19 +877,19 @@ var app = {
     takeVideo: function() {
         // capture callback
         var videoSuccess = function(mediaFiles) {
-
+            console.log(mediaFiles);
             var path = mediaFiles[0].fullPath;
             var type = mediaFiles[0].type;
-            console.log("video path:"+path);
+            console.log("video path:" + path);
             VideoEditor.createThumbnail(
-                function(result){
-                    console.log("Thumbnail path:"+result,"");
-                    var v = "<video controls='controls' poster='"+result+"' >";
+                function(result) {
+                    console.log("Thumbnail path:" + result, "");
+                    var v = "<video controls='controls' poster='" + result + "' >";
                     v += "<source src='" + path + "' type='" + type + "'>";
                     v += "</video>";
                     $$("#video").append(v);
                 }, // success cb 
-                function(e){
+                function(e) {
                     var v = "<video controls='controls'>";
                     v += "<source src='" + path + "' type='" + type + "'>";
                     v += "</video>";
@@ -857,8 +905,8 @@ var app = {
                     quality: 100 // optional, quality of the thumbnail (between 1 and 100) 
                 }
             );
-            
-            
+
+
         };
 
         // capture error callback
@@ -873,6 +921,67 @@ var app = {
         });
     },
     submitScore: function(drawed) {
+        function saveScore() {
+            scoreDB.put(scoreData).then(function(response) {
+                app.uploadScore(response.id, function() {
+                    myApp.hidePreloader();
+                    myApp.alert("成绩已上传", "", function() {
+                        mainView.router.back();
+                    });
+                });
+            }).catch(function(err) {
+                console.log(err);
+            });
+        }
+
+        function saveVideo() {
+            if ($$("#video source").length) {
+                myApp.showPreloader("视频转码中，请稍等。。。");
+                VideoEditor.transcodeVideo(
+                    videoTranscodeSuccess,
+                    videoTranscodeError, {
+                        fileUri: $$("#video source").attr("src"),
+                        outputFileName: new Date().toISOString(),
+                        outputFileType: VideoEditorOptions.OutputFileType.MPEG4,
+                        optimizeForNetworkUse: VideoEditorOptions.OptimizeForNetworkUse.YES,
+                        saveToLibrary: true,
+                        maintainAspectRatio: true,
+                        width: 480,
+                        height: 360,
+                        videoBitrate: 720000,
+                        audioChannels: 2,
+                        audioSampleRate: 44100,
+                        audioBitrate: 128000, // 128 kilobits
+                        progress: function(info) {
+                            console.log('transcodeVideo progress callback, info: ' + info);
+                        }
+                    }
+                );
+
+                function videoTranscodeSuccess(result) {
+                    myApp.hidePreloader();
+                    scoreData.video = result;
+                    saveScore();
+                    VideoEditor.getVideoInfo(
+                        function(info) {
+                            console.log('getVideoInfoSuccess, info: ' + JSON.stringify(info, null, 2));
+                        },
+                        function(error) {
+                            console.log(error);
+                        }, {
+                            fileUri: result
+                        }
+                    );
+                }
+
+                function videoTranscodeError(err) {
+                    myApp.hidePreloader();
+                    console.log('videoTranscodeError, err: ' + err);
+                }
+            } else {
+                saveScore();
+            }
+        }
         var scoreData = {
             _attachments: {},
             score1: {},
@@ -923,16 +1032,36 @@ var app = {
         scoreData.kind = temp.kind;
         scoreData.th = temp.th;
         scoreData.upload = false;
-        scoreDB.put(scoreData).then(function(response) {
-            app.uploadScore(response.id, function() {
-                myApp.hidePreloader();
-                myApp.alert("成绩已上传", "", function() {
-                    mainView.router.back();
-                });
+        var images = $$("#photos img");
+        if (images.length) {
+            scoreData.img = [];
+            images.each(function(index, img) {
+                var uri = img.src;
+                var ext = uri.split('.').pop();
+                var filename = new Date().valueOf().toString()+index + "." + ext;
+                var fail = function(err) {
+                    console.log(err)
+                }
+                window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(destination) {
+                    window.resolveLocalFileSystemURL(uri, function(file) {
+                        file.moveTo(destination, filename, function(e) {
+                            console.log(e);
+                            // file.remove(function(){console.log("removed")},fail);
+                            console.log("file copyed");
+                            scoreData.img.push(e.nativeURL);
+                            if(scoreData.img.length===images.length){
+                                console.log("img done");
+                                saveVideo();
+                            }
+                        });
+                    }, fail);
+                }, fail);
             });
-        }).catch(function(err) {
-            console.log(err);
-        });
+
+        } else {
+            saveVideo();
+        }
+
     },
     uploadScore: function(doc_id, success) {
         scoreDB.get(doc_id, {
@@ -1037,16 +1166,20 @@ myApp.onPageInit('select', function(page) {
 
 myApp.onPageInit('msg', function(page) {
     $$("#msg").removeClass("newMsg");
-    msgDB.allDocs({
-        include_docs: true,
-        attachments: false
-    }).then(function(result) {
-        console.log(result.rows);
-    }).catch(function(err) {
-        console.log(err);
+    // msgDB.allDocs({
+    //     include_docs: true,
+    //     attachments: false
+    // }).then(function(result) {
+    //     console.log(result.rows);
+    // }).catch(function(err) {
+    //     console.log(err);
+    // });
+    var page=1;
+    var token = "27918d29c6ef4319a7d4bc92228187be";
+    app.getMsg(token, page, 20);
+    $$(".infinite-scroll").on("infinite",function(){
+        app.getMsg(token, ++page, 20);
     });
-
-    app.getMsg("27918d29c6ef4319a7d4bc92228187be", 1, 20)
 });
 
 myApp.onPageInit('player', function() {

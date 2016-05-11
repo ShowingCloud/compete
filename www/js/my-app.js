@@ -18,9 +18,9 @@ var mainView = myApp.addView('.view-main', {
 var scoreDB = new PouchDB("score", {
     adapter: 'websql'
 });
-var msgDB = new PouchDB("msg", {
-    adapter: 'websql'
-});
+// var msgDB = new PouchDB("msg", {
+//     adapter: 'websql'
+// });
 //Not use remote PouchDb server
 var remoteCouch = false;
 
@@ -31,10 +31,10 @@ var appOption = {
 
 var scoreAttr = [{
     name: "第一次",
-    type: "a2"
+    type: "a1"
 }, {
     name: "第二次",
-    type: "a2"
+    type: "a1"
 }, {
     name: "总分",
     type: "b1"
@@ -73,10 +73,29 @@ var temp = {
     kind: 1,
     th: 1,
     team1_id: 0,
-    team2_id: 0
+    team2_id: 0,
+    unread:{count:0,ids:[]}
 };
 
 var judgeInfo = {};
+
+function listDir(path){
+  window.resolveLocalFileSystemURL(path,
+    function (fileSystem) {
+      var reader = fileSystem.createReader();
+      reader.readEntries(
+        function (entries) {
+          console.log(entries);
+        },
+        function (err) {
+          console.log(err);
+        }
+      );
+    }, function (err) {
+      console.log(err);
+    }
+  );
+}
 
 function arrayToBytes(array) {
     var newArray = new Uint8Array(array.length);
@@ -272,7 +291,7 @@ var track = {
                     track.status.playing = 1;
                     setTimeout(function(){
                         if(track.status.playing){
-                            myApp.alert("已超时,未完成");
+                            myApp.alert("已超时,未完成","");
                             racke.render(temp.event.limit * 1000);
                         }
                     },temp.event.time_limit*1000+3000);
@@ -509,12 +528,13 @@ var app = {
             console.log(xhr);
             if (xhr.status === 401) {
                 if ((new URL(xhr.requestUrl)).hostname === "dev.domelab.com") {
-                    myApp.alert("登陆失效，请重新登陆", "");
-                    localStorage.removeItem("judgeInfo");
-                    judgeInfo = {};
-                    mainView.router.loadPage("index.html");
-                    MessageBus.stop();
-                    app.login();
+                    myApp.alert("登陆失效，请重新登陆","",function(){
+                        localStorage.removeItem("judgeInfo");
+                        mainView.router.loadPage("index.html");
+                        judgeInfo = {};
+                        MessageBus.stop();
+                    });
+                    
                 }
             }
         });
@@ -788,11 +808,21 @@ var app = {
             "per_page": per
         }, function(response) {
             console.log(response);
+            
             response.notifications.forEach(function(n) {
                 var d = new Date(n.created_at);
                 var time = d.toLocaleString().replace("GMT+8", "");
                 $$("#msgBoard ul").append("<li><p class='time'>" + time + "</p><p class='content'>" + n.content + "</p></li>");
+                if(n.read===0){
+                    temp.unread.ids.push(n.id);
+                }
             });
+        });
+    },
+    
+    setRead:function(msgid){
+        $$.post('http://dev.domelab.com/api/v1/', {msgid:msgid}, function (data) {
+            console.log(data);
         });
     },
     subscribeMsg: function(token) {
@@ -1012,9 +1042,9 @@ var app = {
                 }
                 window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(destination) {
                     window.resolveLocalFileSystemURL(uri, function(file) {
-                        file.copyTo(destination, filename, function(e) {
+                        file.moveTo(destination, filename, function(e) {
                             console.log(e);
-                            file.remove(function(){console.log("removed")},fail)
+                            // file.remove(function(){console.log("removed")},fail);
                             console.log("file copyed");
                             scoreData.img.push(e.nativeURL);
                             if(scoreData.img.length===images.length){
@@ -1134,16 +1164,20 @@ myApp.onPageInit('select', function(page) {
 
 myApp.onPageInit('msg', function(page) {
     $$("#msg").removeClass("newMsg");
-    msgDB.allDocs({
-        include_docs: true,
-        attachments: false
-    }).then(function(result) {
-        console.log(result.rows);
-    }).catch(function(err) {
-        console.log(err);
+    // msgDB.allDocs({
+    //     include_docs: true,
+    //     attachments: false
+    // }).then(function(result) {
+    //     console.log(result.rows);
+    // }).catch(function(err) {
+    //     console.log(err);
+    // });
+    var page=1;
+    var token = "27918d29c6ef4319a7d4bc92228187be";
+    app.getMsg(token, page, 20);
+    $$(".infinite-scroll").on("infinite",function(){
+        app.getMsg(token, ++page, 20);
     });
-
-    app.getMsg("27918d29c6ef4319a7d4bc92228187be", 1, 20)
 });
 
 myApp.onPageInit('player', function() {
