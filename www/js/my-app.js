@@ -500,7 +500,7 @@ var app = {
                         $$("#login-btn").on('click', function() {
                             var username = $$("#username").val();
                             var password = $$("#password").val();
-                            if (typeof username === "string" && typeof password === "string") {
+                            if (username && password) {
                                 //Inject script to inappbrowser to submit the login form
                                 var script = "document.getElementsByName('user[login]')[0].value='" + username.replace(/\s+/g, '') + "';" + "document.getElementsByName('user[password]')[0].value='" + password.replace(/\s+/g, '') + "';" + "document.getElementById('new_user').submit();"
                                 ref.executeScript({
@@ -522,6 +522,9 @@ var app = {
         });
     },
     bind: function() {
+        window.addEventListener("orientationchange", function(){
+            console.log(screen.orientation);
+        });
         //Globle ajax error handller
         $$(document).on('ajaxError', function(e) {
             var xhr = e.detail.xhr;
@@ -530,8 +533,12 @@ var app = {
                 if ((new URL(xhr.requestUrl)).hostname === "dev.domelab.com") {
                     myApp.alert("登陆失效，请重新登陆","",function(){
                         localStorage.removeItem("judgeInfo");
-                        mainView.router.loadPage("index.html");
                         judgeInfo = {};
+                        if(mainView.activePage.name==="home"){
+                            app.login();
+                        }else{
+                            mainView.router.loadPage("index.html");
+                        }
                         MessageBus.stop();
                     });
                     
@@ -610,9 +617,9 @@ var app = {
         $$(document).on("click", "#QR", function() {
             cordova.plugins.barcodeScanner.scan(
                 function(result) {
-
+                    screen.lockOrientation('portrait');
                     if (result.text) {
-                        myApp.alert("获得二维码: " + result.text);
+                        myApp.alert("获得二维码: " + result.text,"");
                         app.teamInfo(result.text);
                     } else {
                         myApp.alert("请输入选手编号", "");
@@ -864,7 +871,7 @@ var app = {
 
         // capture error callback
         var photoError = function(error) {
-            myApp.alert('Error code: ' + error.code, null, 'Capture Error');
+            console.log('Error code: ' + error.code, null, 'Capture Error');
         };
 
         // start image capture
@@ -909,7 +916,7 @@ var app = {
 
         // capture error callback
         var videoError = function(error) {
-            myApp.alert('Error code: ' + error.code, null, 'Capture Error');
+            console.log('Error code: ' + error.code, null, 'Capture Error');
         };
 
         // start video capture

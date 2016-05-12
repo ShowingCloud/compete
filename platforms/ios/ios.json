@@ -91,6 +91,10 @@
                         {
                             "xml": "<feature name=\"VideoEditor\"><param name=\"ios-package\" value=\"VideoEditor\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"YoikScreenOrientation\"><param name=\"ios-package\" value=\"YoikScreenOrientation\" /></feature>",
+                            "count": 1
                         }
                     ],
                     "/widget": [
@@ -175,6 +179,9 @@
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-video-editor": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-screen-orientation": {
             "PACKAGE_NAME": "cn.robodou.compete"
         }
     },
@@ -630,6 +637,22 @@
             "clobbers": [
                 "VideoEditorOptions"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.js",
+            "id": "cordova-plugin-screen-orientation.screenorientation",
+            "pluginId": "cordova-plugin-screen-orientation",
+            "clobbers": [
+                "cordova.plugins.screenorientation"
+            ]
+        },
+        {
+            "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.ios.js",
+            "id": "cordova-plugin-screen-orientation.screenorientation.ios",
+            "pluginId": "cordova-plugin-screen-orientation",
+            "merges": [
+                "cordova.plugins.screenorientation"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -653,6 +676,7 @@
         "cordova-plugin-media": "2.3.0",
         "cordova-plugin-secure-storage": "2.2.1",
         "cordova-plugin-sqlite-2": "1.0.3",
-        "cordova-plugin-video-editor": "1.0.8"
+        "cordova-plugin-video-editor": "1.0.8",
+        "cordova-plugin-screen-orientation": "1.4.0"
     }
 }

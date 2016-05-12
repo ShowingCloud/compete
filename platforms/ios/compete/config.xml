@@ -86,6 +86,9 @@
     <feature name="VideoEditor">
         <param name="ios-package" value="VideoEditor" />
     </feature>
+    <feature name="YoikScreenOrientation">
+        <param name="ios-package" value="YoikScreenOrientation" />
+    </feature>
     <feature name="BLE">
         <param name="ios-package" onload="true" value="BLECentralPlugin" />
     </feature>

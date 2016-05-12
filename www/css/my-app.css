@@ -1,14 +1,14 @@
 /*golble*/
-.scrollable::-webkit-scrollbar {
+::-webkit-scrollbar {
     -webkit-appearance: none;
 }
-.scrollable::-webkit-scrollbar:vertical {
+::-webkit-scrollbar:vertical {
     width: 5px;
 }
 /*.scrollable::-webkit-scrollbar:horizontal {
     height: 5px;
 }*/
-.scrollable::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     border-radius: 6px;
     border: 1px solid rgb(132, 132, 132);
     background-color: rgba(131, 131, 131, 0.6);

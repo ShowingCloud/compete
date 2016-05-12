@@ -450,6 +450,22 @@ module.exports = [
         "clobbers": [
             "VideoEditorOptions"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.js",
+        "id": "cordova-plugin-screen-orientation.screenorientation",
+        "pluginId": "cordova-plugin-screen-orientation",
+        "clobbers": [
+            "cordova.plugins.screenorientation"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.ios.js",
+        "id": "cordova-plugin-screen-orientation.screenorientation.ios",
+        "pluginId": "cordova-plugin-screen-orientation",
+        "merges": [
+            "cordova.plugins.screenorientation"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -475,7 +491,8 @@ module.exports.metadata =
     "cordova-plugin-media": "2.3.0",
     "cordova-plugin-secure-storage": "2.2.1",
     "cordova-plugin-sqlite-2": "1.0.3",
-    "cordova-plugin-video-editor": "1.0.8"
+    "cordova-plugin-video-editor": "1.0.8",
+    "cordova-plugin-screen-orientation": "1.4.0"
 }
 // BOTTOM OF METADATA
 });

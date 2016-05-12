@@ -66,6 +66,9 @@
         },
         "cordova-plugin-video-editor": {
             "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-screen-orientation": {
+            "PACKAGE_NAME": "cn.robodou.compete"
         }
     },
     "dependent_plugins": {
