@@ -25,7 +25,7 @@
 body {
     color: #f7f7f7;
     font-family: 'Adobe Heiti Std';
-    background: url(../images/MergedLayers.png) no-repeat center;
+    background: url(../images/background.png) no-repeat center;
     -webkit-background-size: cover;
     background-size: cover;
     -webkit-user-select: none;        

@@ -25,8 +25,8 @@ var scoreDB = new PouchDB("score", {
 var remoteCouch = false;
 
 // apption for app
-var appOption = {
-    serverHost: "http://dev.domelab.com"
+var app_options = {
+    host: "http://dev.domelab.com",
 };
 
 var scoreAttr = [{
@@ -245,6 +245,7 @@ var track = {
                     } else {
                         track.render(time);
                     }
+                    myApp.alert(track.formatTime(time),"");
 
                     break;
                 case 3:
@@ -289,12 +290,12 @@ var track = {
                 window.plugins.toast.showShortCenter(track.action[track.status.sending]+"指令已发送");
                 if(track.status.sending==="raceUp"){
                     track.status.playing = 1;
-                    setTimeout(function(){
-                        if(track.status.playing){
-                            myApp.alert("已超时,未完成","");
-                            racke.render(temp.event.limit * 1000);
-                        }
-                    },temp.event.time_limit*1000+3000);
+                    // setTimeout(function(){
+                    //     if(track.status.playing){
+                    //         myApp.alert("已超时,未完成","");
+                    //         racke.render(temp.event.limit * 1000);
+                    //     }
+                    // },temp.event.time_limit*1000+3000);
                 }
                 track.order = null;
             }, function() {
@@ -429,11 +430,11 @@ var app = {
             //Oauth2 job 
         document.addEventListener("deviceready", function() {
             var options = {
-                auth_url: 'http://dev.domelab.com/auth/login/authorize',
-                token_url: 'http://dev.domelab.com/auth/login/access_token',
+                auth_url: app_options.host+'/auth/login/authorize',
+                token_url: app_options.host+'/auth/login/access_token',
                 client_id: '1',
                 client_secret: '123456',
-                redirect_uri: 'http://dev.domelab.com'
+                redirect_uri: app_options.host+''
             }
 
             //Generate Login URL
@@ -467,7 +468,7 @@ var app = {
                         success: function(data) {
                             //Get userInfo
                             var dataObj = JSON.parse(data);
-                            $$.getJSON('http://dev.domelab.com/auth/login/user', {
+                            $$.getJSON(app_options.host+'/auth/login/user', {
                                 oauth_token: dataObj.access_token
                             }, function(d) {
                                 console.log(d);
@@ -482,7 +483,6 @@ var app = {
                                     console.log('userInfo saved!');
                                     app.showJudge(judgeInfo);
                                     app.onLogin(judgeInfo.authToken);
-
                                 }
                             });
                         },
@@ -493,7 +493,7 @@ var app = {
                 }
             });
             ref.addEventListener('loadstop', function(e) {
-                if (e.url === "http://dev.domelab.com/account/sign_in") {
+                if (e.url === app_options.host+"/account/sign_in") {
                     if (!count) {
                         count++;
                         window.plugins.toast.showShortCenter("请登录");
@@ -637,7 +637,7 @@ var app = {
     onLogin: function(token) {
         //get realtime message
         app.subscribeMsg(token);
-        app.getResponse("27918d29c6ef4319a7d4bc92228187be");
+        app.getResponse(token);
     },
     showJudge: function(judge) {
         console.log(judge);
@@ -650,7 +650,7 @@ var app = {
         if (typeof temp.process === 'string') {
             $$("#schedule").html(temp.process);
         } else {
-            $$.getJSON("http://dev.domelab.com/api/v1/competitions", function(process) {
+            $$.getJSON(app_options.host+"/api/v1/competitions", function(process) {
                 console.log(process);
                 var processTemp = $$('#processTemp').html();
                 var compiledTemp = Template7.compile(processTemp);
@@ -662,7 +662,7 @@ var app = {
 
     },
     getResponse: function(token) {
-        $$.getJSON("http://192.168.1.128:3000/api/v1/users/" + token + "/user_for_event", function(response) {
+        $$.getJSON(app_options.host+"/api/v1/users/" + token + "/user_for_event", function(response) {
             $$("#judgeComptition").text(response.events[0].comp_name);
             var events = [];
             response.events.forEach(function(e) {
@@ -673,7 +673,7 @@ var app = {
         });
     },
     getEvents: function(comp_id) {
-        $$.getJSON("http://192.168.1.128:3000/api/v1/competitions/events", {
+        $$.getJSON(app_options.host+"/api/v1/competitions/events", {
             "comp_id": comp_id
         }, function(response) {
             console.log(response);
@@ -719,7 +719,7 @@ var app = {
         });
     },
     getScoreAttr: function(event_id) {
-        $$.getJSON("http://192.168.1.128:3000/api/v1/events/score_attributes", {
+        $$.getJSON(app_options.host+"/api/v1/events/score_attributes", {
             "event_id": event_id
         }, function(response) {
             console.log(response);
@@ -742,7 +742,7 @@ var app = {
             return template.content.firstChild;
         }
 
-        $$.getJSON("http://192.168.1.128:3000/api/v1/competitions/event/teams", data, function(response) {
+        $$.getJSON(app_options.host+"/api/v1/competitions/event/teams", data, function(response) {
             console.log(response.teams);
             if (response.teams[0]) {
                 var teams = response.teams[1];
@@ -773,7 +773,7 @@ var app = {
     },
     teamInfo: function(playerId) {
         if (typeof playerId === "string") {
-            var url = "http://dev.domelab.com/api/v1/users/" + judgeInfo.authToken + "/team_players";
+            var url = app_options.host+"/api/v1/users/" + judgeInfo.authToken + "/team_players";
             $$.getJSON(url, {
                 identifier: playerId
             }, function(data) {
@@ -810,12 +810,11 @@ var app = {
         }
     },
     getMsg: function(token, page, per) {
-        $$.getJSON("http://192.168.1.128:3000/api/v1/users/" + token + "/notifications/", {
+        $$.getJSON(app_options.host+"/api/v1/users/" + token + "/notifications/", {
             "page": page,
             "per_page": per
         }, function(response) {
             console.log(response);
-            
             response.notifications.forEach(function(n) {
                 var d = new Date(n.created_at);
                 var time = d.toLocaleString().replace("GMT+8", "");
@@ -828,13 +827,13 @@ var app = {
     },
     
     setRead:function(msgid){
-        $$.post('http://dev.domelab.com/api/v1/', {msgid:msgid}, function (data) {
+        $$.post(app_options.host+'/api/v1/', {msgid:msgid}, function (data) {
             console.log(data);
         });
     },
     subscribeMsg: function(token) {
         //Get unread counts
-        $$.getJSON("http://dev.domelab.com/api/v1/users/" + token + "/notifications/unread ", function(unread) {
+        $$.getJSON(app_options.host+"/api/v1/users/" + token + "/notifications/unread ", function(unread) {
             console.log(unread);
             $$("#msg").addClass("newMsg");
         });
@@ -910,8 +909,6 @@ var app = {
                     quality: 100 // optional, quality of the thumbnail (between 1 and 100) 
                 }
             );
-
-
         };
 
         // capture error callback
@@ -1100,7 +1097,7 @@ var app = {
 
             $$.ajax({
                 method: "POST",
-                url: "http://dev.domelab.com/api/v1/scores/" + judgeInfo.authToken + "/score",
+                url: app_options.host+"/api/v1/scores/" + judgeInfo.authToken + "/score",
                 contentType: "multipart/form-data",
                 data: form_data,
                 dataType: "json",
@@ -1144,7 +1141,7 @@ myApp.onPageInit('player', function(page) {
 myApp.onPageBeforeInit('home', function(page) {
     if (judgeInfo.hasOwnProperty("userId")) {
         app.showJudge(judgeInfo);
-        app.getResponse("27918d29c6ef4319a7d4bc92228187be");
+        app.getResponse(judgeInfo.authToken);
     } else {
 
         app.login();
@@ -1180,10 +1177,9 @@ myApp.onPageInit('msg', function(page) {
     //     console.log(err);
     // });
     var page=1;
-    var token = "27918d29c6ef4319a7d4bc92228187be";
-    app.getMsg(token, page, 20);
+    app.getMsg(judgeInfo.authToken, page, 20);
     $$(".infinite-scroll").on("infinite",function(){
-        app.getMsg(token, ++page, 20);
+        app.getMsg(judgeInfo.authToken, ++page, 20);
     });
 });
 
@@ -1534,7 +1530,7 @@ myApp.onPageInit('stopWatch', function(page) {
 
         context.strokeStyle = "#D7E4F4";
         context.lineJoin = "round";
-        context.lineWidth = 3;
+        context.lineWidth = 2;
 
         for (var i = 0; i < clickX.length; i++) {
             context.beginPath();

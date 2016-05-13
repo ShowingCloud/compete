@@ -7,67 +7,70 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-file": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "phonegap-plugin-barcodescanner": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-x-toast": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-globalization": {
+        "cordova-plugin-battery-status": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-ble-central": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-plugin-device": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-battery-status": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-vibration": {
+        "cordova-plugin-camera": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-console": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-plugin-network-information": {
+        "cordova-plugin-device": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-camera": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-statusbar": {
+        "cordova-plugin-file": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-file-transfer": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-plugin-media-capture": {
+        "cordova-plugin-globalization": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-media": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
+        "cordova-plugin-media-capture": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-screen-orientation": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
         "cordova-plugin-secure-storage": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
         "cordova-plugin-sqlite-2": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-vibration": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
         "cordova-plugin-video-editor": {
             "PACKAGE_NAME": "cn.robodou.compete"
         },
-        "cordova-plugin-screen-orientation": {
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "cordova-plugin-x-toast": {
+            "PACKAGE_NAME": "cn.robodou.compete"
+        },
+        "phonegap-plugin-barcodescanner": {
             "PACKAGE_NAME": "cn.robodou.compete"
         }
     },
