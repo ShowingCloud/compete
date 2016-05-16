@@ -1,7 +1,10 @@
 // "use strict";
 // Initialize the app
 var myApp = new Framework7({
-    tapHold: true
+    tapHold: true,
+    modalButtonOk:'确定',
+    modalButtonCancel:'取消',
+    modalTitle:'Robodou'
 });
 
 var uuid;
@@ -27,14 +30,15 @@ var remoteCouch = false;
 // apption for app
 var app_options = {
     host: "http://dev.domelab.com",
+    //host: "http://test.robodou.cn",
 };
 
 var scoreAttr = [{
     name: "第一次",
-    type: "a1"
+    type: "1"
 }, {
     name: "第二次",
-    type: "a1"
+    type: "1"
 }, {
     name: "总分",
     type: "b1"
@@ -365,11 +369,12 @@ var track = {
             if (!elements[i].value) {
                 elements[i].value = track.formatTime(time);
                 if (i === elements.length - 1) {
+                    window.plugins.toast.showLongCenter("本次记分已完成");
+                    document.getElementById('raceUp').onclick=null;
                     total = 0;
                     for (var i = 0; i < elements.length; i++) {
                         total = total + track.unformat(elements[i].value);
                     }
-                    console.log(total);
                     document.querySelector('.final-score').value = track.formatTime(total);
                 }
                 break;
@@ -1280,15 +1285,15 @@ myApp.onPageInit('stopWatch', function(page) {
     if (scoreAttr) {
         scoreAttr.forEach(function(sa, index) {
             switch (sa.type) {
-                case "a1":
+                case "1":
                     scoreFrom = 1;
                     $$("#team1 .scores").append('<div>' + sa.name + '：<input class="track-score score" name="score' + (index + 1) + '"></div>');
                     break;
-                case "a2":
+                case "2":
                     scoreFrom = 2;
                     $$("#team1 .scores").append('<div>' + sa.name + '：<input class="time-score score" name="score' + (index + 1) + '"></div>');
                     break;
-                case "a3":
+                case "3":
                     scoreFrom = 3;
                     $$(".scrollable").css("height", "500px");
                     $$("#scoreHeader").hide();
