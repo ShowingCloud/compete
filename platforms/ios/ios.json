@@ -61,10 +61,6 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"SplashScreen\"><param name=\"ios-package\" value=\"CDVSplashScreen\" /><param name=\"onload\" value=\"true\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"SQLitePlugin\"><param name=\"ios-package\" value=\"SQLitePlugin\" /></feature>",
                             "count": 1
                         },
@@ -119,70 +115,67 @@
     },
     "installed_plugins": {
         "cordova-plugin-battery-status": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-compat": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-ble-central": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-camera": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-console": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-device": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-file": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-file-transfer": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-media": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-media-capture": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-network-information": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-screen-orientation": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-secure-storage": {
-            "PACKAGE_NAME": "cn.robodou.compete"
-        },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-sqlite-2": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-vibration": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-video-editor": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-x-toast": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         },
         "phonegap-plugin-barcodescanner": {
-            "PACKAGE_NAME": "cn.robodou.compete"
+            "PACKAGE_NAME": "cn.robodou.competition"
         }
     },
     "dependent_plugins": {},
@@ -577,14 +570,6 @@
             "runs": true
         },
         {
-            "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
-            "id": "cordova-plugin-splashscreen.SplashScreen",
-            "pluginId": "cordova-plugin-splashscreen",
-            "clobbers": [
-                "navigator.splashscreen"
-            ]
-        },
-        {
             "file": "plugins/cordova-plugin-sqlite-2/dist/sqlite-plugin.js",
             "id": "cordova-plugin-sqlite-2.sqlitePlugin",
             "pluginId": "cordova-plugin-sqlite-2",
@@ -662,7 +647,6 @@
         "cordova-plugin-network-information": "1.2.1",
         "cordova-plugin-screen-orientation": "1.4.0",
         "cordova-plugin-secure-storage": "2.2.1",
-        "cordova-plugin-splashscreen": "3.2.2",
         "cordova-plugin-sqlite-2": "1.0.3",
         "cordova-plugin-statusbar": "2.1.3",
         "cordova-plugin-vibration": "2.1.1",

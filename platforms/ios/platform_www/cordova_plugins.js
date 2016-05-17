@@ -390,14 +390,6 @@ module.exports = [
         "runs": true
     },
     {
-        "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
-        "id": "cordova-plugin-splashscreen.SplashScreen",
-        "pluginId": "cordova-plugin-splashscreen",
-        "clobbers": [
-            "navigator.splashscreen"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-sqlite-2/dist/sqlite-plugin.js",
         "id": "cordova-plugin-sqlite-2.sqlitePlugin",
         "pluginId": "cordova-plugin-sqlite-2",
@@ -477,7 +469,6 @@ module.exports.metadata =
     "cordova-plugin-network-information": "1.2.1",
     "cordova-plugin-screen-orientation": "1.4.0",
     "cordova-plugin-secure-storage": "2.2.1",
-    "cordova-plugin-splashscreen": "3.2.2",
     "cordova-plugin-sqlite-2": "1.0.3",
     "cordova-plugin-statusbar": "2.1.3",
     "cordova-plugin-vibration": "2.1.1",

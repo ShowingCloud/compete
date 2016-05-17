@@ -1,5 +1,9 @@
 // "use strict";
 // Initialize the app
+window.onload = function() {
+    //navigator.splashscreen.hide();
+};
+
 var myApp = new Framework7({
     tapHold: true,
     modalButtonOk:'确定',
@@ -35,13 +39,10 @@ var app_options = {
 
 var scoreAttr = [{
     name: "第一次",
-    type: "1"
+    type: "3"
 }, {
     name: "第二次",
-    type: "1"
-}, {
-    name: "总分",
-    type: "b1"
+    type: "3"
 }];
 
 if (!HTMLCanvasElement.prototype.toBlob) {
@@ -729,7 +730,12 @@ var app = {
         }, function(response) {
             console.log(response);
             //scoreAttr[event_id] = response;
-            scoreAttr = response;
+            if(scoreAttr.length){
+                scoreAttr = response;
+            }else{
+                myApp.alert("无此项目数据","")
+            }
+            
         });
     },
     getTeams: function(ed, group, schedule) {
@@ -1285,16 +1291,16 @@ myApp.onPageInit('stopWatch', function(page) {
     if (scoreAttr) {
         scoreAttr.forEach(function(sa, index) {
             switch (sa.type) {
-                case "1":
-                    scoreFrom = 1;
+                case "3":
+                    scoreFrom = 3;
                     $$("#team1 .scores").append('<div>' + sa.name + '：<input class="track-score score" name="score' + (index + 1) + '"></div>');
                     break;
                 case "2":
                     scoreFrom = 2;
                     $$("#team1 .scores").append('<div>' + sa.name + '：<input class="time-score score" name="score' + (index + 1) + '"></div>');
                     break;
-                case "3":
-                    scoreFrom = 3;
+                case "1":
+                    scoreFrom = 1;
                     $$(".scrollable").css("height", "500px");
                     $$("#scoreHeader").hide();
                     $$("#team1 .scores").append('<div>' + sa.name + '：<input class="score" name="score' + (index + 1) + '"></div>');
@@ -1342,7 +1348,7 @@ myApp.onPageInit('stopWatch', function(page) {
         app.submitScore(drawed);
     });
     console.log(scoreFrom);
-    if (scoreFrom === 1) {
+    if (scoreFrom === 3) {
         $$("#scoreHeader").html('<div id="raceUp"><img src="images/raceUp.png"></div>');
         document.getElementById('raceUp').onclick = function() {
             track.raceUp()
@@ -1485,6 +1491,11 @@ myApp.onPageInit('stopWatch', function(page) {
 
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext("2d");
+    var ele;
+    var clickX = [];
+    var clickY = [];
+    var clickDrag = [];
+    var paint;
     canvas.addEventListener("touchstart", touchStartHandler, false);
     canvas.addEventListener("touchmove", touchMoveHandler, false);
     canvas.addEventListener("touchend", touchEndHandler, false);
@@ -1500,7 +1511,9 @@ myApp.onPageInit('stopWatch', function(page) {
         e.preventDefault();
         var touchEvent = e.changedTouches[0];
         paint = true;
-        addClick(touchEvent.clientX - $$("#canvas").offset().left, touchEvent.clientY - $$("#canvas").offset().top);
+        ele= $$("#canvas").offset();
+        console.log(ele);
+        addClick(touchEvent.clientX - ele.left, touchEvent.clientY - ele.top);
         redraw();
     }
 
@@ -1508,7 +1521,7 @@ myApp.onPageInit('stopWatch', function(page) {
         e.preventDefault();
         var touchEvent = e.changedTouches[0];
         if (paint) {
-            addClick(touchEvent.clientX - $$("#canvas").offset().left, touchEvent.clientY - $$("#canvas").offset().top, true);
+            addClick(touchEvent.clientX - ele.left, touchEvent.clientY - ele.top, true);
             redraw();
         }
         drawed++;
@@ -1519,11 +1532,6 @@ myApp.onPageInit('stopWatch', function(page) {
         paint = false;
     }
 
-    var clickX = [];
-    var clickY = [];
-    var clickDrag = [];
-    var paint;
-
     function addClick(x, y, dragging) {
         clickX.push(x);
         clickY.push(y);
@@ -1532,9 +1540,11 @@ myApp.onPageInit('stopWatch', function(page) {
 
     function redraw() {
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-
         context.strokeStyle = "#D7E4F4";
         context.lineJoin = "round";
+        context.lineCap = "round";
+        context.shadowColor = "rgba(0,0,0,.5)";
+        context.shadowBlur = 2;
         context.lineWidth = 2;
 
         for (var i = 0; i < clickX.length; i++) {

@@ -22,6 +22,10 @@
     display: none;
 }
 
+input{
+    font-size:1em;
+}
+
 body {
     color: #f7f7f7;
     font-family: 'Adobe Heiti Std';
@@ -580,6 +584,10 @@ aside-linker {
 
 
 /*stopWatch*/
+
+#teams,score{
+    font-size:1.2em;
+}
 
 .record-page{
     overflow: hidden;
