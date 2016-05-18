@@ -39,10 +39,10 @@ var app_options = {
 
 var scoreAttr = [{
     name: "第一次",
-    type: "3"
+    score_type: "3"
 }, {
     name: "第二次",
-    type: "3"
+    score_type: "3"
 }];
 
 if (!HTMLCanvasElement.prototype.toBlob) {
@@ -621,7 +621,7 @@ var app = {
         });
 
         $$(document).on("click", "#QR", function() {
-            cordova.plugins.barcodeScanner.scan(
+            cordova.plugins.barcoscore_typeanner.scan(
                 function(result) {
                     screen.lockOrientation('portrait');
                     if (result.text) {
@@ -731,7 +731,7 @@ var app = {
             console.log(response);
             //scoreAttr[event_id] = response;
             if(scoreAttr.length){
-                scoreAttr = response;
+                scoreAttr = event_score_attributes[0];
             }else{
                 myApp.alert("无此项目数据","")
             }
@@ -1290,7 +1290,7 @@ myApp.onPageInit('stopWatch', function(page) {
     var drawed = 0;
     if (scoreAttr) {
         scoreAttr.forEach(function(sa, index) {
-            switch (sa.type) {
+            switch (sa.score_type) {
                 case "3":
                     scoreFrom = 3;
                     $$("#team1 .scores").append('<div>' + sa.name + '：<input class="track-score score" name="score' + (index + 1) + '"></div>');
