@@ -15,22 +15,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "phonegap-plugin-barcodescanner": {
-        "source": {
-            "type": "registry",
-            "id": "phonegap-plugin-barcodescanner"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-x-toast": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-x-toast"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-compat": {
         "source": {
             "type": "registry",
@@ -46,15 +30,6 @@
             "subdir": "."
         },
         "is_top_level": false,
-        "variables": {}
-    },
-    "cordova-plugin-ble-central": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/don/cordova-plugin-ble-central",
-            "subdir": "."
-        },
-        "is_top_level": true,
         "variables": {}
     },
     "cordova-plugin-device": {
@@ -145,18 +120,26 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-secure-storage": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-secure-storage"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-sqlite-2": {
         "source": {
             "type": "registry",
             "id": "cordova-plugin-sqlite-2"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-dialogs": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-dialogs"
+        },
+        "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-plugin-screen-orientation": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-screen-orientation"
         },
         "is_top_level": true,
         "variables": {}
@@ -169,20 +152,45 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-screen-orientation": {
+    "cordova-plugin-secure-storage": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-screen-orientation"
+            "id": "cordova-plugin-secure-storage"
         },
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-dialogs": {
+    "cordova-plugin-ble-central": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/don/cordova-plugin-ble-central",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-x-toast": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-dialogs"
+            "id": "cordova-plugin-x-toast"
         },
-        "is_top_level": false,
+        "is_top_level": true,
+        "variables": {}
+    },
+    "phonegap-plugin-barcodescanner": {
+        "source": {
+            "type": "registry",
+            "id": "phonegap-plugin-barcodescanner"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-splashscreen": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-splashscreen"
+        },
+        "is_top_level": true,
         "variables": {}
     }
 }

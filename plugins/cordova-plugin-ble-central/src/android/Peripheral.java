@@ -17,6 +17,7 @@ package com.megster.cordova.ble.central;
 import android.app.Activity;
 
 import android.bluetooth.*;
+import android.os.Build;
 import android.util.Base64;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.LOG;
@@ -64,7 +65,11 @@ public class Peripheral extends BluetoothGattCallback {
     public void connect(CallbackContext callbackContext, Activity activity) {
         BluetoothDevice device = getDevice();
         connectCallback = callbackContext;
-        gatt = device.connectGatt(activity, false, this);
+        if (Build.VERSION.SDK_INT < 23) {
+            gatt = device.connectGatt(activity, false, this);
+        } else {
+            gatt = device.connectGatt(activity, false, this, BluetoothDevice.TRANSPORT_LE);
+        }
 
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
         result.setKeepCallback(true);

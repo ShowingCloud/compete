@@ -9,14 +9,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-plugin-ble-central/www/ble.js",
-        "id": "cordova-plugin-ble-central.ble",
-        "pluginId": "cordova-plugin-ble-central",
-        "clobbers": [
-            "ble"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-camera/www/CameraConstants.js",
         "id": "cordova-plugin-camera.Camera",
         "pluginId": "cordova-plugin-camera",
@@ -360,36 +352,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.js",
-        "id": "cordova-plugin-screen-orientation.screenorientation",
-        "pluginId": "cordova-plugin-screen-orientation",
-        "clobbers": [
-            "cordova.plugins.screenorientation"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.ios.js",
-        "id": "cordova-plugin-screen-orientation.screenorientation.ios",
-        "pluginId": "cordova-plugin-screen-orientation",
-        "merges": [
-            "cordova.plugins.screenorientation"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-secure-storage/www/securestorage.js",
-        "id": "cordova-plugin-secure-storage.SecureStorage",
-        "pluginId": "cordova-plugin-secure-storage",
-        "clobbers": [
-            "SecureStorage"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-secure-storage/www/sjcl_ss.js",
-        "id": "cordova-plugin-secure-storage.sjcl_ss",
-        "pluginId": "cordova-plugin-secure-storage",
-        "runs": true
-    },
-    {
         "file": "plugins/cordova-plugin-sqlite-2/dist/sqlite-plugin.js",
         "id": "cordova-plugin-sqlite-2.sqlitePlugin",
         "pluginId": "cordova-plugin-sqlite-2",
@@ -415,6 +377,22 @@ module.exports = [
         ]
     },
     {
+        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.js",
+        "id": "cordova-plugin-screen-orientation.screenorientation",
+        "pluginId": "cordova-plugin-screen-orientation",
+        "clobbers": [
+            "cordova.plugins.screenorientation"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.ios.js",
+        "id": "cordova-plugin-screen-orientation.screenorientation.ios",
+        "pluginId": "cordova-plugin-screen-orientation",
+        "merges": [
+            "cordova.plugins.screenorientation"
+        ]
+    },
+    {
         "file": "plugins/cordova-plugin-video-editor/www/VideoEditor.js",
         "id": "cordova-plugin-video-editor.VideoEditor",
         "pluginId": "cordova-plugin-video-editor",
@@ -428,6 +406,28 @@ module.exports = [
         "pluginId": "cordova-plugin-video-editor",
         "clobbers": [
             "VideoEditorOptions"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-secure-storage/www/securestorage.js",
+        "id": "cordova-plugin-secure-storage.SecureStorage",
+        "pluginId": "cordova-plugin-secure-storage",
+        "clobbers": [
+            "SecureStorage"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-secure-storage/www/sjcl_ss.js",
+        "id": "cordova-plugin-secure-storage.sjcl_ss",
+        "pluginId": "cordova-plugin-secure-storage",
+        "runs": true
+    },
+    {
+        "file": "plugins/cordova-plugin-ble-central/www/ble.js",
+        "id": "cordova-plugin-ble-central.ble",
+        "pluginId": "cordova-plugin-ble-central",
+        "clobbers": [
+            "ble"
         ]
     },
     {
@@ -450,6 +450,14 @@ module.exports = [
         "clobbers": [
             "cordova.plugins.barcodeScanner"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
+        "id": "cordova-plugin-splashscreen.SplashScreen",
+        "pluginId": "cordova-plugin-splashscreen",
+        "clobbers": [
+            "navigator.splashscreen"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -457,7 +465,6 @@ module.exports.metadata =
 {
     "cordova-plugin-battery-status": "1.1.2",
     "cordova-plugin-compat": "1.0.0",
-    "cordova-plugin-ble-central": "1.0.6",
     "cordova-plugin-camera": "2.2.0",
     "cordova-plugin-console": "1.0.3",
     "cordova-plugin-device": "1.1.2",
@@ -467,15 +474,17 @@ module.exports.metadata =
     "cordova-plugin-media": "2.3.0",
     "cordova-plugin-media-capture": "1.3.0",
     "cordova-plugin-network-information": "1.2.1",
-    "cordova-plugin-screen-orientation": "1.4.0",
-    "cordova-plugin-secure-storage": "2.2.1",
     "cordova-plugin-sqlite-2": "1.0.3",
     "cordova-plugin-statusbar": "2.1.3",
     "cordova-plugin-vibration": "2.1.1",
-    "cordova-plugin-video-editor": "1.0.8",
     "cordova-plugin-whitelist": "1.2.2",
-    "cordova-plugin-x-toast": "2.5.0",
-    "phonegap-plugin-barcodescanner": "4.1.0"
+    "cordova-plugin-screen-orientation": "1.4.0",
+    "cordova-plugin-video-editor": "1.0.9",
+    "cordova-plugin-secure-storage": "2.2.3",
+    "cordova-plugin-ble-central": "1.1.0",
+    "cordova-plugin-x-toast": "2.5.1",
+    "phonegap-plugin-barcodescanner": "5.0.0",
+    "cordova-plugin-splashscreen": "3.2.2"
 }
 // BOTTOM OF METADATA
 });

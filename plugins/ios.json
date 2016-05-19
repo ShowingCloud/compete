@@ -10,9 +10,6 @@
         "cordova-plugin-battery-status": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-plugin-ble-central": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
         "cordova-plugin-camera": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
@@ -40,12 +37,6 @@
         "cordova-plugin-network-information": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-plugin-screen-orientation": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
-        "cordova-plugin-secure-storage": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
         "cordova-plugin-sqlite-2": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
@@ -55,16 +46,28 @@
         "cordova-plugin-vibration": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-screen-orientation": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
         "cordova-plugin-video-editor": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-plugin-whitelist": {
+        "cordova-plugin-secure-storage": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-ble-central": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-x-toast": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "phonegap-plugin-barcodescanner": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "cn.robodou.competition"
         }
     },

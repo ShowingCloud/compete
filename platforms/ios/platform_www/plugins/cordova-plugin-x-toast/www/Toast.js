@@ -37,9 +37,9 @@ Toast.prototype.optionsBuilder = function () {
         duration: duration,
         position: position,
         addPixelsY: addPixelsY
-      }
+      };
     }
-  }
+  };
 };
 
 

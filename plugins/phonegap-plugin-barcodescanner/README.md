@@ -26,7 +26,7 @@ It is also possible to install via repo url directly ( unstable )
 
 - Android
 - iOS
-- Windows 8
+- Windows (Windows/Windows Phone 8.1 and Windows 10)
 - Windows Phone 8
 - BlackBerry 10
 - Browser
@@ -35,6 +35,12 @@ Note: the Android source for this project includes an Android Library Project.
 plugman currently doesn't support Library Project refs, so its been
 prebuilt as a jar library. Any updates to the Library Project should be
 committed with an updated jar.
+
+Note: Windows 10 applications can not be build for `AnyCPU` architecture, which is default for Windows platform. If you want to build/run Windows 10 app, you should specify target architecture explicitly, for example (Cordova CLI):
+
+```
+cordova run windows -- --archs=x86
+```
 
 ## Using the plugin ##
 The plugin creates the object `cordova/plugin/BarcodeScanner` with the method `scan(success, fail)`. 
@@ -54,8 +60,11 @@ The following barcode types are currently supported:
 * CODABAR
 * ITF
 * RSS14
-* PDF417
 * RSS_EXPANDED
+
+Not by default, but supported if you pass in the "formats" option:
+* PDF417
+* AZTEC
 
 ### iOS
 
@@ -69,7 +78,7 @@ The following barcode types are currently supported:
 * CODE_39
 * ITF
 
-### Windows8
+### Windows
 
 * UPC_A
 * UPC_E
@@ -119,7 +128,7 @@ The following barcode types are currently supported:
 `success` and `fail` are callback functions. Success is passed an object with data, type and cancelled properties. Data is the text representation of the barcode data, type is the type of barcode detected and cancelled is whether or not the user cancelled the scan.
 
 A full example could be:
-```
+```js
    cordova.plugins.barcodeScanner.scan(
       function (result) {
           alert("We got a barcode\n" +
@@ -129,6 +138,13 @@ A full example could be:
       }, 
       function (error) {
           alert("Scanning failed: " + error);
+      },
+      {
+          "preferFrontCamera" : true, // iOS and Android
+          "showFlipCameraButton" : true, // iOS and Android
+          "prompt" : "Place a barcode inside the scan area", // supported on Android only
+          "formats" : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+          "orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device
       }
    );
 ```
@@ -155,8 +171,8 @@ A full example could be:
         );
 ```
 
-## Windows8 quirks ##
-Windows 8 implementation currently doesn't support encode functionality.
+## Windows quirks ##
+Windows implementation currently doesn't support encode functionality.
 
 ## Windows Phone 8 quirks ##
 Windows Phone 8 implementation currently doesn't support encode functionality.

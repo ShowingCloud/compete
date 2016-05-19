@@ -7,7 +7,6 @@
     <author email="dev@cordova.apache.org" href="http://cordova.io">
             Apache Cordova Team
         </author>
-    <preference name="Orientation" value="landscape" />
     <plugin name="cordova-plugin-whitelist" spec="1" />
     <access origin="*" />
     <allow-navigation href="*://*.domelab.com/*" />
@@ -30,9 +29,12 @@
     </platform>
     <preference name="DisallowOverscroll" value="true" />
     <preference name="StatusBarOverlaysWebView" value="true" />
-    <preference name="AutoHideSplashScreen" value="false" />
-    <preference name="SplashScreenDelay" value="10000" />
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
+    <preference name="SplashScreenDelay" value="5000" />
+    <preference name="SplashShowOnlyFirstTime" value="false" />
+    <preference name="FadeSplashScreen" value="false"/>
+    <preference name="ShowSplashScreenSpinner" value="false"/>
+    <preference name="Orientation" value="landscape" />
 </widget>

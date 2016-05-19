@@ -1,6 +1,18 @@
 Changelog
 =========
 
+2.2.3 - 2016-05-18
+------------------
+
+- Fix broken version number in plugin.xml.
+  [ggozad]
+
+2.2.2 - 2016-05-10
+------------------
+
+- Execute iOS commands in separate threads instead of the main thread.
+  [goshakkk / hellyeahllc]
+
 2.2.1 - 2016-02-09
 ------------------
 

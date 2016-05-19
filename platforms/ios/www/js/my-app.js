@@ -1,14 +1,14 @@
 // "use strict";
 // Initialize the app
 window.onload = function() {
-    //navigator.splashscreen.hide();
+    navigator.splashscreen.hide();
 };
 
 var myApp = new Framework7({
     tapHold: true,
-    modalButtonOk:'确定',
-    modalButtonCancel:'取消',
-    modalTitle:'Robodou'
+    modalButtonOk: '确定',
+    modalButtonCancel: '取消',
+    modalTitle: 'Robodou'
 });
 
 var uuid;
@@ -25,25 +25,17 @@ var mainView = myApp.addView('.view-main', {
 var scoreDB = new PouchDB("score", {
     adapter: 'websql'
 });
-// var msgDB = new PouchDB("msg", {
-//     adapter: 'websql'
-// });
+
 //Not use remote PouchDb server
 var remoteCouch = false;
 
 // apption for app
 var app_options = {
-    host: "http://dev.domelab.com",
+    host: "http://dev.robodou.cn",
     //host: "http://test.robodou.cn",
 };
 
-var scoreAttr = [{
-    name: "第一次",
-    score_type: "3"
-}, {
-    name: "第二次",
-    score_type: "3"
-}];
+var scoreAttr = [];
 
 if (!HTMLCanvasElement.prototype.toBlob) {
     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
@@ -65,41 +57,38 @@ if (!HTMLCanvasElement.prototype.toBlob) {
 }
 
 var temp = {
-    compete: {
-        id: 1,
-        name: "机械奥运"
-    },
-    event: {
-        id: 1,
-        name: "机器人短跑",
-        time_limit: 120
-    },
+    compete: {},
+    event: {},
     schedule_name: "初赛",
     kind: 1,
     th: 1,
     team1_id: 0,
     team2_id: 0,
-    unread:{count:0,ids:[]}
+    unread: {
+        count: 0,
+        ids: []
+    }
 };
 
 var judgeInfo = {};
 
-function listDir(path){
-  window.resolveLocalFileSystemURL(path,
-    function (fileSystem) {
-      var reader = fileSystem.createReader();
-      reader.readEntries(
-        function (entries) {
-          console.log(entries);
+function listDir(path) {
+    window.resolveLocalFileSystemURL(path,
+        function(fileSystem) {
+            var reader = fileSystem.createReader();
+            reader.readEntries(
+                function(entries) {
+                    console.log(entries);
+                },
+                function(err) {
+                    console.log(err);
+                }
+            );
         },
-        function (err) {
-          console.log(err);
+        function(err) {
+            console.log(err);
         }
-      );
-    }, function (err) {
-      console.log(err);
-    }
-  );
+    );
 }
 
 function arrayToBytes(array) {
@@ -125,12 +114,12 @@ function printData(byteArrayData) {
 }
 
 var track = {
-    action:{
-        "raceUp":"开始",
-        "openDoor":"开门",
-        "closeDoor":"关门",
-        "reset":"重置",
-        "getScore":"拿分"
+    action: {
+        "raceUp": "开始",
+        "openDoor": "开门",
+        "closeDoor": "关门",
+        "reset": "重置",
+        "getScore": "拿分"
     },
     formatTime: function(time) {
         function pad(num, size) {
@@ -250,7 +239,7 @@ var track = {
                     } else {
                         track.render(time);
                     }
-                    myApp.alert(track.formatTime(time),"");
+                    myApp.alert(track.formatTime(time), "");
 
                     break;
                 case 3:
@@ -292,8 +281,8 @@ var track = {
             var data = track.arrayToBytes(track.order);
             ble.write(track.service.deviceId, track.service.serviceUUID, track.service.txCharacteristic, data, function() {
                 console.log(track.status.sending + " send success");
-                window.plugins.toast.showShortCenter(track.action[track.status.sending]+"指令已发送");
-                if(track.status.sending==="raceUp"){
+                window.plugins.toast.showShortCenter(track.action[track.status.sending] + "指令已发送");
+                if (track.status.sending === "raceUp") {
                     track.status.playing = 1;
                     // setTimeout(function(){
                     //     if(track.status.playing){
@@ -371,7 +360,7 @@ var track = {
                 elements[i].value = track.formatTime(time);
                 if (i === elements.length - 1) {
                     window.plugins.toast.showLongCenter("本次记分已完成");
-                    document.getElementById('raceUp').onclick=null;
+                    document.getElementById('raceUp').onclick = null;
                     total = 0;
                     for (var i = 0; i < elements.length; i++) {
                         total = total + track.unformat(elements[i].value);
@@ -433,14 +422,14 @@ var app = {
                     return results[1];
                 }
             }
-            //Oauth2 job 
+            //Oauth2 job
         document.addEventListener("deviceready", function() {
             var options = {
-                auth_url: app_options.host+'/auth/login/authorize',
-                token_url: app_options.host+'/auth/login/access_token',
+                auth_url: app_options.host + '/auth/login/authorize',
+                token_url: app_options.host + '/auth/login/access_token',
                 client_id: '1',
                 client_secret: '123456',
-                redirect_uri: app_options.host+''
+                redirect_uri: app_options.host + ''
             }
 
             //Generate Login URL
@@ -474,7 +463,7 @@ var app = {
                         success: function(data) {
                             //Get userInfo
                             var dataObj = JSON.parse(data);
-                            $$.getJSON(app_options.host+'/auth/login/user', {
+                            $$.getJSON(app_options.host + '/auth/login/user', {
                                 oauth_token: dataObj.access_token
                             }, function(d) {
                                 console.log(d);
@@ -499,7 +488,7 @@ var app = {
                 }
             });
             ref.addEventListener('loadstop', function(e) {
-                if (e.url === app_options.host+"/account/sign_in") {
+                if (e.url === app_options.host + "/account/sign_in") {
                     if (!count) {
                         count++;
                         window.plugins.toast.showShortCenter("请登录");
@@ -528,7 +517,7 @@ var app = {
         });
     },
     bind: function() {
-        window.addEventListener("orientationchange", function(){
+        window.addEventListener("orientationchange", function() {
             console.log(screen.orientation);
         });
         //Globle ajax error handller
@@ -536,18 +525,18 @@ var app = {
             var xhr = e.detail.xhr;
             console.log(xhr);
             if (xhr.status === 401) {
-                if ((new URL(xhr.requestUrl)).hostname === "dev.domelab.com") {
-                    myApp.alert("登陆失效，请重新登陆","",function(){
+                if ((new URL(xhr.requestUrl)).origin === app_options.host) {
+                    myApp.alert("登陆失效，请重新登陆", "", function() {
                         localStorage.removeItem("judgeInfo");
                         judgeInfo = {};
-                        if(mainView.activePage.name==="home"){
+                        if (mainView.activePage.name === "home") {
                             app.login();
-                        }else{
+                        } else {
                             mainView.router.loadPage("index.html");
                         }
                         MessageBus.stop();
                     });
-                    
+
                 }
             }
         });
@@ -625,7 +614,7 @@ var app = {
                 function(result) {
                     screen.lockOrientation('portrait');
                     if (result.text) {
-                        myApp.alert("获得二维码: " + result.text,"");
+                        myApp.alert("获得二维码: " + result.text, "");
                         app.teamInfo(result.text);
                     } else {
                         myApp.alert("请输入选手编号", "");
@@ -656,7 +645,7 @@ var app = {
         if (typeof temp.process === 'string') {
             $$("#schedule").html(temp.process);
         } else {
-            $$.getJSON(app_options.host+"/api/v1/competitions", function(process) {
+            $$.getJSON(app_options.host + "/api/v1/competitions", function(process) {
                 console.log(process);
                 var processTemp = $$('#processTemp').html();
                 var compiledTemp = Template7.compile(processTemp);
@@ -668,7 +657,7 @@ var app = {
 
     },
     getResponse: function(token) {
-        $$.getJSON(app_options.host+"/api/v1/users/" + token + "/user_for_event", function(response) {
+        $$.getJSON(app_options.host + "/api/v1/users/" + token + "/user_for_event", function(response) {
             $$("#judgeComptition").text(response.events[0].comp_name);
             var events = [];
             response.events.forEach(function(e) {
@@ -678,64 +667,25 @@ var app = {
             $$("#judgeEvent").text(events.toString());
         });
     },
-    getEvents: function(comp_id) {
-        $$.getJSON(app_options.host+"/api/v1/competitions/events", {
+    getEvents: function(comp_id,callback) {
+        $$.getJSON(app_options.host + "/api/v1/competitions/events", {
             "comp_id": comp_id
         }, function(response) {
             console.log(response);
-            var schoolGroups = {
-                1: "小",
-                2: "中",
-                3: "初",
-                4: "高"
-            };
-            response.events.forEach(function(g1, index1) {
-                g1.events.forEach(function(g2, index2) {
-                    var groupId = "group" + g2.id + "-" + g2.group;
-                    if (index1 === 0 && index2 === 0) {
-                        $$("#groups").append('<li><a href="#' + groupId + '" class="tab-link active">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>');
-                    } else {
-                        $$("#groups").append('<li><a href="#' + groupId + '" class="tab-link">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>');
-                    }
-                    $$("#eventsBoard .tabs").append('<div class="tab" id="' + groupId + '"></div>');
-                    if (g2.z_e) {
-                        g2.z_e.forEach(function(ev) {
-                            $$('<div data-id="' + ev.id + '">' + ev.name + '</div>').appendTo("#" + groupId).on("click", function() {
-                                var compete = {
-                                    id: $$(".compete-select .active").data("id"),
-                                    name: $$(".compete-select .active").text()
-                                };
-                                var event = {
-                                    id: $$(this).data("id"),
-                                    name: $$(this).text(),
-                                    group: g2.group
-                                }
-                                temp.compete = compete;
-                                temp.event = event;
-                                mainView.router.loadPage('player.html');
-                                app.getScoreAttr(event.id);
-                            });
-                        });
-                        if (index1 === 0 && index2 === 0) {
-                            $$(("#" + groupId)).addClass("active");
-                        }
-                    }
-                });
-            });
+            if(typeof callback === "function"){
+                callback(response.events);
+            }
         });
     },
     getScoreAttr: function(event_id) {
-        $$.getJSON(app_options.host+"/api/v1/events/score_attributes", {
+        $$.getJSON(app_options.host + "/api/v1/events/score_attributes", {
             "event_id": event_id
         }, function(response) {
-            console.log(response);
-            //scoreAttr[event_id] = response;
-            if(scoreAttr.length){
-                scoreAttr = event_score_attributes[0];
-            }else{
-                myApp.alert("无此项目数据","")
+            if (response.event_score_attributes.length) {
+                scoreAttr = response.event_score_attributes;
+            } else {
+                myApp.alert("无此项目数据", "")
             }
-            
         });
     },
     getTeams: function(ed, group, schedule) {
@@ -753,7 +703,7 @@ var app = {
             return template.content.firstChild;
         }
 
-        $$.getJSON(app_options.host+"/api/v1/competitions/event/teams", data, function(response) {
+        $$.getJSON(app_options.host + "/api/v1/competitions/event/teams", data, function(response) {
             console.log(response.teams);
             if (response.teams[0]) {
                 var teams = response.teams[1];
@@ -784,7 +734,7 @@ var app = {
     },
     teamInfo: function(playerId) {
         if (typeof playerId === "string") {
-            var url = app_options.host+"/api/v1/users/" + judgeInfo.authToken + "/team_players";
+            var url = app_options.host + "/api/v1/users/" + judgeInfo.authToken + "/team_players";
             $$.getJSON(url, {
                 identifier: playerId
             }, function(data) {
@@ -820,33 +770,35 @@ var app = {
             console.log("no playerId");
         }
     },
-    getMsg: function(token, page, per) {
-        $$.getJSON(app_options.host+"/api/v1/users/" + token + "/notifications/", {
-            "page": page,
-            "per_page": per
-        }, function(response) {
+    getMsg: function(token) {
+        $$.getJSON(app_options.host + "/api/v1/users/" + token + "/notifications/", function(response) {
             console.log(response);
             response.notifications.forEach(function(n) {
                 var d = new Date(n.created_at);
                 var time = d.toLocaleString().replace("GMT+8", "");
                 $$("#msgBoard ul").append("<li><p class='time'>" + time + "</p><p class='content'>" + n.content + "</p></li>");
-                if(n.read===0){
+                if (n.read === 0) {
                     temp.unread.ids.push(n.id);
                 }
             });
         });
     },
-    
-    setRead:function(msgid){
-        $$.post(app_options.host+'/api/v1/', {msgid:msgid}, function (data) {
+
+    setRead: function(msgid) {
+        $$.post(app_options.host + '/api/v1/', {
+            msgid: msgid
+        }, function(data) {
             console.log(data);
         });
     },
     subscribeMsg: function(token) {
         //Get unread counts
-        $$.getJSON(app_options.host+"/api/v1/users/" + token + "/notifications/unread ", function(unread) {
-            console.log(unread);
-            $$("#msg").addClass("newMsg");
+        $$.getJSON(app_options.host + "/api/v1/users/" + token + "/notifications", function(msg) {
+            console.log(msg);
+            if(msg.unread>0){
+                $$("#msg").addClass("newMsg");
+            }
+            
         });
         //Subscribe message
         var channel = "/channel/" + token;
@@ -903,21 +855,21 @@ var app = {
                     v += "<source src='" + path + "' type='" + type + "'>";
                     v += "</video>";
                     $$("#video").append(v);
-                }, // success cb 
+                }, // success cb
                 function(e) {
                     var v = "<video controls='controls'>";
                     v += "<source src='" + path + "' type='" + type + "'>";
                     v += "</video>";
                     $$("#video").append(v);
                     console.log(e);
-                }, // error cb 
+                }, // error cb
                 {
-                    fileUri: path, // the path to the video on the device 
-                    outputFileName: 'thumbnail', // the file name for the JPEG image 
-                    atTime: 2, // optional, location in the video to create the thumbnail (in seconds) 
-                    width: 320, // optional, width of the thumbnail 
-                    height: 480, // optional, height of the thumbnail 
-                    quality: 100 // optional, quality of the thumbnail (between 1 and 100) 
+                    fileUri: path, // the path to the video on the device
+                    outputFileName: 'thumbnail', // the file name for the JPEG image
+                    atTime: 2, // optional, location in the video to create the thumbnail (in seconds)
+                    width: 320, // optional, width of the thumbnail
+                    height: 480, // optional, height of the thumbnail
+                    quality: 100 // optional, quality of the thumbnail (between 1 and 100)
                 }
             );
         };
@@ -939,6 +891,10 @@ var app = {
                 app.uploadScore(response.id, function() {
                     myApp.hidePreloader();
                     myApp.alert("成绩已上传", "", function() {
+                        mainView.router.back();
+                    });
+                },function(){
+                    myApp.alert("成绩上传失败，请稍后再上传", "", function() {
                         mainView.router.back();
                     });
                 });
@@ -1051,7 +1007,7 @@ var app = {
             images.each(function(index, img) {
                 var uri = img.src;
                 var ext = uri.split('.').pop();
-                var filename = new Date().valueOf().toString()+index + "." + ext;
+                var filename = new Date().valueOf().toString() + index + "." + ext;
                 var fail = function(err) {
                     console.log(err)
                 }
@@ -1062,7 +1018,7 @@ var app = {
                             // file.remove(function(){console.log("removed")},fail);
                             console.log("file copyed");
                             scoreData.img.push(e.nativeURL);
-                            if(scoreData.img.length===images.length){
+                            if (scoreData.img.length === images.length) {
                                 console.log("img done");
                                 saveVideo();
                             }
@@ -1076,7 +1032,7 @@ var app = {
         }
 
     },
-    uploadScore: function(doc_id, success) {
+    uploadScore: function(doc_id, success,fail,complete) {
         scoreDB.get(doc_id, {
             attachments: true,
             binary: true
@@ -1108,24 +1064,31 @@ var app = {
 
             $$.ajax({
                 method: "POST",
-                url: app_options.host+"/api/v1/scores/" + judgeInfo.authToken + "/score",
+                url: app_options.host + "/api/v1/scores/" + judgeInfo.authToken + "/score",
                 contentType: "multipart/form-data",
                 data: form_data,
                 dataType: "json",
                 success: function(response) {
                     console.log(response);
                     doc.upload = "Yes";
-                    return scoreDB.put(doc);
+                    scoreDB.put(doc);
+                    if (typeof success === "function") {
+                        success();
+                    }
                 },
                 error: function(error) {
                     console.log(error);
+                    if (typeof fail === "function") {
+                        fail();
+                    }
+                },
+                complete:function(){
+                    if (typeof complete === "function") {
+                        complete();
+                    }
                 }
             });
 
-        }).then(function(response) {
-            if (typeof success === "function") {
-                success();
-            }
         }).catch(function(err) {
             console.log(err);
         });
@@ -1161,36 +1124,56 @@ myApp.onPageBeforeInit('home', function(page) {
 });
 
 myApp.onPageInit('select', function(page) {
-    app.getEvents(1);
-    // $$("#eventsBoard .tab div").on("click", function () {
-    //     var compete = {
-    //         id: $$(".compete-select .active").data("id")
-    //         , name: $$(".compete-select .active").text()
-    //     };
-    //     var event = {
-    //         id: $$(this).data("id")
-    //         , name: $$(this).text()
-    //     }
-    //     temp.compete = compete;
-    //     temp.event = event;
-    //     mainView.router.loadPage('player.html');
-    // });
+    function showEvents(events){
+        var schoolGroups = {
+                1: "小",
+                2: "中",
+                3: "初",
+                4: "高"
+            };
+            console.log(events);
+            events.forEach(function(g1, index1) {
+                g1.events.forEach(function(g2, index2) {
+                    var groupId = "group" + g2.id + "-" + g2.group;
+                    if (index1 === 0 && index2 === 0) {
+                        $$("#groups").append('<li><a href="#' + groupId + '" class="tab-link active">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>');
+                    } else {
+                        $$("#groups").append('<li><a href="#' + groupId + '" class="tab-link">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>');
+                    }
+                    $$("#eventsBoard .tabs").append('<div class="tab" id="' + groupId + '"></div>');
+                    if (g2.z_e) {
+                        g2.z_e.forEach(function(ev) {
+                            $$('<div data-id="' + ev.id + '">' + ev.name + '</div>').appendTo("#" + groupId).on("click", function() {
+                                var compete = {
+                                    id: $$(".compete-select .active").data("id"),
+                                    name: $$(".compete-select .active").text()
+                                };
+                                var event = {
+                                    id: $$(this).data("id"),
+                                    name: $$(this).text(),
+                                    group: g2.group
+                                }
+                                temp.compete = compete;
+                                temp.event = event;
+                                mainView.router.loadPage('player.html');
+                                app.getScoreAttr(event.id);
+                            });
+                        });
+                        if (index1 === 0 && index2 === 0) {
+                            $$(("#" + groupId)).addClass("active");
+                        }
+                    }
+                });
+            });
+    }
+    app.getEvents(1,showEvents);
 });
 
 myApp.onPageInit('msg', function(page) {
     $$("#msg").removeClass("newMsg");
-    // msgDB.allDocs({
-    //     include_docs: true,
-    //     attachments: false
-    // }).then(function(result) {
-    //     console.log(result.rows);
-    // }).catch(function(err) {
-    //     console.log(err);
-    // });
-    var page=1;
-    app.getMsg(judgeInfo.authToken, page, 20);
-    $$(".infinite-scroll").on("infinite",function(){
-        app.getMsg(judgeInfo.authToken, ++page, 20);
+    app.getMsg(judgeInfo.authToken);
+    $$(".infinite-scroll").on("infinite", function() {
+        app.getMsg(judgeInfo.authToken);
     });
 });
 
@@ -1261,16 +1244,20 @@ myApp.onPageInit('data', function(page) {
         $$(".upload-all").on("click", function() {
             if (length) {
                 console.log(toUpload);
-                var newLength = length;
+                var uploadCount=0;
+                var uploadSuccess=0;
                 myApp.showPreloader("正在上传");
                 toUpload.forEach(function(i) {
                     app.uploadScore(i, function() {
-                        if (newLength > 0) {
-                            if (newLength === 1) {
-                                myApp.hidePreloader();
+                        uploadSuccess++;
+                    },null,function(){
+                        uploadCount++;
+                        if(uploadCount===length){
+                            myApp.hidePreloader();
+                            if (uploadSuccess === length) {
                                 mainView.router.loadPage('Uploaded.html');
-                            } else {
-                                newLength--;
+                            }else{
+                                myApp.alert("部分上传失败","");
                             }
                         }
                     });
@@ -1278,7 +1265,6 @@ myApp.onPageInit('data', function(page) {
 
             }
         });
-        console.log(toUpload);
 
     }).catch(function(err) {
         console.log(err);
@@ -1289,17 +1275,18 @@ myApp.onPageInit('stopWatch', function(page) {
     var scoreFrom;
     var drawed = 0;
     if (scoreAttr) {
+        console.log(scoreAttr);
         scoreAttr.forEach(function(sa, index) {
             switch (sa.score_type) {
-                case "3":
+                case 3:
                     scoreFrom = 3;
                     $$("#team1 .scores").append('<div>' + sa.name + '：<input class="track-score score" name="score' + (index + 1) + '"></div>');
                     break;
-                case "2":
+                case 2:
                     scoreFrom = 2;
                     $$("#team1 .scores").append('<div>' + sa.name + '：<input class="time-score score" name="score' + (index + 1) + '"></div>');
                     break;
-                case "1":
+                case 1:
                     scoreFrom = 1;
                     $$(".scrollable").css("height", "500px");
                     $$("#scoreHeader").hide();
@@ -1511,7 +1498,7 @@ myApp.onPageInit('stopWatch', function(page) {
         e.preventDefault();
         var touchEvent = e.changedTouches[0];
         paint = true;
-        ele= $$("#canvas").offset();
+        ele = $$("#canvas").offset();
         console.log(ele);
         addClick(touchEvent.clientX - ele.left, touchEvent.clientY - ele.top);
         redraw();
