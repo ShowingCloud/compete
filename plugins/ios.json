@@ -19,19 +19,7 @@
         "cordova-plugin-device": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-plugin-file": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
-        "cordova-plugin-file-transfer": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
         "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
-        "cordova-plugin-media": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
-        "cordova-plugin-media-capture": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-network-information": {
@@ -47,9 +35,6 @@
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
-        "cordova-plugin-screen-orientation": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-video-editor": {
@@ -68,6 +53,21 @@
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-screen-orientation": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-media": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-media-capture": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-file": {
             "PACKAGE_NAME": "cn.robodou.competition"
         }
     },

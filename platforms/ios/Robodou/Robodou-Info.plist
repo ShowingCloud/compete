@@ -73,14 +73,10 @@
     <string/>
     <key>NSMainNibFile</key>
     <string/>
-    <key>NSMainNibFile~ipad</key>
-    <string/>
     <key>UIInterfaceOrientation</key>
     <array>
       <string>UIInterfaceOrientationLandscapeLeft</string>
     </array>
-    <key>UILaunchStoryboardName</key>
-    <string>MainViewController</string>
     <key>UIRequiresFullScreen</key>
     <true/>
     <key>UISupportedInterfaceOrientations</key>

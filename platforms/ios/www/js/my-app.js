@@ -656,6 +656,12 @@ var app = {
         }
 
     },
+    getSchedule:function(ed,group){
+        $$.getJSON(app_options.host + "/api/v1/users/events/event_schedule",{ed:ed,group:group},function(response){
+            temp.kind=response.event_schedules[0].kind;
+            temp.schedule_name=response.event_schedules[0].schedule_name;
+        });
+    },
     getResponse: function(token) {
         $$.getJSON(app_options.host + "/api/v1/users/" + token + "/user_for_event", function(response) {
             $$("#judgeComptition").text(response.events[0].comp_name);
@@ -693,17 +699,18 @@ var app = {
             "ed": ed,
             "group": group
         };
-        if (typeof schedule === "string") {
-            data.schedule = schedule;
-        }
+        $$.getJSON(app_options.host + "/api/v1/events/event_schedule",data,function(response){
+            temp.kind=response.event_schedules[0].kind;
+            temp.schedule_name=response.event_schedules[0].schedule_name;
+            temp.schedule_id=response.event_schedules[0].schedule_id;
+            data.schedule_id = response.event_schedules[0].schedule_id;
+            function htmlToElement(html) {
+                var template = document.createElement('template');
+                template.innerHTML = html;
+                return template.content.firstChild;
+            }
 
-        function htmlToElement(html) {
-            var template = document.createElement('template');
-            template.innerHTML = html;
-            return template.content.firstChild;
-        }
-
-        $$.getJSON(app_options.host + "/api/v1/competitions/event/teams", data, function(response) {
+        $$.getJSON(app_options.host + "/api/v1/events/event/teams", data, function(response) {
             console.log(response.teams);
             if (response.teams[0]) {
                 var teams = response.teams[1];
@@ -730,7 +737,7 @@ var app = {
             }
 
         });
-
+        });
     },
     teamInfo: function(playerId) {
         if (typeof playerId === "string") {
@@ -777,28 +784,34 @@ var app = {
                 var d = new Date(n.created_at);
                 var time = d.toLocaleString().replace("GMT+8", "");
                 $$("#msgBoard ul").append("<li><p class='time'>" + time + "</p><p class='content'>" + n.content + "</p></li>");
-                if (n.read === 0) {
-                    temp.unread.ids.push(n.id);
-                }
+                
             });
         });
     },
 
-    setRead: function(msgid) {
-        $$.post(app_options.host + '/api/v1/', {
-            msgid: msgid
+    setRead: function(token,msgid,callback) {
+        $$.post(app_options.host + '/api/v1/users/'+ token+'/update_notify_read', {
+            id: msgid
         }, function(data) {
             console.log(data);
+            if(typeof callback === "function"){
+                callback();
+            }
         });
     },
     subscribeMsg: function(token) {
         //Get unread counts
         $$.getJSON(app_options.host + "/api/v1/users/" + token + "/notifications", function(msg) {
             console.log(msg);
+            
+            msg.notifications.forEach(function(n) {
+                if (!n.read) {
+                    temp.unread.ids.push(n.id);
+                }
+            });
             if(msg.unread>0){
                 $$("#msg").addClass("newMsg");
             }
-            
         });
         //Subscribe message
         var channel = "/channel/" + token;
@@ -999,6 +1012,7 @@ var app = {
         scoreData.compete = temp.compete;
         scoreData.schedule_name = temp.schedule_name;
         scoreData.kind = temp.kind;
+        scoreData.schedule_id=temp.schedule_id
         scoreData.th = temp.th;
         scoreData.upload = false;
         var images = $$("#photos img");
@@ -1040,6 +1054,7 @@ var app = {
             var toPost = {
                 event_id: doc.event.id,
                 schedule_name: doc.schedule_name,
+                schedule_id:doc.schedule_id,
                 kind: doc.kind,
                 th: doc.th,
                 team1_id: doc.player.code, // team2_id:doc.player.id,
@@ -1175,6 +1190,11 @@ myApp.onPageInit('msg', function(page) {
     $$(".infinite-scroll").on("infinite", function() {
         app.getMsg(judgeInfo.authToken);
     });
+    console.log(temp.unread);
+    temp.unread.ids.forEach(function(id){
+        app.setRead(judgeInfo.authToken,id);
+    });
+    temp.unread.ids=[];
 });
 
 myApp.onPageInit('player', function() {

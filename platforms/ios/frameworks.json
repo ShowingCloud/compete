@@ -7,7 +7,7 @@
     "CoreTelephony.framework": 1,
     "Security.framework": 2,
     "libsqlite3.dylib": 1,
-    "AudioToolbox.framework": 2,
+    "AudioToolbox.framework": 1,
     "MediaPlayer.framework": 2,
     "CoreVideo.framework": 2,
     "QuartzCore.framework": 2,
