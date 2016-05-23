@@ -59,7 +59,7 @@ if (!HTMLCanvasElement.prototype.toBlob) {
 var temp = {
     compete: {},
     event: {},
-    schedule_name: "初赛",
+    schedule_name: "",
     kind: 1,
     th: 1,
     team1_id: 0,
@@ -656,10 +656,29 @@ var app = {
         }
 
     },
-    getSchedule:function(ed,group){
-        $$.getJSON(app_options.host + "/api/v1/users/events/event_schedule",{ed:ed,group:group},function(response){
-            temp.kind=response.event_schedules[0].kind;
-            temp.schedule_name=response.event_schedules[0].schedule_name;
+    getSchedule: function(ed, group) {
+        var data = {
+            "ed": ed,
+            "group": group
+        };
+        $$.getJSON(app_options.host + "/api/v1/events/event_schedule", data, function(response) {
+            var schedules = response.event_schedules;
+            if (schedules.length === 0) {
+                myApp.alert("该比赛没有赛程,无法继续", "");
+            } else if (schedules.length > 1) {
+                var compiledTemp = Template7.compile($$('#roundTpl').html());
+                var newPageContent = compiledTemp(response);
+                mainView.router.loadContent(newPageContent);
+                mainView.router.load({
+                    content: newPageContent,
+                    animatePages: false
+                });
+            } else {
+                temp.kind = schedules[0].kind;
+                temp.schedule_name = schedules[0].schedule_name;
+                temp.schedule_id = schedules[0].schedule_id;
+                mainView.router.loadPage('player.html');
+            }
         });
     },
     getResponse: function(token) {
@@ -673,12 +692,12 @@ var app = {
             $$("#judgeEvent").text(events.toString());
         });
     },
-    getEvents: function(comp_id,callback) {
+    getEvents: function(comp_id, callback) {
         $$.getJSON(app_options.host + "/api/v1/competitions/events", {
             "comp_id": comp_id
         }, function(response) {
             console.log(response);
-            if(typeof callback === "function"){
+            if (typeof callback === "function") {
                 callback(response.events);
             }
         });
@@ -694,21 +713,12 @@ var app = {
             }
         });
     },
-    getTeams: function(ed, group, schedule) {
-        var data = {
-            "ed": ed,
-            "group": group
-        };
-        $$.getJSON(app_options.host + "/api/v1/events/event_schedule",data,function(response){
-            temp.kind=response.event_schedules[0].kind;
-            temp.schedule_name=response.event_schedules[0].schedule_name;
-            temp.schedule_id=response.event_schedules[0].schedule_id;
-            data.schedule_id = response.event_schedules[0].schedule_id;
-            function htmlToElement(html) {
-                var template = document.createElement('template');
-                template.innerHTML = html;
-                return template.content.firstChild;
-            }
+    getTeams: function(data) {
+        function htmlToElement(html) {
+            var template = document.createElement('template');
+            template.innerHTML = html;
+            return template.content.firstChild;
+        }
 
         $$.getJSON(app_options.host + "/api/v1/events/event/teams", data, function(response) {
             console.log(response.teams);
@@ -736,7 +746,6 @@ var app = {
                 });
             }
 
-        });
         });
     },
     teamInfo: function(playerId) {
@@ -784,17 +793,17 @@ var app = {
                 var d = new Date(n.created_at);
                 var time = d.toLocaleString().replace("GMT+8", "");
                 $$("#msgBoard ul").append("<li><p class='time'>" + time + "</p><p class='content'>" + n.content + "</p></li>");
-                
+
             });
         });
     },
 
-    setRead: function(token,msgid,callback) {
-        $$.post(app_options.host + '/api/v1/users/'+ token+'/update_notify_read', {
+    setRead: function(token, msgid, callback) {
+        $$.post(app_options.host + '/api/v1/users/' + token + '/update_notify_read', {
             id: msgid
         }, function(data) {
             console.log(data);
-            if(typeof callback === "function"){
+            if (typeof callback === "function") {
                 callback();
             }
         });
@@ -803,13 +812,13 @@ var app = {
         //Get unread counts
         $$.getJSON(app_options.host + "/api/v1/users/" + token + "/notifications", function(msg) {
             console.log(msg);
-            
+
             msg.notifications.forEach(function(n) {
                 if (!n.read) {
                     temp.unread.ids.push(n.id);
                 }
             });
-            if(msg.unread>0){
+            if (msg.unread > 0) {
                 $$("#msg").addClass("newMsg");
             }
         });
@@ -906,7 +915,7 @@ var app = {
                     myApp.alert("成绩已上传", "", function() {
                         mainView.router.back();
                     });
-                },function(){
+                }, function() {
                     myApp.alert("成绩上传失败，请稍后再上传", "", function() {
                         mainView.router.back();
                     });
@@ -1012,7 +1021,7 @@ var app = {
         scoreData.compete = temp.compete;
         scoreData.schedule_name = temp.schedule_name;
         scoreData.kind = temp.kind;
-        scoreData.schedule_id=temp.schedule_id
+        scoreData.schedule_id = temp.schedule_id
         scoreData.th = temp.th;
         scoreData.upload = false;
         var images = $$("#photos img");
@@ -1046,7 +1055,7 @@ var app = {
         }
 
     },
-    uploadScore: function(doc_id, success,fail,complete) {
+    uploadScore: function(doc_id, success, fail, complete) {
         scoreDB.get(doc_id, {
             attachments: true,
             binary: true
@@ -1054,7 +1063,7 @@ var app = {
             var toPost = {
                 event_id: doc.event.id,
                 schedule_name: doc.schedule_name,
-                schedule_id:doc.schedule_id,
+                schedule_id: doc.schedule_id,
                 kind: doc.kind,
                 th: doc.th,
                 team1_id: doc.player.code, // team2_id:doc.player.id,
@@ -1097,7 +1106,7 @@ var app = {
                         fail();
                     }
                 },
-                complete:function(){
+                complete: function() {
                     if (typeof complete === "function") {
                         complete();
                     }
@@ -1109,23 +1118,6 @@ var app = {
         });
     }
 };
-
-myApp.onPageInit('player', function(page) {
-    app.getTeams(temp.event.id, temp.event.group);
-    $$("#playerTable select").change(function() {
-        var filter = $(this).val();
-        if (filter === "unfinished") {
-            $$("#playerTable .finished").css("display", "none");
-            $$("#playerTable .unfinished").css("display", null);
-        } else if (filter === "finished") {
-            $$("#playerTable .unfinished").css("display", "none");
-            $$("#playerTable .finished").css("display", null);
-        } else {
-            $$("#playerTable tr").css("display", null);
-        }
-    });
-
-});
 
 myApp.onPageBeforeInit('home', function(page) {
     if (judgeInfo.hasOwnProperty("userId")) {
@@ -1139,49 +1131,49 @@ myApp.onPageBeforeInit('home', function(page) {
 });
 
 myApp.onPageInit('select', function(page) {
-    function showEvents(events){
+    function showEvents(events) {
         var schoolGroups = {
-                1: "小",
-                2: "中",
-                3: "初",
-                4: "高"
-            };
-            console.log(events);
-            events.forEach(function(g1, index1) {
-                g1.events.forEach(function(g2, index2) {
-                    var groupId = "group" + g2.id + "-" + g2.group;
-                    if (index1 === 0 && index2 === 0) {
-                        $$("#groups").append('<li><a href="#' + groupId + '" class="tab-link active">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>');
-                    } else {
-                        $$("#groups").append('<li><a href="#' + groupId + '" class="tab-link">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>');
-                    }
-                    $$("#eventsBoard .tabs").append('<div class="tab" id="' + groupId + '"></div>');
-                    if (g2.z_e) {
-                        g2.z_e.forEach(function(ev) {
-                            $$('<div data-id="' + ev.id + '">' + ev.name + '</div>').appendTo("#" + groupId).on("click", function() {
-                                var compete = {
-                                    id: $$(".compete-select .active").data("id"),
-                                    name: $$(".compete-select .active").text()
-                                };
-                                var event = {
-                                    id: $$(this).data("id"),
-                                    name: $$(this).text(),
-                                    group: g2.group
-                                }
-                                temp.compete = compete;
-                                temp.event = event;
-                                mainView.router.loadPage('player.html');
-                                app.getScoreAttr(event.id);
-                            });
+            1: "小",
+            2: "中",
+            3: "初",
+            4: "高"
+        };
+        console.log(events);
+        events.forEach(function(g1, index1) {
+            g1.events.forEach(function(g2, index2) {
+                var groupId = "group" + g2.id + "-" + g2.group;
+                if (index1 === 0 && index2 === 0) {
+                    $$("#groups").append('<li><a href="#' + groupId + '" class="tab-link active">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>');
+                } else {
+                    $$("#groups").append('<li><a href="#' + groupId + '" class="tab-link">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>');
+                }
+                $$("#eventsBoard .tabs").append('<div class="tab" id="' + groupId + '"></div>');
+                if (g2.z_e) {
+                    g2.z_e.forEach(function(ev) {
+                        $$('<div data-id="' + ev.id + '">' + ev.name + '</div>').appendTo("#" + groupId).on("click", function() {
+                            var compete = {
+                                id: $$(".compete-select .active").data("id"),
+                                name: $$(".compete-select .active").text()
+                            };
+                            var event = {
+                                id: $$(this).data("id"),
+                                name: $$(this).text(),
+                                group: g2.group
+                            }
+                            temp.compete = compete;
+                            temp.event = event;
+                            app.getSchedule(event.id, event.group);
+                            app.getScoreAttr(event.id);
                         });
-                        if (index1 === 0 && index2 === 0) {
-                            $$(("#" + groupId)).addClass("active");
-                        }
+                    });
+                    if (index1 === 0 && index2 === 0) {
+                        $$(("#" + groupId)).addClass("active");
                     }
-                });
+                }
             });
+        });
     }
-    app.getEvents(1,showEvents);
+    app.getEvents(1, showEvents);
 });
 
 myApp.onPageInit('msg', function(page) {
@@ -1191,14 +1183,18 @@ myApp.onPageInit('msg', function(page) {
         app.getMsg(judgeInfo.authToken);
     });
     console.log(temp.unread);
-    temp.unread.ids.forEach(function(id){
-        app.setRead(judgeInfo.authToken,id);
+    temp.unread.ids.forEach(function(id) {
+        app.setRead(judgeInfo.authToken, id);
     });
-    temp.unread.ids=[];
+    temp.unread.ids = [];
 });
 
 myApp.onPageInit('player', function() {
-
+    app.getTeams({
+        "ed": temp.event.id,
+        "group": temp.event.group,
+        "schedule_id": temp.schedule_id
+    });
     $$(".wrapper－dropdown").on('click', function(event) {
         $$(this).toggleClass("active");
         event.stopPropagation();
@@ -1215,6 +1211,14 @@ myApp.onPageInit('player', function() {
         } else {
             $$("#playerTable tr").css("display", null);
         }
+    });
+});
+myApp.onPageInit('round', function() {
+    $$(".round-wrapper").on('click', function() {
+        var data = $$(this).dataset();
+        temp.schedule_name = data.schedule_name;
+        temp.schedule_id = data.schedule_id;
+        mainView.router.loadPage("player.html");
     });
 });
 
@@ -1264,20 +1268,20 @@ myApp.onPageInit('data', function(page) {
         $$(".upload-all").on("click", function() {
             if (length) {
                 console.log(toUpload);
-                var uploadCount=0;
-                var uploadSuccess=0;
+                var uploadCount = 0;
+                var uploadSuccess = 0;
                 myApp.showPreloader("正在上传");
                 toUpload.forEach(function(i) {
                     app.uploadScore(i, function() {
                         uploadSuccess++;
-                    },null,function(){
+                    }, null, function() {
                         uploadCount++;
-                        if(uploadCount===length){
+                        if (uploadCount === length) {
                             myApp.hidePreloader();
                             if (uploadSuccess === length) {
                                 mainView.router.loadPage('Uploaded.html');
-                            }else{
-                                myApp.alert("部分上传失败","");
+                            } else {
+                                myApp.alert("部分上传失败", "");
                             }
                         }
                     });

@@ -870,3 +870,32 @@ div.media-capture {
 .unploadedWrapper img {
     width: 80%;
 }
+
+.round-wrapper{
+    background-image: url(../images/round-border.png);
+    background-position: left center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+    position: relative;
+    height: 90px;
+    width: 290px;
+    margin-bottom: 40px;
+    margin-left:200px;
+}
+
+.round-wrapper h2{
+    font-size: 1.8em;
+    position: absolute;
+    right: 20%;
+    top: 2%;
+    font-weight: 100;
+    letter-spacing: 5px;
+    color: #e4f1ff;
+}
+
+.round-title{
+    margin-top:20px;
+    font-size:1.2em;
+    color:#e4f1ff;
+}

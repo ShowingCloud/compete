@@ -19,11 +19,10 @@
  *
 */
 
-var exec = require('cordova/exec'),
-    screenOrientation = {};
+#import <Cordova/CDVViewController.h>
 
-screenOrientation.setOrientation = function(orientation) {
-    exec(null, null, "YoikScreenOrientation", "screenOrientation", ['set', orientation]);
-};
+@interface CDVViewController (UpdateSupportedOrientations)
 
-module.exports = screenOrientation;
+- (void)updateSupportedOrientations:(NSArray *)orientations;
+
+@end

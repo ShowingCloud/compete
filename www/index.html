@@ -68,6 +68,21 @@
             {{/each}}
         </div>
     </script>
+    
+    <script id="roundTpl" type="text/template7">
+        <div data-page="round" class="page">
+            <div class="page-content">
+                <div class="round-container">
+                    <p class="round-title">请选择比赛阶段</p>
+                    {{#each event_schedules}}
+                        <div class="round-wrapper" data-schedule_name="{{schedule_name}}" data-schedule_id="{{schedule_id}}" >
+                            <h2>{{schedule_name}}</h2>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </script>
     <script id="teamTemp" type="text/template7">
         <div class="swiper-container">
             {{#each user}}

@@ -136,14 +136,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-screen-orientation": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-screen-orientation"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-file-transfer": {
         "source": {
             "type": "registry",
@@ -172,6 +164,14 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-media-capture"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-screen-orientation": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-screen-orientation"
         },
         "is_top_level": true,
         "variables": {}

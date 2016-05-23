@@ -55,9 +55,6 @@
         "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-plugin-screen-orientation": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
         "cordova-plugin-file-transfer": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
@@ -68,6 +65,9 @@
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-file": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-screen-orientation": {
             "PACKAGE_NAME": "cn.robodou.competition"
         }
     },

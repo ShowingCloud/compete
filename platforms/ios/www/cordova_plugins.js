@@ -183,22 +183,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.js",
-        "id": "cordova-plugin-screen-orientation.screenorientation",
-        "pluginId": "cordova-plugin-screen-orientation",
-        "clobbers": [
-            "cordova.plugins.screenorientation"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.ios.js",
-        "id": "cordova-plugin-screen-orientation.screenorientation.ios",
-        "pluginId": "cordova-plugin-screen-orientation",
-        "merges": [
-            "cordova.plugins.screenorientation"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-file/www/DirectoryEntry.js",
         "id": "cordova-plugin-file.DirectoryEntry",
         "pluginId": "cordova-plugin-file",
@@ -458,6 +442,22 @@ module.exports = [
         "clobbers": [
             "navigator.device.capture"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.js",
+        "id": "cordova-plugin-screen-orientation.screenorientation",
+        "pluginId": "cordova-plugin-screen-orientation",
+        "clobbers": [
+            "cordova.plugins.screenorientation"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.ios.js",
+        "id": "cordova-plugin-screen-orientation.screenorientation.ios",
+        "pluginId": "cordova-plugin-screen-orientation",
+        "merges": [
+            "cordova.plugins.screenorientation"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -480,11 +480,11 @@ module.exports.metadata =
     "cordova-plugin-x-toast": "2.5.1",
     "phonegap-plugin-barcodescanner": "5.0.0",
     "cordova-plugin-splashscreen": "3.2.2",
-    "cordova-plugin-screen-orientation": "1.4.0",
     "cordova-plugin-file": "4.2.0",
     "cordova-plugin-file-transfer": "1.5.1",
     "cordova-plugin-media": "2.3.0",
-    "cordova-plugin-media-capture": "1.3.0"
+    "cordova-plugin-media-capture": "1.3.0",
+    "cordova-plugin-screen-orientation": "1.4.2"
 }
 // BOTTOM OF METADATA
 });
