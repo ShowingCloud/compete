@@ -115,7 +115,7 @@ function printData(byteArrayData) {
 
 var track = {
     action: {
-        "raceUp": "开始",
+        "run": "开始",
         "openDoor": "开门",
         "closeDoor": "关门",
         "reset": "重置",
@@ -250,9 +250,9 @@ var track = {
             myApp.alert("收到奇怪的数据:" + dataStr, "");
         }
     },
-    raceUp: function() {
+    run: function() {
         track.order = [170, 1, 0, 0, 255];
-        track.status.sending = "raceUp";
+        track.status.sending = "run";
         track.init();
     },
     getScore: function() {
@@ -282,7 +282,7 @@ var track = {
             ble.write(track.service.deviceId, track.service.serviceUUID, track.service.txCharacteristic, data, function() {
                 console.log(track.status.sending + " send success");
                 window.plugins.toast.showShortCenter(track.action[track.status.sending] + "指令已发送");
-                if (track.status.sending === "raceUp") {
+                if (track.status.sending === "run") {
                     track.status.playing = 1;
                     // setTimeout(function(){
                     //     if(track.status.playing){
@@ -360,7 +360,7 @@ var track = {
                 elements[i].value = track.formatTime(time);
                 if (i === elements.length - 1) {
                     window.plugins.toast.showLongCenter("本次记分已完成");
-                    document.getElementById('raceUp').onclick = null;
+                    document.getElementById('run').onclick = null;
                     total = 0;
                     for (var i = 0; i < elements.length; i++) {
                         total = total + track.unformat(elements[i].value);
@@ -819,7 +819,7 @@ var app = {
                 }
             });
             if (msg.unread > 0) {
-                $$("#msg").addClass("newMsg");
+                $$("#msg").addClass("more");
             }
         });
         //Subscribe message
@@ -839,7 +839,7 @@ var app = {
             });;
             // $$("#msgBoard ul").append("<li><p class='time'>" + d.time + "</p><p class='content'>" +
             //     d.content + "</p></li>");
-            $$("#msg").addClass("newMsg");
+            $$("#msg").addClass("more");
         });
 
     },
@@ -1131,6 +1131,7 @@ myApp.onPageBeforeInit('home', function(page) {
 });
 
 myApp.onPageInit('select', function(page) {
+    var event_id=temp.event.id;
     function showEvents(events) {
         var schoolGroups = {
             1: "小",
@@ -1150,7 +1151,13 @@ myApp.onPageInit('select', function(page) {
                 $$("#eventsBoard .tabs").append('<div class="tab" id="' + groupId + '"></div>');
                 if (g2.z_e) {
                     g2.z_e.forEach(function(ev) {
-                        $$('<div data-id="' + ev.id + '">' + ev.name + '</div>').appendTo("#" + groupId).on("click", function() {
+                        var div;
+                        if(event_id==ev.id){
+                           div = '<div class="selected" data-id="' + ev.id + '">' + ev.name + '</div>'
+                        }else{
+                           div= '<div data-id="' + ev.id + '">' + ev.name + '</div>';
+                        }
+                        $$(div).appendTo("#" + groupId).on("click", function() {
                             var compete = {
                                 id: $$(".compete-select .active").data("id"),
                                 name: $$(".compete-select .active").text()
@@ -1177,7 +1184,7 @@ myApp.onPageInit('select', function(page) {
 });
 
 myApp.onPageInit('msg', function(page) {
-    $$("#msg").removeClass("newMsg");
+    $$("#msg").removeClass("more");
     app.getMsg(judgeInfo.authToken);
     $$(".infinite-scroll").on("infinite", function() {
         app.getMsg(judgeInfo.authToken);
@@ -1360,9 +1367,9 @@ myApp.onPageInit('stopWatch', function(page) {
     });
     console.log(scoreFrom);
     if (scoreFrom === 3) {
-        $$("#scoreHeader").html('<div id="raceUp"><img src="images/raceUp.png"></div>');
-        document.getElementById('raceUp').onclick = function() {
-            track.raceUp()
+        $$("#scoreHeader").html('<div id="run"><img src="images/run.png"></div>');
+        document.getElementById('run').onclick = function() {
+            track.run()
         };
 
     } else if (scoreFrom === 2) {
