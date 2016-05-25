@@ -1,7 +1,6 @@
 // "use strict";
 // Initialize the app
 window.onload = function() {
-    alert("Start");
     navigator.splashscreen.hide();
 };
 
@@ -541,6 +540,8 @@ var app = {
                 }
             }
         });
+        
+
 
         //Save uuid in keychain
         document.addEventListener("deviceready", function() {
@@ -694,10 +695,12 @@ var app = {
         });
     },
     getEvents: function(comp_id, callback) {
+        myApp.showIndicator();
         $$.getJSON(app_options.host + "/api/v1/competitions/events", {
             "comp_id": comp_id
         }, function(response) {
             console.log(response);
+            myApp.hideIndicator();
             if (typeof callback === "function") {
                 callback(response.events);
             }
@@ -1132,6 +1135,7 @@ myApp.onPageBeforeInit('home', function(page) {
 });
 
 myApp.onPageInit('select', function(page) {
+    $$("#groups,#eventsBoard .tabs").html("");
     var event_id=temp.event.id;
     function showEvents(events) {
         var schoolGroups = {
@@ -1368,7 +1372,7 @@ myApp.onPageInit('stopWatch', function(page) {
     });
     console.log(scoreFrom);
     if (scoreFrom === 3) {
-        $$("#scoreHeader").html('<div id="run"><img src="images/run.png"></div>');
+        $$("#scoreHeader").html('<div id="runWrapper"><img src="images/run.png" usemap="#runmap"><map name="runmap"><area id="run" shape="poly" coords="26,0,433,0,452,29,389,118,72,118,8,28"></map></div>');
         document.getElementById('run').onclick = function() {
             track.run()
         };

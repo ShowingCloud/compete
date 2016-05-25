@@ -31,6 +31,15 @@ input {
     font-size: 1em;
 }
 
+.text-button{
+    padding:5px;
+    line-height: 1em;
+}
+
+.text-button:active{
+    font-size: 1.2em;
+}
+
 body {
     color: #f7f7f7;
     font-family: 'Adobe Heiti Std';
@@ -588,11 +597,11 @@ div#scoreHeader {
     padding-bottom: 10px;
 }
 
-div#run {
+div#runWrapper {
     text-align: center;
 }
 
-#run img {
+#runWrapper img {
     width: 70%;
     height: 150px;
 }
@@ -686,11 +695,10 @@ stopwatch .sm-circle-btn {
 }
 
 div.media-capture {
-    margin-left: 40px;
+    margin-left: 3em;
 }
 
 .media-capture span {
-    padding: 5px;
     display: inline-block;
     margin-right: 20px;
 }
@@ -752,7 +760,6 @@ div.media-capture {
 
 #clearCanvas {
     display: block;
-    padding: 5px;
 }
 
 
