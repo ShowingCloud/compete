@@ -40,9 +40,6 @@
         "cordova-plugin-video-editor": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-plugin-secure-storage": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
         "cordova-plugin-ble-central": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
@@ -68,6 +65,9 @@
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-screen-orientation": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-secure-storage": {
             "PACKAGE_NAME": "cn.robodou.competition"
         }
     },

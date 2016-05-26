@@ -132,20 +132,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-plugin-secure-storage/www/securestorage.js",
-        "id": "cordova-plugin-secure-storage.SecureStorage",
-        "pluginId": "cordova-plugin-secure-storage",
-        "clobbers": [
-            "SecureStorage"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-secure-storage/www/sjcl_ss.js",
-        "id": "cordova-plugin-secure-storage.sjcl_ss",
-        "pluginId": "cordova-plugin-secure-storage",
-        "runs": true
-    },
-    {
         "file": "plugins/cordova-plugin-ble-central/www/ble.js",
         "id": "cordova-plugin-ble-central.ble",
         "pluginId": "cordova-plugin-ble-central",
@@ -458,6 +444,20 @@ module.exports = [
         "merges": [
             "cordova.plugins.screenorientation"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-secure-storage/www/securestorage.js",
+        "id": "cordova-plugin-secure-storage.SecureStorage",
+        "pluginId": "cordova-plugin-secure-storage",
+        "clobbers": [
+            "SecureStorage"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-secure-storage/www/sjcl_ss.js",
+        "id": "cordova-plugin-secure-storage.sjcl_ss",
+        "pluginId": "cordova-plugin-secure-storage",
+        "runs": true
     }
 ];
 module.exports.metadata = 
@@ -475,7 +475,6 @@ module.exports.metadata =
     "cordova-plugin-vibration": "2.1.1",
     "cordova-plugin-whitelist": "1.2.2",
     "cordova-plugin-video-editor": "1.0.9",
-    "cordova-plugin-secure-storage": "2.2.3",
     "cordova-plugin-ble-central": "1.1.0",
     "cordova-plugin-x-toast": "2.5.1",
     "phonegap-plugin-barcodescanner": "5.0.0",
@@ -484,7 +483,8 @@ module.exports.metadata =
     "cordova-plugin-file-transfer": "1.5.1",
     "cordova-plugin-media": "2.3.0",
     "cordova-plugin-media-capture": "1.3.0",
-    "cordova-plugin-screen-orientation": "1.4.2"
+    "cordova-plugin-screen-orientation": "1.4.2",
+    "cordova-plugin-secure-storage": "2.2.4"
 }
 // BOTTOM OF METADATA
 });

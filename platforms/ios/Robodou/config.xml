@@ -46,9 +46,6 @@
     <feature name="VideoEditor">
         <param name="ios-package" value="VideoEditor" />
     </feature>
-    <feature name="SecureStorage">
-        <param name="ios-package" value="SecureStorage" />
-    </feature>
     <feature name="Toast">
         <param name="ios-package" value="Toast" />
     </feature>
@@ -74,6 +71,9 @@
     </feature>
     <feature name="YoikScreenOrientation">
         <param name="ios-package" value="YoikScreenOrientation" />
+    </feature>
+    <feature name="SecureStorage">
+        <param name="ios-package" value="SecureStorage" />
     </feature>
     <feature name="BLE">
         <param name="ios-package" onload="true" value="BLECentralPlugin" />

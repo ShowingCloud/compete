@@ -517,31 +517,37 @@ var app = {
         });
     },
     bind: function() {
-        window.addEventListener("orientationchange", function() {
-            console.log(screen.orientation);
+        //Set ajax timeout
+        $$(document).on('ajaxStart', function (e) {
+            e.detail.xhr.timeout=5000;
         });
+        
         //Globle ajax error handller
-        $$(document).on('ajaxError', function(e) {
-            var xhr = e.detail.xhr;
-            console.log(xhr);
-            if (xhr.status === 401) {
-                if ((new URL(xhr.requestUrl)).origin === app_options.host) {
-                    myApp.alert("登陆失效，请重新登陆", "", function() {
-                        localStorage.removeItem("judgeInfo");
-                        judgeInfo = {};
-                        if (mainView.activePage.name === "home") {
-                            app.login();
-                        } else {
-                            mainView.router.loadPage("index.html");
-                        }
-                        MessageBus.stop();
-                    });
+        $$.ajaxSetup({
+            timeout:5000,
+            error: function (xhr, status) {
+                if (xhr.status === 401) {
+                    if ((new URL(xhr.requestUrl)).origin === app_options.host) {
+                        myApp.alert("登陆失效，请重新登陆", "", function() {
+                            localStorage.removeItem("judgeInfo");
+                            judgeInfo = {};
+                            if (mainView.activePage.name === "home") {
+                                app.login();
+                            } else {
+                                mainView.router.loadPage("index.html");
+                            }
+                            MessageBus.stop();
+                        });
 
+                    }
+                }
+                if ( status === "timeout") {
+                    window.plugins.toast.showShortCenter("请求超时，请稍候重试");
+                    myApp.hideIndicator();
+                    myApp.hidePreloader();
                 }
             }
         });
-        
-
 
         //Save uuid in keychain
         document.addEventListener("deviceready", function() {
@@ -656,7 +662,6 @@ var app = {
                 $$("#schedule").html(html);
             });
         }
-
     },
     getSchedule: function(ed, group) {
         var data = {
@@ -1147,22 +1152,21 @@ myApp.onPageInit('select', function(page) {
         console.log(events);
         events.forEach(function(g1, index1) {
             g1.events.forEach(function(g2, index2) {
-                var groupId = "group" + g2.id + "-" + g2.group;
-                if (index1 === 0 && index2 === 0) {
-                    $$("#groups").append('<li><a href="#' + groupId + '" class="tab-link active">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>');
-                } else {
-                    $$("#groups").append('<li><a href="#' + groupId + '" class="tab-link">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>');
-                }
-                $$("#eventsBoard .tabs").append('<div class="tab" id="' + groupId + '"></div>');
+                var groupId = g2.group;
+                var groupName="group" + "-" + groupId;
+                var tabName="tab"+"_"+groupId;
+                var tab = $$('<li><a  id="'+tabName+'" href="#' + groupName + '" class="tab-link">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>')
+                tab.appendTo("#groups");
+                $$("#eventsBoard .tabs").append('<div class="tab" id="' + groupName + '"></div>');
                 if (g2.z_e) {
                     g2.z_e.forEach(function(ev) {
                         var div;
-                        if(event_id==ev.id){
+                        if(event_id==ev.id && groupId==temp.event.group){
                            div = '<div class="selected" data-id="' + ev.id + '">' + ev.name + '</div>'
                         }else{
                            div= '<div data-id="' + ev.id + '">' + ev.name + '</div>';
                         }
-                        $$(div).appendTo("#" + groupId).on("click", function() {
+                        $$(div).appendTo("#" + groupName).on("click", function() {
                             var compete = {
                                 id: $$(".compete-select .active").data("id"),
                                 name: $$(".compete-select .active").text()
@@ -1170,18 +1174,24 @@ myApp.onPageInit('select', function(page) {
                             var event = {
                                 id: $$(this).data("id"),
                                 name: $$(this).text(),
-                                group: g2.group
+                                group: groupId
                             }
+                            
                             temp.compete = compete;
                             temp.event = event;
                             app.getSchedule(event.id, event.group);
                             app.getScoreAttr(event.id);
                         });
                     });
-                    if (index1 === 0 && index2 === 0) {
-                        $$(("#" + groupId)).addClass("active");
+                    
+                    if(g2.group==temp.event.group){
+                        document.getElementById(tabName).click();
+                    }else if (index1 === 0 && index2 === 0) {
+                        document.getElementById(tabName).click();
+                        console.log(document.getElementById(tabName));
                     }
                 }
+                
             });
         });
     }

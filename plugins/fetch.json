@@ -95,14 +95,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-secure-storage": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-secure-storage"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-ble-central": {
         "source": {
             "type": "git",
@@ -172,6 +164,14 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-screen-orientation"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-secure-storage": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-secure-storage"
         },
         "is_top_level": true,
         "variables": {}
