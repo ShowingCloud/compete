@@ -1153,18 +1153,24 @@ myApp.onPageInit('select', function(page) {
         events.forEach(function(g1, index1) {
             g1.events.forEach(function(g2, index2) {
                 var groupId = g2.group;
+                var temp_group_id= temp.event.group;
                 var groupName="group" + "-" + groupId;
                 var tabName="tab"+"_"+groupId;
-                var tab = $$('<li><a  id="'+tabName+'" href="#' + groupName + '" class="tab-link">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>')
-                tab.appendTo("#groups");
-                $$("#eventsBoard .tabs").append('<div class="tab" id="' + groupName + '"></div>');
+                var tab_link = $$('<li><a  id="'+tabName+'" href="#' + groupName + '" class="tab-link">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>')
+                var tab =$$('<div class="tab" id="' + groupName + '"></div>');
+                $$("#eventsBoard .tabs").append(tab);
+                tab_link.appendTo("#groups");
+                if(!temp_group_id&&index2===0){
+                    tab.addClass("active");
+                    tab_link.find("a").addClass("active");
+                }
                 if (g2.z_e) {
                     g2.z_e.forEach(function(ev) {
-                        var div;
-                        if(event_id==ev.id && groupId==temp.event.group){
-                           div = '<div class="selected" data-id="' + ev.id + '">' + ev.name + '</div>'
-                        }else{
-                           div= '<div data-id="' + ev.id + '">' + ev.name + '</div>';
+                        var div =$$('<div data-id="' + ev.id + '">' + ev.name + '</div>');
+                        if(event_id==ev.id && groupId==temp_group_id){
+                           div.addClass("selected");
+                           tab.addClass("active");
+                           tab_link.find("a").addClass("active");
                         }
                         $$(div).appendTo("#" + groupName).on("click", function() {
                             var compete = {
@@ -1183,14 +1189,8 @@ myApp.onPageInit('select', function(page) {
                             app.getScoreAttr(event.id);
                         });
                     });
-                    
-                    if(g2.group==temp.event.group){
-                        document.getElementById(tabName).click();
-                    }else if (index1 === 0 && index2 === 0) {
-                        document.getElementById(tabName).click();
-                    }
                 }
-                
+
             });
         });
     }

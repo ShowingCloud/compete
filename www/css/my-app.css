@@ -36,6 +36,30 @@ input {
     line-height: 1em;
 }
 
+.my-label::before{
+    background-image: url(../images/left.png);
+    background-size: cover;
+    display: inline-block;
+    width: 55px;
+    height: 35px;
+    content: "";
+    position: absolute;
+    left: -1.2em;
+    top: 0px;
+}
+
+.my-label::after{
+    background-image: url(../images/right.png);
+    background-size: cover;
+    display: inline-block;
+    width: 55px;
+    height: 35px;
+    content: "";
+    position: absolute;
+    right: -1.2em;
+    top: 0px;
+}
+
 .text-button:active{
     font-size: 1.2em;
 }
@@ -222,6 +246,7 @@ aside-linker {
     text-align: center;
     line-height: 31px;
     font-size: 1.2em;
+    position: relative;
 }
 
 .competeTab1 img {
@@ -293,6 +318,7 @@ aside-linker {
 .compete-select .tab-link {
     color: currentColor;
     font-size: 1.2em;
+    
 }
 
 .compete-select .active p {
