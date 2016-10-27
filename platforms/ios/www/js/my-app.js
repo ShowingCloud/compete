@@ -31,7 +31,8 @@ var remoteCouch = false;
 
 // apption for app
 var app_options = {
-    host: "http://dev.robodou.cn",
+    auth_host: "http://i.s1.com",
+    host: "http://www.c1.com",
     //host: "http://test.robodou.cn",
 };
 
@@ -408,7 +409,7 @@ var app = {
         }, false);
 
     },
-    login: function() {
+    old_login: function() {
         $$("#login-container").show();
         $$("#judge-info").hide();
         $$("#login-btn").off('click');
@@ -516,16 +517,83 @@ var app = {
 
         });
     },
+    login: function() {
+        $$("#login-container").show();
+        $$("#judge-info").hide();
+        $$("#login-btn").off('click');
+        document.addEventListener("deviceready", function() {
+            var login_url = app_options.host + '/account/auth/cas?auth_type=token';
+            //Open an inappbrowser but not show it to user
+            var ref = window.open(login_url, "_blank", "hidden=yes,clearcache=yes");
+            var count = 0;
+
+            ref.addEventListener('loadstart', function(e) {
+                var parser = document.createElement('a');
+                parser.href = e.url;
+                if (parser.protocol + "//" + parser.host === app_options.host && parser.pathname === "/") {
+                    if (parser.search) {
+                        console.log("---------");
+                        console.log(parser.search);
+                        var params = {};
+                        var parts = parser.search.substring(1).split('&');
+                        for (var i = 0; i < parts.length; i++) {
+                            var nv = parts[i].split('=');
+                            if (!nv[0]) continue;
+                            params[nv[0]] = nv[1] || true;
+                        }
+                        judgeInfo = {
+                            userId: params.user_id,
+                            nickname: params.nickname,
+                            authToken: params.token
+                        };
+                        localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
+                        console.log('userInfo saved!');
+                        app.showJudge(judgeInfo);
+                        app.onLogin(judgeInfo.authToken);
+                    }
+                }
+            });
+
+            ref.addEventListener('loadstop', function(e) {
+                var parser = document.createElement('a');
+                parser.href = e.url;
+                if (parser.pathname === "/login") {
+                    if (!count) {
+                        count++;
+                        window.plugins.toast.showShortCenter("请登录");
+                        $$("#login-btn").on('click', function() {
+                            var username = $$("#username").val();
+                            var password = $$("#password").val();
+                            if (username && password) {
+                                //Inject script to inappbrowser to submit the login form
+                                var script = "document.getElementById('username').value='" + username.replace(/\s+/g, '') + "';" + "document.getElementById('password').value='" + password.replace(/\s+/g, '') + "';" + "document.getElementById('login-form').submit();"
+                                ref.executeScript({
+                                    code: script
+                                }, function(values) {
+                                    console.log(values);
+                                });
+                            } else {
+                                myApp.alert("请输入用户名和密码", "");
+                            }
+                        });
+                    } else {
+                        myApp.alert("错误，请重新登录", "");
+                    }
+                }
+
+            });
+        });
+    },
     bind: function() {
         //Set ajax timeout
-        $$(document).on('ajaxStart', function (e) {
-            e.detail.xhr.timeout=5000;
+        $$(document).on('ajaxStart', function(e) {
+            e.detail.xhr.timeout = 5000;
         });
-        
+
         //Globle ajax error handller
         $$.ajaxSetup({
-            timeout:5000,
-            error: function (xhr, status) {
+            timeout: 5000,
+            error: function(xhr, status) {
                 if (xhr.status === 401) {
                     if ((new URL(xhr.requestUrl)).origin === app_options.host) {
                         myApp.alert("登陆失效，请重新登陆", "", function() {
@@ -541,7 +609,7 @@ var app = {
 
                     }
                 }
-                if ( status === "timeout") {
+                if (status === "timeout") {
                     window.plugins.toast.showShortCenter("请求超时，请稍候重试");
                     myApp.hideIndicator();
                     myApp.hidePreloader();
@@ -1141,7 +1209,8 @@ myApp.onPageBeforeInit('home', function(page) {
 
 myApp.onPageInit('select', function(page) {
     $$("#groups,#eventsBoard .tabs").html("");
-    var event_id=temp.event.id;
+    var event_id = temp.event.id;
+
     function showEvents(events) {
         var schoolGroups = {
             1: "小",
@@ -1153,24 +1222,24 @@ myApp.onPageInit('select', function(page) {
         events.forEach(function(g1, index1) {
             g1.events.forEach(function(g2, index2) {
                 var groupId = g2.group;
-                var temp_group_id= temp.event.group;
-                var groupName="group" + "-" + groupId;
-                var tabName="tab"+"_"+groupId;
-                var tab_link = $$('<li><a  id="'+tabName+'" href="#' + groupName + '" class="tab-link">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>')
-                var tab =$$('<div class="tab" id="' + groupName + '"></div>');
+                var temp_group_id = temp.event.group;
+                var groupName = "group" + "-" + groupId;
+                var tabName = "tab" + "_" + groupId;
+                var tab_link = $$('<li><a  id="' + tabName + '" href="#' + groupName + '" class="tab-link">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>')
+                var tab = $$('<div class="tab" id="' + groupName + '"></div>');
                 $$("#eventsBoard .tabs").append(tab);
                 tab_link.appendTo("#groups");
-                if(!temp_group_id&&index2===0){
+                if (!temp_group_id && index2 === 0) {
                     tab.addClass("active");
                     tab_link.find("a").addClass("active");
                 }
                 if (g2.z_e) {
                     g2.z_e.forEach(function(ev) {
-                        var div =$$('<div data-id="' + ev.id + '">' + ev.name + '</div>');
-                        if(event_id==ev.id && groupId==temp_group_id){
-                           div.addClass("selected");
-                           tab.addClass("active");
-                           tab_link.find("a").addClass("active");
+                        var div = $$('<div data-id="' + ev.id + '">' + ev.name + '</div>');
+                        if (event_id == ev.id && groupId == temp_group_id) {
+                            div.addClass("selected");
+                            tab.addClass("active");
+                            tab_link.find("a").addClass("active");
                         }
                         $$(div).appendTo("#" + groupName).on("click", function() {
                             var compete = {
@@ -1182,7 +1251,7 @@ myApp.onPageInit('select', function(page) {
                                 name: $$(this).text(),
                                 group: groupId
                             }
-                            
+
                             temp.compete = compete;
                             temp.event = event;
                             app.getSchedule(event.id, event.group);
