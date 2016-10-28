@@ -17,9 +17,15 @@ Performance, browser support, and future prospects are all better in IndexedDB. 
 Install
 ----
 
-Use the [Cordova CLI](https://www.npmjs.com/package/cordova) to download from npm:
+For Ionic, use the [Ionic CLI](http://ionicframework.com/docs/cli/):
+
+    ionic plugin add cordova-plugin-sqlite-2
+
+Otherwise, use the [Cordova CLI](https://www.npmjs.com/package/cordova):
 
     cordova plugin add cordova-plugin-sqlite-2
+
+In both cases, the plugin will be downloaded [from npm](https://www.npmjs.com/package/cordova-plugin-sqlite-2).
 
 Usage
 ----
@@ -30,7 +36,7 @@ that is exactly the same as WebSQL. Example usage:
 ```js
 var db = sqlitePlugin.openDatabase('mydb.db', '1.0', '', 1);
 db.transaction(function (txn) {
-  txn.executeSql('SELECT 42 AS `answer` FROM sqlite_master', [], function (tx, res) {
+  txn.executeSql('SELECT 42 AS `answer`', [], function (tx, res) {
     console.log(res.rows.item(0)); // {"answer": 42}
   });
 });
@@ -40,7 +46,7 @@ Only the first argument to `openDatabase()` (the database name) is required.
 The other values may be provided for backwards compatibility with WebSQL, but are ignored.
 
 You can also pass in a single options object with the `name` key. This is for compatibility
-with the old SQLite Plugin, although it is non-standard with respect to WebSQL:
+with the original SQLite Plugin, although it is non-standard with respect to WebSQL:
 
 ```js
 var db = sqlitePlugin.openDatabase({name: 'mydb.db'});
@@ -51,6 +57,10 @@ You can also create an in-memory SQLite database like so:
 ```js
 var db = sqlitePlugin.openDatabase(':memory:');
 ```
+
+Both `readTransaction()` (read-only) and `transaction()` (read-write) are supported.
+`readTransaction()` has some small performance optimizations, so it's worthwhile to
+use if you're not writing any data in a transaction.
 
 For a tutorial on how to use WebSQL, check out [the HTML5 Rocks article](http://www.html5rocks.com/en/tutorials/webdatabase/todo/) or [the HTML5 Doctor article](http://html5doctor.com/introducing-web-sql-databases/).
 
@@ -68,6 +78,8 @@ Non-goals
 This project is not designed to replicate 100% of the functionality of the old SQLite Plugin – deleting databases, closing databases, specifying a particular location, etc. The goal is just to provide a bridge to WebSQL, especially for environments where WebSQL is unavailable and IndexedDB is unfeasible (e.g. WKWebView on iOS).
 
 If possible, you should prefer IndexedDB, e.g. via wrapper library like [Dexie](http://dexie.org/), [LocalForage](http://mozilla.github.io/localForage/), or [PouchDB](http://pouchdb.com/). This plugin should be thought of as a polyfill for less-capable platforms ([namely iOS](http://www.raymondcamden.com/2014/09/25/IndexedDB-on-iOS-8-Broken-Bad/)) while we wait for their browser implementations to catch up.
+
+For more thoughts on why this plugin exists, read [my introductory blog post](https://nolanlawson.com/2016/04/10/introducing-the-cordova-sqlite-plugin-2/).
 
 Supported platforms
 ---
@@ -94,7 +106,7 @@ To skip using it on Android, just do:
 
 ```js
 document.addEventListener('deviceready', function () {
-  if (/Android/i).test(navigator.userAgent)) {
+  if (/Android/i.test(navigator.userAgent)) {
     delete window.sqlitePlugin;
   }
 }, false);
@@ -151,6 +163,16 @@ E.g. if your file is called `foo.db`, then you open it with:
 ```js
 var db = sqlitePlugin.openDatabase('foo.db', '1.0', '', 1);
 ```
+
+Migrating from the original SQLite Plugin
+------
+
+On iOS, the original SQLite Plugin does not use the standard `Library/NoCloud`, 
+but rather `Library/LocalDatabase` ([source](https://github.com/litehelpers/Cordova-sqlite-storage/issues/430)).
+So you will need to migrate if you are upgrading an existing app to the SQLite Plugin 2.
+
+To migrate, what you essentially need to do is copy the database file from `Library/LocalDatabase` to `Library/NoCloud`,
+using [the Cordova file plugin](https://github.com/apache/cordova-plugin-file).  Here is [some sample code](https://gist.github.com/nolanlawson/1b3ad1c4b327f49a0d59e6e94cff49b6) to get you started. You can also check out the [prepopulated database demo app](https://github.com/nolanlawson/cordova-prepopulated-database-demo), which performs a similar file copy operation.
 
 Building
 ---

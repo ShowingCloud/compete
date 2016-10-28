@@ -2,7 +2,7 @@
 #import <Security/Security.h>
 #import "SecureStorage.h"
 #import <Cordova/CDV.h>
-#import "SSKeychain.h"
+#import "SAMKeychain.h"
 
 @implementation SecureStorage
 
@@ -15,7 +15,7 @@
     [self.commandDelegate runInBackground:^{
         NSError *error;
 
-        SSKeychainQuery *query = [[SSKeychainQuery alloc] init];
+        SAMKeychainQuery *query = [[SAMKeychainQuery alloc] init];
         query.service = service;
         query.account = key;
 
@@ -64,10 +64,10 @@
 
         if ([self.keychainAccesssibilityMapping objectForKey:(keychainAccessibility)] != nil) {
             CFTypeRef accessibility = (__bridge CFTypeRef)([self.keychainAccesssibilityMapping objectForKey:(keychainAccessibility)]);
-            [SSKeychain setAccessibilityType:accessibility];
+            [SAMKeychain setAccessibilityType:accessibility];
         }
 
-        SSKeychainQuery *query = [[SSKeychainQuery alloc] init];
+        SAMKeychainQuery *query = [[SAMKeychainQuery alloc] init];
 
         query.service = service;
         query.account = key;
@@ -88,15 +88,75 @@
     [self.commandDelegate runInBackground:^{
         NSError *error;
 
-        SSKeychainQuery *query = [[SSKeychainQuery alloc] init];
+        SAMKeychainQuery *query = [[SAMKeychainQuery alloc] init];
         query.service = service;
         query.account = key;
 
         if ([query deleteItem:&error]) {
             [self successWithMessage: key : command.callbackId];
         } else {
-            [self failWithMessage: @"Failure in SecureStorage.get()" : error : command.callbackId];
+            [self failWithMessage: @"Failure in SecureStorage.remove()" : error : command.callbackId];
         }
+    }];
+}
+
+- (void)keys:(CDVInvokedUrlCommand*)command
+{
+    NSString *service = [command argumentAtIndex:0];
+    [self.commandDelegate runInBackground:^{
+        NSError *error;
+
+        SAMKeychainQuery *query = [[SAMKeychainQuery alloc] init];
+        query.service = service;
+
+        NSArray *accounts = [query fetchAll:&error];
+        if (accounts) {
+            NSMutableArray *array = [NSMutableArray arrayWithCapacity:[accounts count]];
+            for (id dict in accounts) {
+                [array addObject:[dict valueForKeyPath:@"acct"]];
+            }
+
+            CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:array];
+            [self.commandDelegate sendPluginResult:commandResult callbackId:command.callbackId];
+        } else if ([error code] == errSecItemNotFound) {
+            CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:[NSArray array]];
+            [self.commandDelegate sendPluginResult:commandResult callbackId:command.callbackId];
+        } else {
+            [self failWithMessage: @"Failure in SecureStorage.keys()" : error : command.callbackId];
+        }
+    }];
+}
+
+- (void)clear:(CDVInvokedUrlCommand*)command
+{
+    NSString *service = [command argumentAtIndex:0];
+    [self.commandDelegate runInBackground:^{
+        NSError *error;
+
+        SAMKeychainQuery *query = [[SAMKeychainQuery alloc] init];
+        query.service = service;
+
+        NSArray *accounts = [query fetchAll:&error];
+        if (accounts) {
+            for (id dict in accounts) {
+                query.account = [dict valueForKeyPath:@"acct"];
+                if (![query deleteItem:&error]) {
+                    break;
+                }
+            }
+
+            if (!error) {
+                [self successWithMessage: nil : command.callbackId];
+            } else {
+                [self failWithMessage: @"Failure in SecureStorage.clear()" : error : command.callbackId];
+            }
+
+        } else if ([error code] == errSecItemNotFound) {
+            [self successWithMessage: nil : command.callbackId];
+        } else {
+            [self failWithMessage: @"Failure in SecureStorage.clear()" : error : command.callbackId];
+        }
+
     }];
 }
 

@@ -10,7 +10,13 @@
         "cordova-plugin-battery-status": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
+        "cordova-plugin-ble-central": {
+            "BLUETOOTH_USAGE_DESCRIPTION": " ",
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
         "cordova-plugin-camera": {
+            "CAMERA_USAGE_DESCRIPTION": " ",
+            "PHOTOLIBRARY_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-console": {
@@ -19,10 +25,34 @@
         "cordova-plugin-device": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
         "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
+        "cordova-plugin-media": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-media-capture": {
+            "CAMERA_USAGE_DESCRIPTION": " ",
+            "MICROPHONE_USAGE_DESCRIPTION": " ",
+            "PHOTOLIBRARY_USAGE_DESCRIPTION": " ",
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
         "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-screen-orientation": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-secure-storage": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-sqlite-2": {
@@ -34,40 +64,17 @@
         "cordova-plugin-vibration": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
         "cordova-plugin-video-editor": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-plugin-ble-central": {
+        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-x-toast": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "phonegap-plugin-barcodescanner": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
-        "cordova-plugin-file-transfer": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
-        "cordova-plugin-media": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
-        "cordova-plugin-media-capture": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
-        "cordova-plugin-file": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
-        "cordova-plugin-screen-orientation": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
-        "cordova-plugin-secure-storage": {
+            "CAMERA_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "cn.robodou.competition"
         }
     },

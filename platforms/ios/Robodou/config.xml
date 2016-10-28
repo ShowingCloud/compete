@@ -27,11 +27,34 @@
     <feature name="Device">
         <param name="ios-package" value="CDVDevice" />
     </feature>
+    <feature name="File">
+        <param name="ios-package" value="CDVFile" />
+        <param name="onload" value="true" />
+    </feature>
+    <feature name="FileTransfer">
+        <param name="ios-package" value="CDVFileTransfer" />
+    </feature>
     <feature name="InAppBrowser">
         <param name="ios-package" value="CDVInAppBrowser" />
     </feature>
+    <feature name="Media">
+        <param name="ios-package" value="CDVSound" />
+    </feature>
+    <feature name="Capture">
+        <param name="ios-package" value="CDVCapture" />
+    </feature>
     <feature name="NetworkStatus">
         <param name="ios-package" value="CDVConnection" />
+    </feature>
+    <feature name="YoikScreenOrientation">
+        <param name="ios-package" value="YoikScreenOrientation" />
+    </feature>
+    <feature name="SecureStorage">
+        <param name="ios-package" value="SecureStorage" />
+    </feature>
+    <feature name="SplashScreen">
+        <param name="ios-package" value="CDVSplashScreen" />
+        <param name="onload" value="true" />
     </feature>
     <feature name="SQLitePlugin">
         <param name="ios-package" value="SQLitePlugin" />
@@ -52,53 +75,18 @@
     <feature name="BarcodeScanner">
         <param name="ios-package" value="CDVBarcodeScanner" />
     </feature>
-    <feature name="SplashScreen">
-        <param name="ios-package" value="CDVSplashScreen" />
-        <param name="onload" value="true" />
-    </feature>
-    <feature name="File">
-        <param name="ios-package" value="CDVFile" />
-        <param name="onload" value="true" />
-    </feature>
-    <feature name="FileTransfer">
-        <param name="ios-package" value="CDVFileTransfer" />
-    </feature>
-    <feature name="Media">
-        <param name="ios-package" value="CDVSound" />
-    </feature>
-    <feature name="Capture">
-        <param name="ios-package" value="CDVCapture" />
-    </feature>
-    <feature name="YoikScreenOrientation">
-        <param name="ios-package" value="YoikScreenOrientation" />
-    </feature>
-    <feature name="SecureStorage">
-        <param name="ios-package" value="SecureStorage" />
-    </feature>
     <feature name="BLE">
         <param name="ios-package" onload="true" value="BLECentralPlugin" />
     </feature>
     <name>Robodou</name>
     <description>
-            A sample Apache Cordova application that responds to the deviceready event.
+          The Robodou complete app.
         </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-            Apache Cordova Team
+    <author email="service@robodou.cn" href="http://intro.domelab.com">
+            Robodou Team
         </author>
     <access origin="*" />
-    <allow-navigation href="*://*.domelab.com/*" />
-    <allow-navigation href="*://*.robodou.cn/*" />
-    <allow-navigation href="http://localhost/*" />
-    <access origin="http://*.domelab.com" />
-    <access origin="http://*.robodou.cn" />
-    <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" />
-    <allow-intent href="tel:*" />
-    <allow-intent href="sms:*" />
-    <allow-intent href="mailto:*" />
-    <allow-intent href="geo:*" />
-    <allow-intent href="itms:*" />
-    <allow-intent href="itms-apps:*" />
+    <allow-navigation href="*" />
     <preference name="AllowInlineMediaPlayback" value="false" />
     <preference name="BackupWebStorage" value="cloud" />
     <preference name="DisallowOverscroll" value="true" />

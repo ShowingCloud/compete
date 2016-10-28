@@ -30,48 +30,22 @@
     <true/>
     <key>NSAppTransportSecurity</key>
     <dict>
-      <key>NSExceptionDomains</key>
-      <dict>
-        <key>domelab.com/*</key>
-        <dict>
-          <key>NSIncludesSubdomains</key>
-          <true/>
-          <key>NSExceptionAllowsInsecureHTTPLoads</key>
-          <true/>
-        </dict>
-        <key>robodou.cn/*</key>
-        <dict>
-          <key>NSIncludesSubdomains</key>
-          <true/>
-          <key>NSExceptionAllowsInsecureHTTPLoads</key>
-          <true/>
-        </dict>
-        <key>localhost</key>
-        <dict>
-          <key>NSExceptionAllowsInsecureHTTPLoads</key>
-          <true/>
-        </dict>
-        <key>domelab.com</key>
-        <dict>
-          <key>NSIncludesSubdomains</key>
-          <true/>
-          <key>NSExceptionAllowsInsecureHTTPLoads</key>
-          <true/>
-        </dict>
-        <key>robodou.cn</key>
-        <dict>
-          <key>NSIncludesSubdomains</key>
-          <true/>
-          <key>NSExceptionAllowsInsecureHTTPLoads</key>
-          <true/>
-        </dict>
-      </dict>
       <key>NSAllowsArbitraryLoads</key>
       <true/>
     </dict>
+    <key>NSBluetoothPeripheralUsageDescription</key>
+    <string/>
+    <key>NSCameraUsageDescription</key>
+    <string/>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string/>
     <key>NSMainNibFile</key>
+    <string/>
+    <key>NSMainNibFile~ipad</key>
+    <string/>
+    <key>NSMicrophoneUsageDescription</key>
+    <string/>
+    <key>NSPhotoLibraryUsageDescription</key>
     <string/>
     <key>UIInterfaceOrientation</key>
     <array>

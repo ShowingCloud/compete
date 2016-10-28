@@ -1,5 +1,6 @@
 // "use strict";
 // Initialize the app
+
 window.onload = function() {
     navigator.splashscreen.hide();
 };
@@ -135,7 +136,6 @@ var track = {
         }
         var h = m = s = ms = 0;
         var newTime = '';
-
         time = time % (60 * 60 * 1000);
         m = Math.floor(time / (60 * 1000));
         time = time % (60 * 1000);
@@ -188,9 +188,9 @@ var track = {
                 window.plugins.toast.showShortCenter("未找到赛道");
                 myApp.hidePreloader();
                 ble.stopScan(function() {
-                    console.log("Scan complete")
+                    console.log("Scan complete");
                 }, function() {
-                    console.log("stopScan failed")
+                    console.log("stopScan failed");
                 });
             }
         }, 10000);
@@ -204,7 +204,7 @@ var track = {
             track.connect(device.id);
             track.status.find = 1;
         }, function() {
-            console.log("stopScan failed")
+            console.log("stopScan failed");
         });
 
     },
@@ -337,7 +337,7 @@ var track = {
             },
             function() {
                 myApp.alert("请打开蓝牙后重试", "", function() {
-                    track.init()
+                    track.init();
                 });
             }
         );
@@ -372,7 +372,7 @@ var track = {
             }
         }
     }
-}
+};
 
 var app = {
     init: function() {
@@ -409,114 +409,6 @@ var app = {
         }, false);
 
     },
-    old_login: function() {
-        $$("#login-container").show();
-        $$("#judge-info").hide();
-        $$("#login-btn").off('click');
-        String.prototype.getParam = function(str) {
-                str = str.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-                var regex = new RegExp("[\\?&]*" + str + "=([^&#]*)");
-                var results = regex.exec(this);
-                if (results == null) {
-                    return "";
-                } else {
-                    return results[1];
-                }
-            }
-            //Oauth2 job
-        document.addEventListener("deviceready", function() {
-            var options = {
-                auth_url: app_options.host + '/auth/login/authorize',
-                token_url: app_options.host + '/auth/login/access_token',
-                client_id: '1',
-                client_secret: '123456',
-                redirect_uri: app_options.host + ''
-            }
-
-            //Generate Login URL
-            var paramObj = {
-                client_id: options.client_id,
-                redirect_uri: options.redirect_uri,
-                response_type: options.response_type
-            };
-            var login_url = options.auth_url + '?' + $$.serializeObject(paramObj);
-            //Open an inappbrowser but not show it to user
-            var ref = window.open(login_url, "_blank", "hidden=yes,clearcache=yes");
-            var count = 0;
-            ref.addEventListener('loadstart', function(e) {
-                var url = e.url;
-                url = url.split("#")[0];
-
-                var code = url.getParam("code");
-                if (code) {
-                    ref.close();
-                    //Get access token
-                    $$.ajax({
-                        url: options.token_url,
-                        data: {
-                            code: code,
-                            client_id: options.client_id,
-                            client_secret: options.client_secret,
-                            redirect_uri: options.redirect_uri,
-                            grant_type: "authorization_code"
-                        },
-                        method: 'POST',
-                        success: function(data) {
-                            //Get userInfo
-                            var dataObj = JSON.parse(data);
-                            $$.getJSON(app_options.host + '/auth/login/user', {
-                                oauth_token: dataObj.access_token
-                            }, function(d) {
-                                console.log(d);
-                                if ((d instanceof Object)) {
-                                    judgeInfo = {
-                                        userId: d.id,
-                                        email: d.info.email,
-                                        nickname: d.extra.nickname,
-                                        authToken: d.info.private_token
-                                    };
-                                    localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
-                                    console.log('userInfo saved!');
-                                    app.showJudge(judgeInfo);
-                                    app.onLogin(judgeInfo.authToken);
-                                }
-                            });
-                        },
-                        error: function(error) {
-                            console.log(error);
-                        }
-                    });
-                }
-            });
-            ref.addEventListener('loadstop', function(e) {
-                if (e.url === app_options.host + "/account/sign_in") {
-                    if (!count) {
-                        count++;
-                        window.plugins.toast.showShortCenter("请登录");
-                        $$("#login-btn").on('click', function() {
-                            var username = $$("#username").val();
-                            var password = $$("#password").val();
-                            if (username && password) {
-                                //Inject script to inappbrowser to submit the login form
-                                var script = "document.getElementsByName('user[login]')[0].value='" + username.replace(/\s+/g, '') + "';" + "document.getElementsByName('user[password]')[0].value='" + password.replace(/\s+/g, '') + "';" + "document.getElementById('new_user').submit();"
-                                ref.executeScript({
-                                    code: script
-                                }, function(values) {
-                                    console.log(values);
-                                });
-                            } else {
-                                myApp.alert("请输入用户名和密码", "");
-                            }
-                        });
-                    } else {
-                        myApp.alert("错误，请重新登录", "");
-                    }
-                }
-
-            });
-
-        });
-    },
     login: function() {
         $$("#login-container").show();
         $$("#judge-info").hide();
@@ -550,6 +442,7 @@ var app = {
                         console.log('userInfo saved!');
                         app.showJudge(judgeInfo);
                         app.onLogin(judgeInfo.authToken);
+                        ref.close();
                     }
                 }
             });
@@ -566,7 +459,7 @@ var app = {
                             var password = $$("#password").val();
                             if (username && password) {
                                 //Inject script to inappbrowser to submit the login form
-                                var script = "document.getElementById('username').value='" + username.replace(/\s+/g, '') + "';" + "document.getElementById('password').value='" + password.replace(/\s+/g, '') + "';" + "document.getElementById('login-form').submit();"
+                                var script = "document.getElementById('username').value='" + username.replace(/\s+/g, '') + "';" + "document.getElementById('password').value='" + password.replace(/\s+/g, '') + "';" + "document.getElementById('login-form').submit();";
                                 ref.executeScript({
                                     code: script
                                 }, function(values) {
@@ -621,7 +514,7 @@ var app = {
         document.addEventListener("deviceready", function() {
             var ss = new cordova.plugins.SecureStorage(
                 function() {
-                    console.log('Success')
+                    console.log('Success');
                 },
                 function(error) {
                     console.log('Error ' + error);
@@ -668,10 +561,10 @@ var app = {
             judgeInfo = {};
             var channel = "/channel/" + judgeInfo.authToken;
             localStorage.removeItem("judgeInfo");
-            MessageBus.unsubscribe(channel, function() {
-                console("unsubscribe");
-            });
-            MessageBus.stop();
+            // MessageBus.unsubscribe(channel, function() {
+            //     console("unsubscribe");
+            // });
+            // MessageBus.stop();
 
             app.login();
         });
@@ -786,7 +679,7 @@ var app = {
             if (response.event_score_attributes.length) {
                 scoreAttr = response.event_score_attributes;
             } else {
-                myApp.alert("无此项目数据", "")
+                myApp.alert("无此项目数据", "");
             }
         });
     },
@@ -817,7 +710,7 @@ var app = {
                         trClass = "unfinished";
                     } else if (status === 1) {
                         statusStr = " 已完赛";
-                        trClass = "finished"
+                        trClass = "finished";
                     }
                     tbody.append(htmlToElement("<tr class='" + trClass + "'><td>" + t.name + "</td><td>" + school + "</td><td>" + mobile + "</td><td>" + teacher + "<br>" + teacher_mobile + "</td><td>" + statusStr + "</td></tr>"));
                 });
@@ -901,24 +794,26 @@ var app = {
         });
         //Subscribe message
         var channel = "/channel/" + token;
-        MessageBus.start();
-        MessageBus.callbackInterval = 500;
-        MessageBus.subscribe(channel, function(d) {
-            console.log(d);
-            myApp.addNotification({
-                title: '重要通知',
-                message: d.content
-            });
-            msgDB.post(d).then(function(response) {
-                console.log(response);
-            }).catch(function(err) {
-                console.log(err);
-            });;
-            // $$("#msgBoard ul").append("<li><p class='time'>" + d.time + "</p><p class='content'>" +
-            //     d.content + "</p></li>");
-            $$("#msg").addClass("more");
+        myApp.cable = ActionCable.createConsumer("ws://www.c1.com/cable?token=" + judgeInfo.authToken);
+        myApp.notification = myApp.cable.subscriptions.create("NotificationChannel", {
+            connected: function() {},
+            disconnected: function() {},
+            received: function(d) {
+                console.log(d);
+                myApp.addNotification({
+                    title: "消息提示",
+                    message: d.message.content
+                });
+                // msgDB.post(d).then(function(response) {
+                //     console.log(response);
+                // }).catch(function(err) {
+                //     console.log(err);
+                // });
+                // $$("#msgBoard ul").append("<li><p class='time'>" + d.time + "</p><p class='content'>" +
+                //     d.content + "</p></li>");
+                $$("#msg").addClass("more");
+            }
         });
-
     },
     takePhoto: function(limit) {
         var photoSuccess = function(mediaFiles) {
@@ -1003,6 +898,26 @@ var app = {
         }
 
         function saveVideo() {
+            function videoTranscodeSuccess(result) {
+                myApp.hidePreloader();
+                scoreData.video = result;
+                saveScore();
+                VideoEditor.getVideoInfo(
+                    function(info) {
+                        console.log('getVideoInfoSuccess, info: ' + JSON.stringify(info, null, 2));
+                    },
+                    function(error) {
+                        console.log(error);
+                    }, {
+                        fileUri: result
+                    }
+                );
+            }
+
+            function videoTranscodeError(err) {
+                myApp.hidePreloader();
+                console.log('videoTranscodeError, err: ' + err);
+            }
             if ($$("#video source").length) {
                 myApp.showPreloader("视频转码中，请稍等。。。");
                 VideoEditor.transcodeVideo(
@@ -1026,26 +941,7 @@ var app = {
                     }
                 );
 
-                function videoTranscodeSuccess(result) {
-                    myApp.hidePreloader();
-                    scoreData.video = result;
-                    saveScore();
-                    VideoEditor.getVideoInfo(
-                        function(info) {
-                            console.log('getVideoInfoSuccess, info: ' + JSON.stringify(info, null, 2));
-                        },
-                        function(error) {
-                            console.log(error);
-                        }, {
-                            fileUri: result
-                        }
-                    );
-                }
 
-                function videoTranscodeError(err) {
-                    myApp.hidePreloader();
-                    console.log('videoTranscodeError, err: ' + err);
-                }
             } else {
                 saveScore();
             }
@@ -1098,7 +994,7 @@ var app = {
         scoreData.compete = temp.compete;
         scoreData.schedule_name = temp.schedule_name;
         scoreData.kind = temp.kind;
-        scoreData.schedule_id = temp.schedule_id
+        scoreData.schedule_id = temp.schedule_id;
         scoreData.th = temp.th;
         scoreData.upload = false;
         var images = $$("#photos img");
@@ -1109,8 +1005,8 @@ var app = {
                 var ext = uri.split('.').pop();
                 var filename = new Date().valueOf().toString() + index + "." + ext;
                 var fail = function(err) {
-                    console.log(err)
-                }
+                    console.log(err);
+                };
                 window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(destination) {
                     window.resolveLocalFileSystemURL(uri, function(file) {
                         file.moveTo(destination, filename, function(e) {
@@ -1225,7 +1121,7 @@ myApp.onPageInit('select', function(page) {
                 var temp_group_id = temp.event.group;
                 var groupName = "group" + "-" + groupId;
                 var tabName = "tab" + "_" + groupId;
-                var tab_link = $$('<li><a  id="' + tabName + '" href="#' + groupName + '" class="tab-link">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>')
+                var tab_link = $$('<li><a  id="' + tabName + '" href="#' + groupName + '" class="tab-link">' + g2.name + '(' + schoolGroups[g2.group] + ')</a></li>');
                 var tab = $$('<div class="tab" id="' + groupName + '"></div>');
                 $$("#eventsBoard .tabs").append(tab);
                 tab_link.appendTo("#groups");
@@ -1250,7 +1146,7 @@ myApp.onPageInit('select', function(page) {
                                 id: $$(this).data("id"),
                                 name: $$(this).text(),
                                 group: groupId
-                            }
+                            };
 
                             temp.compete = compete;
                             temp.event = event;
@@ -1452,7 +1348,7 @@ myApp.onPageInit('stopWatch', function(page) {
     if (scoreFrom === 3) {
         $$("#scoreHeader").html('<div id="runWrapper"><img src="images/run.png" usemap="#runmap"><map name="runmap"><area id="run" shape="poly" coords="26,0,433,0,452,29,389,118,72,118,8,28"></map></div>');
         document.getElementById('run').onclick = function() {
-            track.run()
+            track.run();
         };
 
     } else if (scoreFrom === 2) {
