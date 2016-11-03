@@ -56,7 +56,7 @@
 			"type": "cordova",
 			"request": "launch",
 			"platform": "ios",
-			"target": "emulator",
+			"target": "iPad-Air-2",
 			"port": 9220,
 			"sourceMaps": true,
             "cwd": "${cwd}"

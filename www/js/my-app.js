@@ -32,8 +32,8 @@ var remoteCouch = false;
 
 // apption for app
 var app_options = {
-    auth_host: "http://i.s1.com",
-    host: "http://www.c1.com",
+    auth_host: "http://dev.account.domelab.com",
+    host: "http://dev.robodou.cn",
     //host: "http://test.robodou.cn",
 };
 
@@ -377,8 +377,7 @@ var track = {
 var app = {
     init: function() {
         document.addEventListener('DOMContentLoaded', function() {
-            app.bind();
-            app.getProcess();
+
             //Check local judge data exciting
             var tempStr;
             tempStr = localStorage.getItem("judgeInfo");
@@ -390,6 +389,9 @@ var app = {
 
                 app.login();
             }
+
+            app.bind();
+            app.getProcess();
 
             $$("#asideBar a").on("click", function(e) {
                 var href = $$(this).data("href");
@@ -599,6 +601,11 @@ var app = {
 
     },
     onLogin: function(token) {
+        $$.ajaxSetup({
+            headers: {
+                "auth-token": token
+            }
+        });
         //get realtime message
         app.subscribeMsg(token);
         app.getResponse(token);
@@ -614,8 +621,11 @@ var app = {
         if (typeof temp.process === 'string') {
             $$("#schedule").html(temp.process);
         } else {
-            $$.getJSON(app_options.host + "/api/v1/competitions", function(process) {
-                console.log(process);
+            $$.getJSON(app_options.host + "/api/v1/competitions", function(competitions) {
+                console.log(competitions);
+                var process = {
+                    "competitions": competitions
+                };
                 var processTemp = $$('#processTemp').html();
                 var compiledTemp = Template7.compile(processTemp);
                 var html = compiledTemp(process);
@@ -650,25 +660,25 @@ var app = {
         });
     },
     getResponse: function(token) {
-        $$.getJSON(app_options.host + "/api/v1/users/" + token + "/user_for_event", function(response) {
-            $$("#judgeComptition").text(response.events[0].comp_name);
-            var events = [];
-            response.events.forEach(function(e) {
-                events.push(e.name);
-                //app.getScoreAttr(e.id);
-            });
-            $$("#judgeEvent").text(events.toString());
-        });
+        // $$.getJSON(app_options.host + "/api/v1/users/" + token + "/user_for_event", function(response) {
+        //     $$("#judgeComptition").text(response.events[0].comp_name);
+        //     var events = [];
+        //     response.events.forEach(function(e) {
+        //         events.push(e.name);
+        //         //app.getScoreAttr(e.id);
+        //     });
+        //     $$("#judgeEvent").text(events.toString());
+        // });
     },
     getEvents: function(comp_id, callback) {
         myApp.showIndicator();
-        $$.getJSON(app_options.host + "/api/v1/competitions/events", {
+        $$.getJSON(app_options.host + "/api/v1/competitions/get_events", {
             "comp_id": comp_id
         }, function(response) {
             console.log(response);
             myApp.hideIndicator();
             if (typeof callback === "function") {
-                callback(response.events);
+                callback(response);
             }
         });
     },
@@ -757,9 +767,9 @@ var app = {
         }
     },
     getMsg: function(token) {
-        $$.getJSON(app_options.host + "/api/v1/users/" + token + "/notifications/", function(response) {
+        $$.getJSON(app_options.host + "/api/v1/notifications", function(response) {
             console.log(response);
-            response.notifications.forEach(function(n) {
+            response.forEach(function(n) {
                 var d = new Date(n.created_at);
                 var time = d.toLocaleString().replace("GMT+8", "");
                 $$("#msgBoard ul").append("<li><p class='time'>" + time + "</p><p class='content'>" + n.content + "</p></li>");
@@ -780,15 +790,15 @@ var app = {
     },
     subscribeMsg: function(token) {
         //Get unread counts
-        $$.getJSON(app_options.host + "/api/v1/users/" + token + "/notifications", function(msg) {
+        $$.getJSON(app_options.host + "/api/v1/notifications", function(msg) {
             console.log(msg);
 
-            msg.notifications.forEach(function(n) {
+            msg.forEach(function(n) {
                 if (!n.read) {
                     temp.unread.ids.push(n.id);
                 }
             });
-            if (msg.unread > 0) {
+            if (temp.unread.ids.length > 0) {
                 $$("#msg").addClass("more");
             }
         });
@@ -1114,8 +1124,8 @@ myApp.onPageInit('select', function(page) {
             3: "初",
             4: "高"
         };
-        console.log(events);
         events.forEach(function(g1, index1) {
+            console.log(g1);
             g1.events.forEach(function(g2, index2) {
                 var groupId = g2.group;
                 var temp_group_id = temp.event.group;

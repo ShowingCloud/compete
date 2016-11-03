@@ -50,7 +50,6 @@
       {{#each competitions}}
       <div class="tab {{#unless @index}}active{{/unless}}" id="processTab{{id}}">
         <table>
-          {{#each schedule}}
           <tr>
             {{#if end_time}}
             <td>{{start_time}}-{{end_time}}</td>
@@ -59,7 +58,6 @@
             {{/if}}
             <td>{{step}}</td>
           </tr>
-          {{/each}}
         </table>
       </div>
       {{/each}}
