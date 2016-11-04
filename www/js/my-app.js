@@ -32,12 +32,36 @@ var remoteCouch = false;
 
 // apption for app
 var app_options = {
-    auth_host: "http://dev.account.domelab.com",
-    host: "http://dev.robodou.cn",
-    //host: "http://test.robodou.cn",
+    // auth_host: "http://dev.account.domelab.com",
+    // host: "http://dev.robodou.cn"
+    auth_host: "http://i.s1.com",
+    host: "http://www.c1.com"
 };
 
 var scoreAttr = [];
+
+Template7.registerHelper('build_schedule', function(str, options) {
+    var arr = str.split(";");
+    var table = '';
+    if (arr) {
+        arr.forEach(function(item) {
+            var d = item.split("：");
+            if (d && d.length === 2) {
+                var tr = '<tr>' +
+                    '<td>' + d[0] + '<td/>' +
+                    '<td>' + d[1] + '<td/>' +
+                    '</tr>'
+                if (tr) {
+                    table = table + tr;
+                }
+            }
+        });
+    }
+    if (table) {
+        table = '<table>' + table + '</table>';
+    }
+    return table;
+});
 
 if (!HTMLCanvasElement.prototype.toBlob) {
     Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
@@ -426,8 +450,6 @@ var app = {
                 parser.href = e.url;
                 if (parser.protocol + "//" + parser.host === app_options.host && parser.pathname === "/") {
                     if (parser.search) {
-                        console.log("---------");
-                        console.log(parser.search);
                         var params = {};
                         var parts = parser.search.substring(1).split('&');
                         for (var i = 0; i < parts.length; i++) {
@@ -480,15 +502,13 @@ var app = {
         });
     },
     bind: function() {
-        //Set ajax timeout
-        $$(document).on('ajaxStart', function(e) {
-            e.detail.xhr.timeout = 5000;
-        });
 
-        //Globle ajax error handller
+        //Globle ajax setup
         $$.ajaxSetup({
             timeout: 5000,
             error: function(xhr, status) {
+                console.log(status);
+                console.log(xhr);
                 if (xhr.status === 401) {
                     if ((new URL(xhr.requestUrl)).origin === app_options.host) {
                         myApp.alert("登陆失效，请重新登陆", "", function() {
@@ -504,7 +524,7 @@ var app = {
 
                     }
                 }
-                if (status === "timeout") {
+                if (status === "timeout" || 500) {
                     window.plugins.toast.showShortCenter("请求超时，请稍候重试");
                     myApp.hideIndicator();
                     myApp.hidePreloader();
@@ -543,10 +563,10 @@ var app = {
                 'uuid');
         });
 
-        //Listening network status
-        document.addEventListener("offline", function() {
-            myApp.alert("请打开你的网络", "");
-        }, false);
+        // Listening network status
+        // document.addEventListener("offline", function() {
+        //     myApp.alert("请打开你的网络", "");
+        // }, false);
 
 
         $$(document).click(function() {
@@ -622,7 +642,6 @@ var app = {
             $$("#schedule").html(temp.process);
         } else {
             $$.getJSON(app_options.host + "/api/v1/competitions", function(competitions) {
-                console.log(competitions);
                 var process = {
                     "competitions": competitions
                 };
@@ -634,18 +653,21 @@ var app = {
             });
         }
     },
-    getSchedule: function(ed, group) {
+    getSchedule: function(event_id, group) {
         var data = {
-            "ed": ed,
+            "event_id": event_id,
             "group": group
         };
-        $$.getJSON(app_options.host + "/api/v1/events/event_schedule", data, function(response) {
-            var schedules = response.event_schedules;
+        $$.getJSON(app_options.host + "/api/v1/events/group_schedules", data, function(response) {
+            console.log(response);
+            var schedules = response.group_schedules;
             if (schedules.length === 0) {
                 myApp.alert("该比赛没有赛程,无法继续", "");
             } else if (schedules.length > 1) {
+                alert("ffff");
                 var compiledTemp = Template7.compile($$('#roundTpl').html());
                 var newPageContent = compiledTemp(response);
+                console.log(newPageContent);
                 mainView.router.loadContent(newPageContent);
                 mainView.router.load({
                     content: newPageContent,
@@ -655,20 +677,21 @@ var app = {
                 temp.kind = schedules[0].kind;
                 temp.schedule_name = schedules[0].schedule_name;
                 temp.schedule_id = schedules[0].schedule_id;
+                alert(tmp);
                 mainView.router.loadPage('player.html');
             }
         });
     },
     getResponse: function(token) {
-        // $$.getJSON(app_options.host + "/api/v1/users/" + token + "/user_for_event", function(response) {
-        //     $$("#judgeComptition").text(response.events[0].comp_name);
-        //     var events = [];
-        //     response.events.forEach(function(e) {
-        //         events.push(e.name);
-        //         //app.getScoreAttr(e.id);
-        //     });
-        //     $$("#judgeEvent").text(events.toString());
-        // });
+        $$.getJSON(app_options.host + "/api/v1/users/" + token + "/user_for_event", function(response) {
+            $$("#judgeComptition").text(response.events[0].comp_name);
+            var events = [];
+            response.events.forEach(function(e) {
+                events.push(e.name);
+                //app.getScoreAttr(e.id);
+            });
+            $$("#judgeEvent").text(events.toString());
+        });
     },
     getEvents: function(comp_id, callback) {
         myApp.showIndicator();
@@ -683,11 +706,11 @@ var app = {
         });
     },
     getScoreAttr: function(event_id) {
-        $$.getJSON(app_options.host + "/api/v1/events/score_attributes", {
+        $$.getJSON(app_options.host + "/api/v1/events/score_attrs", {
             "event_id": event_id
         }, function(response) {
-            if (response.event_score_attributes.length) {
-                scoreAttr = response.event_score_attributes;
+            if (response.length) {
+                scoreAttr = response;
             } else {
                 myApp.alert("无此项目数据", "");
             }
@@ -700,7 +723,7 @@ var app = {
             return template.content.firstChild;
         }
 
-        $$.getJSON(app_options.host + "/api/v1/events/event/teams", data, function(response) {
+        $$.getJSON(app_options.host + "/api/v1/events/group_teams", data, function(response) {
             console.log(response.teams);
             if (response.teams[0]) {
                 var teams = response.teams[1];
@@ -1187,7 +1210,7 @@ myApp.onPageInit('msg', function(page) {
 
 myApp.onPageInit('player', function() {
     app.getTeams({
-        "ed": temp.event.id,
+        "event_id": temp.event.id,
         "group": temp.event.group,
         "schedule_id": temp.schedule_id
     });
@@ -1570,4 +1593,4 @@ myApp.onPageInit('stopWatch', function(page) {
 
 });
 
-app.init();
+app.init();;

@@ -490,7 +490,8 @@ module.exports.metadata =
     "cordova-plugin-video-editor": "1.1.2",
     "cordova-plugin-whitelist": "1.3.0",
     "cordova-plugin-x-toast": "2.5.2",
-    "phonegap-plugin-barcodescanner": "6.0.3"
+    "phonegap-plugin-barcodescanner": "6.0.3",
+    "cordova-plugin-browsersync": "0.1.1"
 };
 // BOTTOM OF METADATA
 });

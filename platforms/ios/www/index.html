@@ -49,16 +49,7 @@
     <div class="tabs process">
       {{#each competitions}}
       <div class="tab {{#unless @index}}active{{/unless}}" id="processTab{{id}}">
-        <table>
-          <tr>
-            {{#if end_time}}
-            <td>{{start_time}}-{{end_time}}</td>
-            {{else}}
-            <td>{{start_time}}</td>
-            {{/if}}
-            <td>{{step}}</td>
-          </tr>
-        </table>
+        {{build_schedule date_schedule}}
       </div>
       {{/each}}
     </div>
@@ -69,7 +60,7 @@
       <div class="page-content">
         <div class="round-container">
           <p class="round-title">请选择比赛阶段</p>
-          {{#each event_schedules}}
+          {{#each group_schedules}}
           <div class="round-wrapper" data-schedule_name="{{schedule_name}}" data-schedule_id="{{schedule_id}}">
             <h2>{{schedule_name}}</h2>
           </div>
@@ -192,7 +183,7 @@
               </div>
               <div id="judge-info" class="hidden">
                 <ul class="inline-block">
-                  <li>裁判ID：<span id="judgeId"></span></li>
+                  <li>裁ID：<span id="judgeId"></span></li>
                   <li>姓名：<span id="judgeName"></span></li>
                   <!--                                    <li>学校：<span id="judgeSchool">上海大学</span></li>-->
                   <li>负责比赛：<span id="judgeComptition"></span></li>

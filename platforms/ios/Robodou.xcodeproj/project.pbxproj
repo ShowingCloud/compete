@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		0028331784A747A292D014EC /* UIImage+CropScaleOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 846B410033CC407E8104F2D4 /* UIImage+CropScaleOrientation.m */; };
 		0207DA581B56EA530066E2B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0207DA571B56EA530066E2B4 /* Images.xcassets */; };
