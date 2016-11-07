@@ -50,7 +50,7 @@ Template7.registerHelper('build_schedule', function(str, options) {
                 var tr = '<tr>' +
                     '<td>' + d[0] + '<td/>' +
                     '<td>' + d[1] + '<td/>' +
-                    '</tr>'
+                    '</tr>';
                 if (tr) {
                     table = table + tr;
                 }
@@ -448,6 +448,7 @@ var app = {
             ref.addEventListener('loadstart', function(e) {
                 var parser = document.createElement('a');
                 parser.href = e.url;
+                console.log(parser.href);
                 if (parser.protocol + "//" + parser.host === app_options.host && parser.pathname === "/") {
                     if (parser.search) {
                         var params = {};
@@ -459,7 +460,7 @@ var app = {
                         }
                         judgeInfo = {
                             userId: params.user_id,
-                            nickname: params.nickname,
+                            nickname: decodeURIComponent(params.nickname),
                             authToken: params.token
                         };
                         localStorage.setItem("judgeInfo", JSON.stringify(judgeInfo));
@@ -505,11 +506,11 @@ var app = {
 
         //Globle ajax setup
         $$.ajaxSetup({
-            timeout: 5000,
+            timeout: 10000,
             error: function(xhr, status) {
                 console.log(status);
                 console.log(xhr);
-                if (xhr.status === 401) {
+                if (status === 401) {
                     if ((new URL(xhr.requestUrl)).origin === app_options.host) {
                         myApp.alert("登陆失效，请重新登陆", "", function() {
                             localStorage.removeItem("judgeInfo");
@@ -524,7 +525,7 @@ var app = {
 
                     }
                 }
-                if (status === "timeout" || 500) {
+                if (status === 500) {
                     window.plugins.toast.showShortCenter("请求超时，请稍候重试");
                     myApp.hideIndicator();
                     myApp.hidePreloader();
@@ -642,7 +643,6 @@ var app = {
             $$("#schedule").html(temp.process);
         } else {
             $$.getJSON(app_options.host + "/api/v1/competitions", function(competitions) {
-                console.log(competitions);
                 var process = {
                     "competitions": competitions
                 };
@@ -665,7 +665,6 @@ var app = {
             if (schedules.length === 0) {
                 myApp.alert("该比赛没有赛程,无法继续", "");
             } else if (schedules.length > 1) {
-                alert("ffff");
                 var compiledTemp = Template7.compile($$('#roundTpl').html());
                 var newPageContent = compiledTemp(response);
                 console.log(newPageContent);
@@ -678,21 +677,20 @@ var app = {
                 temp.kind = schedules[0].kind;
                 temp.schedule_name = schedules[0].schedule_name;
                 temp.schedule_id = schedules[0].schedule_id;
-                alert(tmp);
                 mainView.router.loadPage('player.html');
             }
         });
     },
     getResponse: function(token) {
-        $$.getJSON(app_options.host + "/api/v1/users/" + token + "/user_for_event", function(response) {
-            $$("#judgeComptition").text(response.events[0].comp_name);
-            var events = [];
-            response.events.forEach(function(e) {
-                events.push(e.name);
-                //app.getScoreAttr(e.id);
-            });
-            $$("#judgeEvent").text(events.toString());
-        });
+        // $$.getJSON(app_options.host + "/api/v1/users/" + token + "/user_for_event", function(response) {
+        //     $$("#judgeComptition").text(response.events[0].comp_name);
+        //     var events = [];
+        //     response.events.forEach(function(e) {
+        //         events.push(e.name);
+        //         //app.getScoreAttr(e.id);
+        //     });
+        //     $$("#judgeEvent").text(events.toString());
+        // });
     },
     getEvents: function(comp_id, callback) {
         myApp.showIndicator();
@@ -754,7 +752,7 @@ var app = {
     },
     teamInfo: function(playerId) {
         if (typeof playerId === "string") {
-            var url = app_options.host + "/api/v1/users/" + judgeInfo.authToken + "/team_players";
+            var url = app_options.host + "/api/v1/team_players";
             $$.getJSON(url, {
                 identifier: playerId
             }, function(data) {
@@ -830,10 +828,13 @@ var app = {
         var channel = "/channel/" + token;
         myApp.cable = ActionCable.createConsumer("ws://www.c1.com/cable?token=" + judgeInfo.authToken);
         myApp.notification = myApp.cable.subscriptions.create("NotificationChannel", {
-            connected: function() {},
-            disconnected: function() {},
+            connected: function() {
+                console.log("消息链路已连接");
+            },
+            disconnected: function() {
+                console.log("消息链路断开");
+            },
             received: function(d) {
-                console.log(d);
                 myApp.addNotification({
                     title: "消息提示",
                     message: d.message.content
@@ -1594,4 +1595,4 @@ myApp.onPageInit('stopWatch', function(page) {
 
 });
 
-app.init();;
+app.init();

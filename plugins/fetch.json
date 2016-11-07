@@ -178,8 +178,8 @@
     },
     "cordova-plugin-browsersync": {
         "source": {
-            "type": "registry",
-            "id": "cordova-plugin-browsersync"
+            "type": "local",
+            "path": "/Users/wht/Downloads/cordova-plugin-browsersync-master"
         },
         "is_top_level": true,
         "variables": {}
