@@ -49,10 +49,18 @@
     <div class="tabs process">
       {{#each competitions}}
       <div class="tab {{#unless @index}}active{{/unless}}" id="processTab{{id}}">
-        {{build_schedule date_schedule}}
+        {{build_schedule competition_schedules}}
       </div>
       {{/each}}
     </div>
+  </script>
+
+  <script id="compete-select-tpl" type="text/template7">
+    {{#each competitions}}
+    <div class="col-auto">
+      <a href="#compete{{id}}" class="tab-link {{#unless @index}}active{{/unless}}" data-id="{{id}}"><span>机械奥运</span><p></p></a>
+    </div>
+    {{/each}}
   </script>
 
   <script id="roundTpl" type="text/template7">

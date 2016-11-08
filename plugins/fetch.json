@@ -4,7 +4,7 @@
             "type": "registry",
             "id": "cordova-plugin-compat"
         },
-        "is_top_level": false,
+        "is_top_level": true,
         "variables": {}
     },
     "cordova-plugin-file": {
@@ -172,14 +172,6 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-media-capture@1.4.0"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-browsersync": {
-        "source": {
-            "type": "local",
-            "path": "/Users/wht/Downloads/cordova-plugin-browsersync-master"
         },
         "is_top_level": true,
         "variables": {}

@@ -40,20 +40,24 @@ var app_options = {
 
 var scoreAttr = [];
 
-Template7.registerHelper('build_schedule', function(str, options) {
-    var arr = str.split(";");
+Template7.registerHelper('build_schedule', function(arr, options) {
     var table = '';
     if (arr) {
         arr.forEach(function(item) {
-            var d = item.split("：");
-            if (d && d.length === 2) {
-                var tr = '<tr>' +
-                    '<td>' + d[0] + '<td/>' +
-                    '<td>' + d[1] + '<td/>' +
-                    '</tr>';
-                if (tr) {
-                    table = table + tr;
+            var name = item.name;
+            var start_time = item.start_time;
+            var end_time = item.end_time;
+            if (name && start_time) {
+                var time, tr;
+                if (end_time) {
+                    time = '<td>' + start_time + "--" + end_time + '<td/>';
+                } else {
+                    time = '<td>' + start_time + '<td/>';
                 }
+                tr = '<tr>' + time +
+                    '<td>' + name + '<td/>' +
+                    '</tr>';
+                table = table + tr;
             }
         });
     }
@@ -520,7 +524,9 @@ var app = {
                             } else {
                                 mainView.router.loadPage("index.html");
                             }
-                            MessageBus.stop();
+                            if (myApp.cable.subscriptions.subscriptions.length > 1) {
+                                myApp.cable.subscriptions.remove(myApp.cable.subscriptions.subscriptions[0]);
+                            }
                         });
 
                     }
@@ -582,12 +588,10 @@ var app = {
         //Handling logout
         $$(document).on("click", "#logout-btn", function() {
             judgeInfo = {};
-            var channel = "/channel/" + judgeInfo.authToken;
             localStorage.removeItem("judgeInfo");
-            // MessageBus.unsubscribe(channel, function() {
-            //     console("unsubscribe");
-            // });
-            // MessageBus.stop();
+            if (myApp.cable.subscriptions['subscriptions'].length > 1) {
+                myApp.cable.subscriptions.remove(myApp.cable.subscriptions['subscriptions'][0])
+            }
 
             app.login();
         });
@@ -639,20 +643,22 @@ var app = {
         $$("#judge-info").show();
     },
     getProcess: function() {
-        if (typeof temp.process === 'string') {
-            $$("#schedule").html(temp.process);
-        } else {
-            $$.getJSON(app_options.host + "/api/v1/competitions", function(competitions) {
+        $$.ajax({
+            method: "GET",
+            url: app_options.host + "/api/v1/competitions",
+            success: function(response) {
+                var competitions = JSON.parse(response);
+                console.log(competitions);
                 var process = {
                     "competitions": competitions
                 };
+                temp.competitions = competitions;
                 var processTemp = $$('#processTemp').html();
                 var compiledTemp = Template7.compile(processTemp);
                 var html = compiledTemp(process);
-                temp.process = html;
                 $$("#schedule").html(html);
-            });
-        }
+            }
+        });
     },
     getSchedule: function(event_id, group) {
         var data = {
@@ -1194,7 +1200,14 @@ myApp.onPageInit('select', function(page) {
             });
         });
     }
-    app.getEvents(1, showEvents);
+
+    var compete_select = $$('.compete-select');
+    compete_select.html('');
+    var template = $$('#compete-select-tpl').html();
+    var compiledTemplate = Template7.compile(template);
+    var html = compiledTemplate(temp);
+    compete_select.append(html);
+    app.getEvents(temp.competitions[0].id, showEvents);
 });
 
 myApp.onPageInit('msg', function(page) {

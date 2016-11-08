@@ -470,7 +470,6 @@ module.exports.metadata =
 // TOP OF METADATA
 {
     "cordova-plugin-battery-status": "1.2.0",
-    "cordova-plugin-compat": "1.0.0",
     "cordova-plugin-ble-central": "1.1.3",
     "cordova-plugin-camera": "2.3.0",
     "cordova-plugin-console": "1.0.4",
@@ -491,7 +490,7 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.3.0",
     "cordova-plugin-x-toast": "2.5.2",
     "phonegap-plugin-barcodescanner": "6.0.3",
-    "cordova-plugin-browsersync": "0.1.1"
+    "cordova-plugin-compat": "1.1.0"
 };
 // BOTTOM OF METADATA
 });

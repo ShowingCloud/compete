@@ -77,13 +77,9 @@
             "CAMERA_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-plugin-browsersync": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        }
-    },
-    "dependent_plugins": {
         "cordova-plugin-compat": {
             "PACKAGE_NAME": "cn.robodou.competition"
         }
-    }
+    },
+    "dependent_plugins": {}
 }
