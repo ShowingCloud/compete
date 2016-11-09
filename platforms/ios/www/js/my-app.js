@@ -40,22 +40,31 @@ var app_options = {
 
 var scoreAttr = [];
 
+function date_format(date_str) {
+    if (typeof date_str === 'string') {
+        var date = new Date(date_str);
+        return date.toISOString().slice(-13, -8);
+    } else {
+        return false;
+    }
+}
+
 Template7.registerHelper('build_schedule', function(arr, options) {
     var table = '';
     if (arr) {
         arr.forEach(function(item) {
             var name = item.name;
-            var start_time = item.start_time;
-            var end_time = item.end_time;
+            var start_time = date_format(item.start_time);
+            var end_time = date_format(item.end_time);
             if (name && start_time) {
                 var time, tr;
                 if (end_time) {
-                    time = '<td>' + start_time + "--" + end_time + '<td/>';
+                    time = '<td>' + start_time + "--" + end_time + '</td>';
                 } else {
-                    time = '<td>' + start_time + '<td/>';
+                    time = '<td>' + start_time + '</td>';
                 }
                 tr = '<tr>' + time +
-                    '<td>' + name + '<td/>' +
+                    '<td>' + name + '</td>' +
                     '</tr>';
                 table = table + tr;
             }
@@ -423,18 +432,25 @@ var app = {
 
             $$("#asideBar a").on("click", function(e) {
                 var href = $$(this).data("href");
-                if (mainView.activePage.name === "stopWatch") {
-                    if (href !== "stopWatch.html") {
-                        myApp.confirm("是否放弃本次记分？", "", function(goto) {
-                            mainView.router.loadPage(href);
-                            if (track.status.playing) {
-                                track.reset();
-                            }
-                        });
+                var comp_id = temp.compete.id;
+                if (temp.compete.id) {
+                    myApp.alert(comp_id, '');
+                    if (mainView.activePage.name === "stopWatch") {
+                        if (href !== "stopWatch.html") {
+                            myApp.confirm("是否放弃本次记分？", "", function(goto) {
+                                mainView.router.loadPage(href);
+                                if (track.status.playing) {
+                                    track.reset();
+                                }
+                            });
+                        }
+                    } else {
+                        mainView.router.loadPage(href);
                     }
                 } else {
-                    mainView.router.loadPage(href);
+                    myApp.alert("请先选择比赛", '');
                 }
+
             });
         }, false);
 
@@ -592,7 +608,9 @@ var app = {
             if (myApp.cable.subscriptions['subscriptions'].length > 1) {
                 myApp.cable.subscriptions.remove(myApp.cable.subscriptions['subscriptions'][0])
             }
-
+            $$.ajaxSetup({
+                headers: {}
+            });
             app.login();
         });
 
@@ -622,6 +640,13 @@ var app = {
                 }
             );
 
+        });
+        $$(document).on("click", "#schedule .tab-link", function() {
+            var _this = $$(this);
+            if (!_this.hasClass("active")) {
+                _this.addClass("active");
+            }
+            temp.compete.id = _this.data("id");
         });
 
     },
@@ -721,78 +746,85 @@ var app = {
             }
         });
     },
-    getTeams: function(data) {
+    getTeams: function(params) {
         function htmlToElement(html) {
             var template = document.createElement('template');
             template.innerHTML = html;
             return template.content.firstChild;
         }
 
-        $$.getJSON(app_options.host + "/api/v1/events/group_teams", data, function(response) {
-            console.log(response.teams);
-            if (response.teams[0]) {
-                var teams = response.teams[1];
-                var allTeamId = [];
-                var tbody = $$("#playerTable tbody");
-                tbody.html("");
-                teams.forEach(function(t) {
-                    allTeamId.push(t.id);
-                    var mobile = t.mobile || "无";
-                    var school = t.school;
-                    var teacher = t.teacher || "无";
-                    var teacher_mobile = t.teacher_mobile || "无";
-                    var status = t.status;
-                    var statusStr, trClass;
-                    if (status === 0) {
-                        statusStr = "未完赛";
-                        trClass = "unfinished";
-                    } else if (status === 1) {
-                        statusStr = " 已完赛";
-                        trClass = "finished";
-                    }
-                    tbody.append(htmlToElement("<tr class='" + trClass + "'><td>" + t.name + "</td><td>" + school + "</td><td>" + mobile + "</td><td>" + teacher + "<br>" + teacher_mobile + "</td><td>" + statusStr + "</td></tr>"));
-                });
+        $$.ajax({
+            url: app_options.host + "/api/v1/events/group_teams",
+            data: params,
+            success: function(response) {
+                var teams = JSON.parse(response);
+                console.log(teams);
+                if (teams.length) {
+                    var allTeamId = [];
+                    var tbody = $$("#playerTable tbody");
+                    tbody.html("");
+                    teams.forEach(function(t) {
+                        allTeamId.push(t.id);
+                        var mobile = t.mobile || "无";
+                        var school = t.school_name;
+                        var teacher = t.teacher || "无";
+                        var teacher_mobile = t.teacher_mobile || "无";
+                        var status = t.status;
+                        var statusStr, trClass;
+                        if (status === 0) {
+                            statusStr = "未完赛";
+                            trClass = "unfinished";
+                        } else if (status === 1) {
+                            statusStr = " 已完赛";
+                            trClass = "finished";
+                        } else {
+                            statusStr = "未完赛";
+                            trClass = "unfinished";
+                        }
+                        tbody.append(htmlToElement("<tr class='" + trClass + "'><td>" + t.identifier + "</td><td>" + school + "</td><td>" + mobile + "</td><td>" + teacher + "<br>" + teacher_mobile + "</td><td>" + statusStr + "</td></tr>"));
+                    });
+                }
             }
-
         });
     },
     teamInfo: function(playerId) {
-        if (typeof playerId === "string") {
-            var url = app_options.host + "/api/v1/team_players";
-            $$.getJSON(url, {
-                identifier: playerId
-            }, function(data) {
-                if (!data.result[0]) {
-                    if (typeof data.result[1] === "string")
-                        myApp.alert(data.result[1], "");
-                    return;
-                } else {
-                    var team = data.result[1][0];
-                    temp.player = {
-                        name: team.team_name,
-                        code: $$("#playerId").val()
-                    };
-                    var player = team;
-                    var template, compiledTemp;
-                    player.eventName = temp.compete.name + "-" + temp.event.name;
-                    player.playCode = $$("#playerId").val();
-                    console.log(player);
-                    if (team.user.length === 1) {
-                        template = $$('#playerTemp').html();
-                    } else {
-                        template = $$('#teamTemp').html();
-                    }
-
-                    compiledTemp = Template7.compile(template);
-
-                    temp.playerInfo = compiledTemp(player);
-                    console.log(temp);
-                    mainView.router.loadPage('stopWatch.html');
-                }
-            });
-        } else {
-            console.log("no playerId");
-        }
+        mainView.router.loadPage('stopWatch.html');
+        // if (typeof playerId === "string") {
+        //     var url = app_options.host + "/api/v1/team_players";
+        //     $$.getJSON(url, {
+        //         identifier: playerId
+        //     }, function(data) {
+        //         if (!data.result[0]) {
+        //             if (typeof data.result[1] === "string")
+        //                 myApp.alert(data.result[1], "");
+        //             return;
+        //         } else {
+        //             var team = data.result[1][0];
+        //             temp.player = {
+        //                 name: team.team_name,
+        //                 code: $$("#playerId").val()
+        //             };
+        //             var player = team;
+        //             var template, compiledTemp;
+        //             player.eventName = temp.compete.name + "-" + temp.event.name;
+        //             player.playCode = $$("#playerId").val();
+        //             console.log(player);
+        //             if (team.user.length === 1) {
+        //                 template = $$('#playerTemp').html();
+        //             } else {
+        //                 template = $$('#teamTemp').html();
+        //             }
+        //
+        //             compiledTemp = Template7.compile(template);
+        //
+        //             temp.playerInfo = compiledTemp(player);
+        //             console.log(temp);
+        //             mainView.router.loadPage('stopWatch.html');
+        //         }
+        //     });
+        // } else {
+        //     console.log("no playerId");
+        // }
     },
     getMsg: function(token) {
         $$.getJSON(app_options.host + "/api/v1/notifications", function(response) {
@@ -1145,7 +1177,7 @@ myApp.onPageBeforeInit('home', function(page) {
 });
 
 myApp.onPageInit('select', function(page) {
-    $$("#groups,#eventsBoard .tabs").html("");
+    $$("#groups,#eventsBoard .tabs").find("*").remove();
     var event_id = temp.event.id;
 
     function showEvents(events) {
@@ -1202,7 +1234,7 @@ myApp.onPageInit('select', function(page) {
     }
 
     var compete_select = $$('.compete-select');
-    compete_select.html('');
+    compete_select.find('*').remove();
     var template = $$('#compete-select-tpl').html();
     var compiledTemplate = Template7.compile(template);
     var html = compiledTemplate(temp);

@@ -1,0 +1,138 @@
+[
+  {
+    "file": "css/framework7.ios.colors.min.css",
+    "hash": "7e2a71faa558e9f7f129b6a0df7158cd"
+  },
+  {
+    "file": "css/framework7.ios.min.css",
+    "hash": "ae9f9eab785d97ebdcddc2901f4690a7"
+  },
+  {
+    "file": "css/my-app.css",
+    "hash": "d12efb8ad563fcb15aa1959d73d997df"
+  },
+  {
+    "file": "data.html",
+    "hash": "0f434b819f517ea69c5e74812ba72dff"
+  },
+  {
+    "file": "images/background.png",
+    "hash": "758d340edad21584a595bc1e5ff5a45c"
+  },
+  {
+    "file": "images/button.png",
+    "hash": "0c77d460625973d6a6e666730d4bf012"
+  },
+  {
+    "file": "images/competeLabel.png",
+    "hash": "96df3ddf43d5daeca1d5e30ac2b8437d"
+  },
+  {
+    "file": "images/contact.png",
+    "hash": "1be2b4930894e7dd43fcc5fa210b4220"
+  },
+  {
+    "file": "images/data-border.png",
+    "hash": "285ae95d4508bc9bb966072656ec02ac"
+  },
+  {
+    "file": "images/icon-1.png",
+    "hash": "22964751eb4cf0f29f10ec251dae941f"
+  },
+  {
+    "file": "images/left.png",
+    "hash": "ed1b5fc5a03309b777a537805e2a6761"
+  },
+  {
+    "file": "images/login-border.png",
+    "hash": "dbee229357b734d4f4a3b5c5ea6afed0"
+  },
+  {
+    "file": "images/message-board.png",
+    "hash": "e057951166cc6811938f2f2725afe452"
+  },
+  {
+    "file": "images/modal-img.png",
+    "hash": "d151ab673ab9ff2d308c09ce5478be62"
+  },
+  {
+    "file": "images/player-table.png",
+    "hash": "970b70400903807a10c4785fb1db2347"
+  },
+  {
+    "file": "images/playerInfo.png",
+    "hash": "705b83dbf15e921c1c8b22f73e954b46"
+  },
+  {
+    "file": "images/right.png",
+    "hash": "b2f3cdca3e7ac9143094425c6f6b9523"
+  },
+  {
+    "file": "images/round-border.png",
+    "hash": "11655231059f9effde1a0aec3a7b685a"
+  },
+  {
+    "file": "images/run.png",
+    "hash": "da7b952b3138bb103333274751985d86"
+  },
+  {
+    "file": "images/select-title.png",
+    "hash": "f37c8afe8a398a3e525a9e2dfc2129f8"
+  },
+  {
+    "file": "images/tiaowen.png",
+    "hash": "427f53c94c2ab83cccae59e90db522f9"
+  },
+  {
+    "file": "images/title-bottom.png",
+    "hash": "108ca85c248cbefd42ef7a1d0d47ffb2"
+  },
+  {
+    "file": "images/uploaded.png",
+    "hash": "5ecfb38d39cb21529c40715a149b1c26"
+  },
+  {
+    "file": "index.html",
+    "hash": "61e55c95817a7dfb3ded223e94275f0b"
+  },
+  {
+    "file": "js/action_cable.js",
+    "hash": "3610ea381abc5b70176762cbc924fb10"
+  },
+  {
+    "file": "js/framework7.min.js",
+    "hash": "774f13ecf4ffaa8c4f1b513f3df37b6d"
+  },
+  {
+    "file": "js/my-app.js",
+    "hash": "169d3fed7290b26a687e3afb41e97207"
+  },
+  {
+    "file": "js/pouchdb.min.js",
+    "hash": "48260c77fb393873b964683ee475cff5"
+  },
+  {
+    "file": "msg.html",
+    "hash": "4faf45291904026144ad561d20749420"
+  },
+  {
+    "file": "player.html",
+    "hash": "e744f425b41b9708b1889e8cd07b318f"
+  },
+  {
+    "file": "round.html",
+    "hash": "04453e3876f4be68ca515349084006c2"
+  },
+  {
+    "file": "select.html",
+    "hash": "298f6f247bc9011309d56da700d94e04"
+  },
+  {
+    "file": "stopWatch.html",
+    "hash": "3e4db7f228fcc72ec7f2a3cbbfb7b3d4"
+  },
+  {
+    "file": "uploaded.html",
+    "hash": "053239e20f20f6d3cf56f21397883b7b"
+  }
+]

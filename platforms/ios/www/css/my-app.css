@@ -265,6 +265,7 @@ aside-linker {
     width: 80%;
     margin: 55px auto 0 auto;
     font-size: 1.2em;
+    height: 200px;
 }
 
 #judge-info ul {
@@ -318,7 +319,7 @@ aside-linker {
 .compete-select .tab-link {
     color: currentColor;
     font-size: 1.2em;
-    
+
 }
 
 .compete-select .active p {
@@ -939,4 +940,8 @@ div.media-capture {
     top: 25%;
     left: 59.5%;
     border-radius: 50%;
+}
+
+#schedule a.tab-link.active{
+  box-shadow: 0 0 6px #e4f1ff;
 }

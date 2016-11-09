@@ -41,7 +41,7 @@
     <div class="row competeTab1">
       {{#each competitions}}
       <div class="col-auto">
-        <a href="#processTab{{id}}" class="tab-link"><span class="my-label">{{name}}<span></a>
+        <a href="#processTab{{id}}" data-id="{{id}}" class="tab-link"><span class="my-label">{{name}}<span></a>
       </div>
       {{/each}}
     </div>
@@ -193,9 +193,6 @@
                 <ul class="inline-block">
                   <li>裁ID：<span id="judgeId"></span></li>
                   <li>姓名：<span id="judgeName"></span></li>
-                  <!--                                    <li>学校：<span id="judgeSchool">上海大学</span></li>-->
-                  <li>负责比赛：<span id="judgeComptition"></span></li>
-                  <li>负责项目：<span id="judgeEvent"></span></li>
                 </ul>
                 <div class="inline-block" id="logout-btn">
                   <span class="btn">退出</span>
