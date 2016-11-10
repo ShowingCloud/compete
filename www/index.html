@@ -58,7 +58,7 @@
   <script id="compete-select-tpl" type="text/template7">
     {{#each competitions}}
     <div class="col-auto">
-      <a href="#compete{{id}}" class="tab-link {{#unless @index}}active{{/unless}}" data-id="{{id}}"><span>机械奥运</span><p></p></a>
+      <a href="#compete{{id}}" class="tab-link {{#unless @index}}active{{/unless}}" data-id="{{id}}"><span>{{name}}</span><p></p></a>
     </div>
     {{/each}}
   </script>
@@ -77,16 +77,16 @@
       </div>
     </div>
   </script>
-  <script id="teamTemp" type="text/template7">
+  <script id="multi-players-tpl" type="text/template7">
     <div class="swiper-container">
-      {{#each user}}
+      {{#each players}}
       <div class="swiper-wrapper">
         <div class="swiper-slide">
           <p>姓名：{{username}}</p>
-          <p>参赛编号：{{@root.playCode}}</p>
+          <p>参赛编号：{{@root.identifier}}</p>
           <p>性别：{{#js_compare "this.gender === 1"}}男{{else}}女{{/js_compare}} </p>
           <p>学校：{{school}}</p>
-          <p class="play-event">参赛项目：{{@root.eventName}}</p>
+          <p class="play-event">参赛项目：{{@root.event_name}} {{@root.comp_name}}</p>
         </div>
       </div>
       {{/each}}
@@ -94,18 +94,18 @@
     </div>
   </script>
 
-  <script id="playerTemp" type="text/template7">
-    {{#each user}}
+  <script id="one-player-tpl" type="text/template7">
+    {{#each players}}
     <p>姓名：{{username}}</p>
-    <p>参赛编号：{{@root.playCode}}</p>
+    <p>参赛编号：{{@root.identifier}}</p>
     <p>性别：{{#js_compare "this.gender === 1"}}男{{else}}女{{/js_compare}} </p>
     <p>学校：{{school}}</p>
-    <p class="play-event">参赛项目：{{@root.eventName}}</p>
+    <p class="play-event">参赛项目：{{@root.event_name}} {{@root.comp_name}}</p>
     {{/each}}
   </script>
 
-  <script id="data-item" type="text/template7">
-    <li>
+  <script id="data-item-tpl" type="text/template7">
+    <li data-id="{{_id}}">
       <div class="number-plate">
         <img src="images/tiaowen.png">
         <div class="number">{{index}}</div>
@@ -113,8 +113,7 @@
       <div class="player-score">
         <table>
           <tr>
-            <td>{{player.name}}</td>
-            <td>{{player.code}}</td>
+            <td>{{team.identifier}}</td>
           </tr>
           <tr>
             <td>{{compete.name}}</td>
@@ -191,7 +190,7 @@
               </div>
               <div id="judge-info" class="hidden">
                 <ul class="inline-block">
-                  <li>裁ID：<span id="judgeId"></span></li>
+                  <li>裁判ID：<span id="judgeId"></span></li>
                   <li>姓名：<span id="judgeName"></span></li>
                 </ul>
                 <div class="inline-block" id="logout-btn">

@@ -96,8 +96,8 @@
   <access origin="*"/>
   <allow-navigation href="*"/>
   <chcp>
+    <config-file url="http://localhost:31284/chcp.json"/>
     <local-development enabled="true"/>
-    <config-file url="https://ac1e7120.ngrok.io/chcp.json"/>
   </chcp>
   <preference name="AllowInlineMediaPlayback" value="false"/>
   <preference name="BackupWebStorage" value="cloud"/>

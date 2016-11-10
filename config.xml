@@ -41,6 +41,7 @@
     <plugin name="cordova-plugin-secure-storage" spec="~2.2.4" />
     <plugin name="cordova-plugin-compat" spec="~1.1.0" />
     <chcp>
+      <config-file url="http://localhost:31284/chcp.json" />
       <local-development enabled="true" />
     </chcp>
 </widget>

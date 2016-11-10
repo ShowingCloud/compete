@@ -27,6 +27,8 @@ var scoreDB = new PouchDB("score", {
     adapter: 'websql'
 });
 
+var teamList;
+
 //Not use remote PouchDb server
 var remoteCouch = false;
 
@@ -47,6 +49,12 @@ function date_format(date_str) {
     } else {
         return false;
     }
+}
+
+function htmlToElement(html) {
+    var template = document.createElement('template');
+    template.innerHTML = html;
+    return template.content.firstChild;
 }
 
 Template7.registerHelper('build_schedule', function(arr, options) {
@@ -94,6 +102,10 @@ if (!HTMLCanvasElement.prototype.toBlob) {
         }
     });
 }
+
+var current_game = {
+
+};
 
 var temp = {
     compete: {},
@@ -434,7 +446,6 @@ var app = {
                 var href = $$(this).data("href");
                 var comp_id = temp.compete.id;
                 if (temp.compete.id) {
-                    myApp.alert(comp_id, '');
                     if (mainView.activePage.name === "stopWatch") {
                         if (href !== "stopWatch.html") {
                             myApp.confirm("是否放弃本次记分？", "", function(goto) {
@@ -615,11 +626,11 @@ var app = {
         });
 
         $$(document).on("click", "#getPlyaer", function() {
-            var playerId = $$("#playerId").val();
-            if (playerId) {
-                app.teamInfo(playerId);
+            var teamID = $$("#teamID").val();
+            if (teamID) {
+                app.searchTeam(teamID);
             } else {
-                myApp.alert("请输入选手编号", "");
+                myApp.alert("请输入参赛编号", "");
             }
         });
 
@@ -629,7 +640,8 @@ var app = {
                     screen.lockOrientation('portrait');
                     if (result.text) {
                         myApp.alert("获得二维码: " + result.text, "");
-                        app.teamInfo(result.text);
+                        var info = JSON.parse(result.text);
+                        app.searchTeam(info["队伍"]);
                     } else {
                         myApp.alert("请输入选手编号", "");
                     }
@@ -649,6 +661,21 @@ var app = {
             temp.compete.id = _this.data("id");
         });
 
+        $$(document).on("click", "#playerTable tbody tr", function() {
+            var _this = $$(this);
+            var identifier = _this.data("identifier");
+            app.teamInfo(identifier);
+        });
+
+        $$(document).on("click", ".data-tabs li", function() {
+            var id = $$(this).data("id");
+            if (id) {
+                scoreDB.get(doc_id).then(function(doc) {
+                    console.log(doc);
+                });
+            }
+        });
+
     },
     onLogin: function(token) {
         $$.ajaxSetup({
@@ -658,7 +685,7 @@ var app = {
         });
         //get realtime message
         app.subscribeMsg(token);
-        app.getResponse(token);
+        // app.getResponse();
     },
     showJudge: function(judge) {
         console.log(judge);
@@ -712,17 +739,17 @@ var app = {
             }
         });
     },
-    getResponse: function(token) {
-        // $$.getJSON(app_options.host + "/api/v1/users/" + token + "/user_for_event", function(response) {
-        //     $$("#judgeComptition").text(response.events[0].comp_name);
-        //     var events = [];
-        //     response.events.forEach(function(e) {
-        //         events.push(e.name);
-        //         //app.getScoreAttr(e.id);
-        //     });
-        //     $$("#judgeEvent").text(events.toString());
-        // });
-    },
+    // getResponse: function(token) {
+    //     $$.getJSON(app_options.host + "/api/v1/users/" + token + "/user_for_event", function(response) {
+    //         $$("#judgeComptition").text(response.events[0].comp_name);
+    //         var events = [];
+    //         response.events.forEach(function(e) {
+    //             events.push(e.name);
+    //             //app.getScoreAttr(e.id);
+    //         });
+    //         $$("#judgeEvent").text(events.toString());
+    //     });
+    // },
     getEvents: function(comp_id, callback) {
         myApp.showIndicator();
         $$.getJSON(app_options.host + "/api/v1/competitions/get_events", {
@@ -747,12 +774,6 @@ var app = {
         });
     },
     getTeams: function(params) {
-        function htmlToElement(html) {
-            var template = document.createElement('template');
-            template.innerHTML = html;
-            return template.content.firstChild;
-        }
-
         $$.ajax({
             url: app_options.host + "/api/v1/events/group_teams",
             data: params,
@@ -760,71 +781,74 @@ var app = {
                 var teams = JSON.parse(response);
                 console.log(teams);
                 if (teams.length) {
-                    var allTeamId = [];
+                    teamList = teams;
                     var tbody = $$("#playerTable tbody");
-                    tbody.html("");
+                    tbody.find("*").remove();
                     teams.forEach(function(t) {
-                        allTeamId.push(t.id);
-                        var mobile = t.mobile || "无";
-                        var school = t.school_name;
-                        var teacher = t.teacher || "无";
-                        var teacher_mobile = t.teacher_mobile || "无";
-                        var status = t.status;
-                        var statusStr, trClass;
-                        if (status === 0) {
-                            statusStr = "未完赛";
-                            trClass = "unfinished";
-                        } else if (status === 1) {
-                            statusStr = " 已完赛";
-                            trClass = "finished";
-                        } else {
-                            statusStr = "未完赛";
-                            trClass = "unfinished";
-                        }
-                        tbody.append(htmlToElement("<tr class='" + trClass + "'><td>" + t.identifier + "</td><td>" + school + "</td><td>" + mobile + "</td><td>" + teacher + "<br>" + teacher_mobile + "</td><td>" + statusStr + "</td></tr>"));
+                        app.render_team(tbody, t);
                     });
                 }
             }
         });
     },
-    teamInfo: function(playerId) {
-        mainView.router.loadPage('stopWatch.html');
-        // if (typeof playerId === "string") {
-        //     var url = app_options.host + "/api/v1/team_players";
-        //     $$.getJSON(url, {
-        //         identifier: playerId
-        //     }, function(data) {
-        //         if (!data.result[0]) {
-        //             if (typeof data.result[1] === "string")
-        //                 myApp.alert(data.result[1], "");
-        //             return;
-        //         } else {
-        //             var team = data.result[1][0];
-        //             temp.player = {
-        //                 name: team.team_name,
-        //                 code: $$("#playerId").val()
-        //             };
-        //             var player = team;
-        //             var template, compiledTemp;
-        //             player.eventName = temp.compete.name + "-" + temp.event.name;
-        //             player.playCode = $$("#playerId").val();
-        //             console.log(player);
-        //             if (team.user.length === 1) {
-        //                 template = $$('#playerTemp').html();
-        //             } else {
-        //                 template = $$('#teamTemp').html();
-        //             }
-        //
-        //             compiledTemp = Template7.compile(template);
-        //
-        //             temp.playerInfo = compiledTemp(player);
-        //             console.log(temp);
-        //             mainView.router.loadPage('stopWatch.html');
-        //         }
-        //     });
-        // } else {
-        //     console.log("no playerId");
-        // }
+    searchTeam: function(code) {
+        teamList.forEach(function(team) {
+            if (team.identifier === code) {
+                var tbody = $$("#playerTable tbody");
+                tbody.find("*").remove();
+                app.render_team(tbody, team);
+            }
+        });
+    },
+    render_team: function(tbody, t) {
+        var mobile = t.mobile || "无";
+        var school = t.school_name;
+        var teacher = t.teacher || "无";
+        var teacher_mobile = t.teacher_mobile || "无";
+        var status = t.status;
+        var statusStr, trClass;
+        if (status === 0) {
+            statusStr = "未完赛";
+            trClass = "unfinished";
+        } else if (status === 1) {
+            statusStr = " 已完赛";
+            trClass = "finished";
+        } else {
+            statusStr = "未完赛";
+            trClass = "unfinished";
+        }
+        tbody.append(htmlToElement("<tr data-id='" + t.id + "' data-identifier='" + t.identifier + "' class='" + trClass + "'><td>" + t.identifier + "</td><td>" + school + "</td><td>" + mobile + "</td><td>" + teacher + "<br>" + teacher_mobile + "</td><td>" + statusStr + "</td></tr>"));
+    },
+    teamInfo: function(teamID) {
+        if (typeof teamID === "string") {
+            var url = app_options.host + "/api/v1/events/get_team_by_identifier";
+            $$.ajax({
+                url: url,
+                data: {
+                    identifier: teamID
+                },
+                success: function(response) {
+                    console.log(response);
+                    var team = JSON.parse(response);
+                    var players = team.players;
+                    if (players.length) {
+                        temp.team = team;
+                        var template, compiledTemp;
+                        if (players.length === 1) {
+                            template = $$('#one-player-tpl').html();
+                        } else {
+                            template = $$('#multi-players-tpl').html();
+                        }
+                        compiledTemp = Template7.compile(template);
+                        temp.playerInfo = compiledTemp(team);
+                        console.log(temp);
+                        mainView.router.loadPage('stopWatch.html');
+                    }
+                }
+            });
+        } else {
+            console.log("no teamID");
+        }
     },
     getMsg: function(token) {
         $$.getJSON(app_options.host + "/api/v1/notifications", function(response) {
@@ -1060,8 +1084,9 @@ var app = {
             };
             scoreData._attachments.signature = signature;
         }, "image/jpeg", 0.95);
-        scoreData._id = new Date().toISOString();
-        scoreData.player = temp.player;
+        scoreData._id = temp.compete.id + ";" + temp.event.id + ";" + temp.schedule_id + ";" + temp.th + ";" + temp.team.identifier;
+        scoreData.create_at = new Date().toISOString();
+        scoreData.team = temp.team;
         scoreData.judgeid = judgeInfo.userId;
         scoreData.event = temp.event;
         scoreData.compete = temp.compete;
@@ -1106,25 +1131,28 @@ var app = {
             attachments: true,
             binary: true
         }).then(function(doc) {
+            console.log(doc);
             var toPost = {
                 event_id: doc.event.id,
                 schedule_name: doc.schedule_name,
                 schedule_id: doc.schedule_id,
                 kind: doc.kind,
                 th: doc.th,
-                team1_id: doc.player.code, // team2_id:doc.player.id,
-                score1: doc.score1,
+                team1_id: 4,
+                score_attribute: doc.score1,
+                last_score: "1",
                 note: doc.remark || "",
                 confirm_sign: doc._attachments.signature.data,
+                operator_id: doc.judgeid,
                 device_no: device.uuid
             };
             console.log(toPost);
             var form_data = new FormData();
 
             for (var key in toPost) {
-                if (key === "score1") {
-                    for (var key1 in toPost.score1) {
-                        form_data.append("score1" + "[" + key1 + "]", toPost[key][key1]);
+                if (key === "score_attribute") {
+                    for (var key1 in toPost.score_attribute) {
+                        form_data.append("score_attribute" + "[" + key1 + "]", toPost[key][key1]);
                     }
                 } else {
                     form_data.append(key, toPost[key]);
@@ -1134,16 +1162,21 @@ var app = {
 
             $$.ajax({
                 method: "POST",
-                url: app_options.host + "/api/v1/scores/" + judgeInfo.authToken + "/score",
+                url: app_options.host + "/api/v1/scores/upload_scores",
                 contentType: "multipart/form-data",
                 data: form_data,
                 dataType: "json",
                 success: function(response) {
-                    console.log(response);
-                    doc.upload = "Yes";
-                    scoreDB.put(doc);
-                    if (typeof success === "function") {
-                        success();
+                    if (response.status === false) {
+                        if (typeof fail === "function") {
+                            fail();
+                        }
+                    } else {
+                        doc.upload = "Yes";
+                        scoreDB.put(doc);
+                        if (typeof success === "function") {
+                            success();
+                        }
                     }
                 },
                 error: function(error) {
@@ -1168,7 +1201,7 @@ var app = {
 myApp.onPageBeforeInit('home', function(page) {
     if (judgeInfo.hasOwnProperty("userId")) {
         app.showJudge(judgeInfo);
-        app.getResponse(judgeInfo.authToken);
+        // app.getResponse();
     } else {
 
         app.login();
@@ -1303,12 +1336,11 @@ myApp.onPageInit('data', function(page) {
         attachments: false
     }).then(function(result) {
         console.log(result);
-        var template = $$("#data-item").html();
+        var template = $$("#data-item-tpl").html();
         var compiledTemp = Template7.compile(template);
         result.rows.forEach(function(element, index) {
             console.log(element);
             var doc = element.doc;
-            //ToDo render score items
             if (!doc.upload) {
                 toUpload.push(doc._id);
             }
@@ -1324,7 +1356,8 @@ myApp.onPageInit('data', function(page) {
                 num = pad.substr(0, 3 - num.length) + num;
             }
             doc.index = num;
-            doc.date = formatDate(doc._id);
+            doc.date = formatDate(doc.create_at);
+            console.log(doc);
             var html = compiledTemp(doc);
             $$("#dataTab" + id).append(html);
 
@@ -1370,20 +1403,20 @@ myApp.onPageInit('stopWatch', function(page) {
             switch (sa.score_type) {
                 case 3:
                     scoreFrom = 3;
-                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="track-score score" name="score' + (index + 1) + '"></div>');
+                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="track-score score" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
                     break;
                 case 2:
                     scoreFrom = 2;
-                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="time-score score" name="score' + (index + 1) + '"></div>');
+                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="time-score score" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
                     break;
                 case 1:
                     scoreFrom = 1;
                     $$(".scrollable").css("height", "500px");
                     $$("#scoreHeader").hide();
-                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="score" name="score' + (index + 1) + '"></div>');
+                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="score" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
                     break;
                 case "b1":
-                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="final-score score" name="score' + (index + 1) + '"></div>');
+                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="final-score score" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
                     break;
             }
         });

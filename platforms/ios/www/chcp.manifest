@@ -9,7 +9,7 @@
   },
   {
     "file": "css/my-app.css",
-    "hash": "d12efb8ad563fcb15aa1959d73d997df"
+    "hash": "dc52c3b1122c72ea929592425d8050b8"
   },
   {
     "file": "data.html",
@@ -93,7 +93,7 @@
   },
   {
     "file": "index.html",
-    "hash": "61e55c95817a7dfb3ded223e94275f0b"
+    "hash": "33070064f7a96b35b708eb7ea1f9c7a4"
   },
   {
     "file": "js/action_cable.js",
@@ -105,7 +105,7 @@
   },
   {
     "file": "js/my-app.js",
-    "hash": "169d3fed7290b26a687e3afb41e97207"
+    "hash": "1a974420bde5dfc8c39694c714554c62"
   },
   {
     "file": "js/pouchdb.min.js",
@@ -117,7 +117,7 @@
   },
   {
     "file": "player.html",
-    "hash": "e744f425b41b9708b1889e8cd07b318f"
+    "hash": "b902a1df5cb4cc559b4ffb3ebb00eb94"
   },
   {
     "file": "round.html",
