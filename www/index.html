@@ -57,8 +57,8 @@
 
   <script id="compete-select-tpl" type="text/template7">
     {{#each competitions}}
-    <div class="col-auto">
-      <a href="#compete{{id}}" class="tab-link {{#unless @index}}active{{/unless}}" data-id="{{id}}"><span>{{name}}</span><p></p></a>
+    <div class="col-auto comp-tab-wrapper">
+      <a id="comp-tab-{{id}}" href="#compete{{id}}" class="tab-link" data-id="{{id}}"><span>{{name}}</span><p></p></a>
     </div>
     {{/each}}
   </script>
@@ -120,8 +120,8 @@
             <td>{{event.name}}</td>
           </tr>
         </table>
-        <span>成绩1 {{score1.score1}}</span>
-        <span>成绩2 {{score1.score2}}</span>
+        <!-- <span>成绩1 {{score1.score1}}</span>
+        <span>成绩2 {{score1.score2}}</span> -->
       </div>
       <div class="rightCornor">
         <p>{{date}}</p>

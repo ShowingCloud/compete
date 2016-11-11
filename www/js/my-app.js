@@ -594,9 +594,9 @@ var app = {
         });
 
         // Listening network status
-        // document.addEventListener("offline", function() {
-        //     myApp.alert("请打开你的网络", "");
-        // }, false);
+        document.addEventListener("offline", function() {
+            myApp.alert("请打开你的网络", "");
+        }, false);
 
 
         $$(document).click(function() {
@@ -667,7 +667,9 @@ var app = {
             var id = $$(this).data("id");
             if (id) {
                 scoreDB.get(id).then(function(doc) {
-                    console.log(doc);
+                    scoreAttr = doc.scoreAttr;
+                    temp.edit = doc;
+                    app.teamInfo(doc.team.identifier);
                 });
             }
         });
@@ -838,7 +840,7 @@ var app = {
                         compiledTemp = Template7.compile(template);
                         temp.playerInfo = compiledTemp(team);
                         console.log(temp);
-                        mainView.router.loadPage('stopWatch.html');
+                        mainView.router.loadPage('stopWatch.html?' + $$.serializeObject(team));
                     }
                 }
             });
@@ -987,6 +989,9 @@ var app = {
                 });
             }).catch(function(err) {
                 console.log(err);
+                if (err.status === 409) {
+                    alert("数据冲突，该队伍成绩之前已录入");
+                }
             });
         }
 
@@ -1042,7 +1047,8 @@ var app = {
         var scoreData = {
             _attachments: {},
             score1: {},
-            score2: {}
+            score2: {},
+            scoreAttr: scoreAttr
         };
         var remark;
         //Get score1
@@ -1122,6 +1128,7 @@ var app = {
         }
 
     },
+
     uploadScore: function(doc_id, success, fail, complete) {
         scoreDB.get(doc_id, {
             attachments: true,
@@ -1150,6 +1157,8 @@ var app = {
                     for (var key1 in toPost.score_attribute) {
                         form_data.append("score_attribute" + "[" + key1 + "]", toPost[key][key1]);
                     }
+                } else if (key === "confirm_sign") {
+                    form_data.append(key, toPost[key], "signature.jpg");
                 } else {
                     form_data.append(key, toPost[key]);
                 }
@@ -1210,6 +1219,7 @@ myApp.onPageInit('select', function(page) {
     var event_id = temp.event.id;
 
     function showEvents(events) {
+        $$("#groups,#eventsBoard .tabs").empty();
         var schoolGroups = {
             1: "小",
             2: "中",
@@ -1268,7 +1278,20 @@ myApp.onPageInit('select', function(page) {
     var compiledTemplate = Template7.compile(template);
     var html = compiledTemplate(temp);
     compete_select.append(html);
-    app.getEvents(temp.competitions[0].id, showEvents);
+    if (temp.compete.id) {
+        app.getEvents(temp.compete.id, showEvents);
+        $$(".comp-tab-wrapper a").removeClass("active");
+        $$("#comp-tab-" + temp.compete.id).addClass("active");
+    }
+
+    $$(".comp-tab-wrapper a").click(function() {
+        var id = $$(this).data("id");
+        temp.compete.id = id;
+        app.getEvents(id, showEvents);
+        $$(".comp-tab-wrapper a").removeClass("active");
+        $$("#comp-tab" + temp.compete.id).addClass("active");
+    });
+
 });
 
 myApp.onPageInit('msg', function(page) {
@@ -1282,6 +1305,14 @@ myApp.onPageInit('msg', function(page) {
         app.setRead(judgeInfo.authToken, id);
     });
     temp.unread.ids = [];
+    if (temp.compete.id) {
+        temp.competition.forEach(function(c) {
+            if (c.id == temp.compete.id) {
+                var contact = c.emc_contact;
+                $$("#contact p").html(contact);
+            }
+        });
+    }
 });
 
 myApp.onPageInit('player', function() {
@@ -1391,6 +1422,7 @@ myApp.onPageInit('data', function(page) {
 });
 
 myApp.onPageInit('stopWatch', function(page) {
+    console.log(page);
     var scoreFrom;
     var drawed = 0;
     if (scoreAttr) {
@@ -1419,6 +1451,55 @@ myApp.onPageInit('stopWatch', function(page) {
     }
 
 
+    if (temp.playerInfo) {
+        $$(".playerInfo").append(temp.playerInfo);
+        var mySwiper = myApp.swiper('.swiper-container', {
+            pagination: '.swiper-pagination',
+            paginationHide: false,
+            paginationClickable: true
+        });
+    }
+
+    if (temp.edit) {
+        console.log(temp.edit);
+        $$.each(temp.edit.score1, function(key, value) {
+            $$("input[name='" + key + "']").val(value);
+        });
+
+        $$("#submitScore").on("click", function() {
+            var score = {};
+            $$(".score").each(function(i, obj) {
+                var _this = $$(this);
+                var value = _this.val();
+                var name = _this.attr('name');
+                if (value) {
+                    score[name] = value;
+                    console.log(value);
+                }
+            });
+            console.log(score);
+            if (Object.keys(score).length < $$(".score").length) {
+                myApp.alert("分数未填写完整", "");
+                return;
+            }
+            temp.edit.score1 = score;
+            scoreDB.put(temp.edit).then(function(response) {
+                app.uploadScore(response.id, function() {
+                    myApp.alert("分数上传成功", "", function() {
+                        mainView.router.back();
+                    });
+
+                }, function() {
+                    myApp.alert("分数上传失败", "");
+                });
+            }).catch(function(err) {
+                console.log(err);
+            });
+        });
+
+        $$(".canvasWrapper").hide();
+        return;
+    }
     $$("#takePhoto").on("click", function() {
         var quantity = $$("#photos img").length;
         if (quantity === 3) {
@@ -1439,16 +1520,6 @@ myApp.onPageInit('stopWatch', function(page) {
         }
 
     });
-
-
-    if (temp.playerInfo) {
-        $$(".playerInfo").append(temp.playerInfo);
-        var mySwiper = myApp.swiper('.swiper-container', {
-            pagination: '.swiper-pagination',
-            paginationHide: false,
-            paginationClickable: true
-        });
-    }
 
     $$("#submitScore").on("click", function() {
         app.submitScore(drawed);
