@@ -1,19 +1,23 @@
 [
   {
+    "file": "css/animate.min.css",
+    "hash": "178b651958ceff556cbc5f355e08bbf1"
+  },
+  {
     "file": "css/framework7.ios.colors.min.css",
-    "hash": "7e2a71faa558e9f7f129b6a0df7158cd"
+    "hash": "87f5960c37a37c274ca3156756f2f1aa"
   },
   {
     "file": "css/framework7.ios.min.css",
-    "hash": "ae9f9eab785d97ebdcddc2901f4690a7"
+    "hash": "9de8e618af1dcde8c471161ecc772fa5"
   },
   {
     "file": "css/my-app.css",
-    "hash": "dc52c3b1122c72ea929592425d8050b8"
+    "hash": "60ff942e8e5b15785dd0765e7ecddfb9"
   },
   {
     "file": "data.html",
-    "hash": "0f434b819f517ea69c5e74812ba72dff"
+    "hash": "056e3fcaaf56cef80ec41df78bc982ad"
   },
   {
     "file": "images/background.png",
@@ -93,7 +97,7 @@
   },
   {
     "file": "index.html",
-    "hash": "33070064f7a96b35b708eb7ea1f9c7a4"
+    "hash": "00d31d310c5c84122673e7381a76a2fe"
   },
   {
     "file": "js/action_cable.js",
@@ -101,38 +105,42 @@
   },
   {
     "file": "js/framework7.min.js",
-    "hash": "774f13ecf4ffaa8c4f1b513f3df37b6d"
+    "hash": "fb281e40971358761419a96c1e04b4b5"
   },
   {
     "file": "js/my-app.js",
-    "hash": "1a974420bde5dfc8c39694c714554c62"
+    "hash": "44769e081158db3fd35224fd3d98da00"
+  },
+  {
+    "file": "js/pouchdb.cordova-sqlite.js",
+    "hash": "4fb9c75b82ee113c7d50d62fd44a46bd"
   },
   {
     "file": "js/pouchdb.min.js",
-    "hash": "48260c77fb393873b964683ee475cff5"
+    "hash": "95d78331ddec3074de04f2a2ba254ba4"
   },
   {
     "file": "msg.html",
-    "hash": "4faf45291904026144ad561d20749420"
+    "hash": "26c32988168aa99b9e5c73f35844020f"
   },
   {
     "file": "player.html",
-    "hash": "b902a1df5cb4cc559b4ffb3ebb00eb94"
+    "hash": "b5941713454ed79f1223a2eb5742583a"
   },
   {
     "file": "round.html",
-    "hash": "04453e3876f4be68ca515349084006c2"
+    "hash": "19289789909a7751b431316304a9be3f"
   },
   {
     "file": "select.html",
-    "hash": "298f6f247bc9011309d56da700d94e04"
+    "hash": "02e329ae14ca0d5f515c65984a4d6d08"
   },
   {
     "file": "stopWatch.html",
-    "hash": "3e4db7f228fcc72ec7f2a3cbbfb7b3d4"
+    "hash": "ee7b3e79fa2e8e5bd519d257bb6d6776"
   },
   {
     "file": "uploaded.html",
-    "hash": "053239e20f20f6d3cf56f21397883b7b"
+    "hash": "5b79216137a22d35d53c8cac79e58396"
   }
 ]

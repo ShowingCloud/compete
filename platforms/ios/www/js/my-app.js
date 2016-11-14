@@ -23,8 +23,12 @@ var mainView = myApp.addView('.view-main', {
 });
 
 //Initialize PouchDB
-var scoreDB = new PouchDB("score", {
-    adapter: 'websql'
+var scoreDB;
+document.addEventListener('deviceready', function() {
+    PouchDB.plugin(PouchAdapterCordovaSqlite);
+    scoreDB = new PouchDB('score', {
+        adapter: 'cordova-sqlite'
+    });
 });
 
 var teamList;
@@ -34,13 +38,22 @@ var remoteCouch = false;
 
 // apption for app
 var app_options = {
-    // auth_host: "http://dev.account.domelab.com",
-    // host: "http://dev.robodou.cn"
-    auth_host: "http://i.s1.com",
-    host: "http://www.c1.com"
+    auth_host: "http://dev.account.domelab.com",
+    host: "http://dev.robodou.cn",
+    ws: "ws://dev.robodou.cn/cable"
+        // auth_host: "http://i.s1.com",
+        // host: "http://www.c1.com",
+        // ws: "ws://www.c1.com/cable"
 };
 
 var scoreAttr = [];
+
+function animateCss(selector, animationName) {
+    var target = $$(selector);
+    target.addClass('animated ' + animationName).once('webkitAnimationEnd', function() {
+        target.removeClass('animated ' + animationName);
+    });
+}
 
 function date_format(date_str) {
     if (typeof date_str === 'string') {
@@ -408,8 +421,8 @@ var track = {
                     window.plugins.toast.showLongCenter("本次记分已完成");
                     document.getElementById('run').onclick = null;
                     total = 0;
-                    for (var i = 0; i < elements.length; i++) {
-                        total = total + track.unformat(elements[i].value);
+                    for (var j = 0; j < elements.length; i++) {
+                        total = total + track.unformat(elements[j].value);
                     }
                     document.querySelector('.final-score').value = track.formatTime(total);
                 }
@@ -611,9 +624,10 @@ var app = {
         //Handling logout
         $$(document).on("click", "#logout-btn", function() {
             judgeInfo = {};
+            temp = {};
             localStorage.removeItem("judgeInfo");
             if (myApp.cable.subscriptions['subscriptions'].length > 1) {
-                myApp.cable.subscriptions.remove(myApp.cable.subscriptions['subscriptions'][0])
+                myApp.cable.subscriptions.remove(myApp.cable.subscriptions['subscriptions'][0]);
             }
             $$.ajaxSetup({
                 headers: {}
@@ -631,13 +645,13 @@ var app = {
         });
 
         $$(document).on("click", "#QR", function() {
-            cordova.plugins.barcoscore_typeanner.scan(
+            cordova.plugins.barcodeScanner.scan(
                 function(result) {
-                    screen.lockOrientation('portrait');
+                    // screen.lockOrientation('portrait');
                     if (result.text) {
-                        myApp.alert("获得二维码: " + result.text, "");
-                        var info = JSON.parse(result.text);
-                        app.searchTeam(info["队伍"]);
+                        var code = result.text.split(";")[0].split(":")[1];
+                        myApp.alert("获得二维码: " + code, "");
+                        app.searchTeam(code);
                     } else {
                         myApp.alert("请输入选手编号", "");
                     }
@@ -660,7 +674,8 @@ var app = {
         $$(document).on("click", "#playerTable tbody tr", function() {
             var _this = $$(this);
             var identifier = _this.data("identifier");
-            app.teamInfo(identifier);
+            var team_id = _this.data("id");
+            app.teamInfo(identifier, team_id);
         });
 
         $$(document).on("click", ".data-tabs li", function() {
@@ -672,6 +687,10 @@ var app = {
                     app.teamInfo(doc.team.identifier);
                 });
             }
+        });
+
+        myApp.onPageBeforeInit('home select data msg player round stopWatch upload', function(page) {
+            animateCss('#' + page.name + '-page', 'fadeIn');
         });
 
     },
@@ -778,10 +797,10 @@ var app = {
             success: function(response) {
                 var teams = JSON.parse(response);
                 console.log(teams);
+                var tbody = $$("#playerTable tbody");
+                tbody.empty();
                 if (teams.length) {
                     teamList = teams;
-                    var tbody = $$("#playerTable tbody");
-                    tbody.find("*").remove();
                     teams.forEach(function(t) {
                         app.render_team(tbody, t);
                     });
@@ -793,7 +812,7 @@ var app = {
         teamList.forEach(function(team) {
             if (team.identifier === code) {
                 var tbody = $$("#playerTable tbody");
-                tbody.find("*").remove();
+                tbody.empty();
                 app.render_team(tbody, team);
             }
         });
@@ -803,27 +822,27 @@ var app = {
         var school = t.school_name;
         var teacher = t.teacher || "无";
         var teacher_mobile = t.teacher_mobile || "无";
-        var status = t.status;
+        var status = t.score_num;
         var statusStr, trClass;
         if (status === 0) {
             statusStr = "未完赛";
             trClass = "unfinished";
-        } else if (status === 1) {
+        } else if (status >= 1) {
             statusStr = " 已完赛";
             trClass = "finished";
         } else {
-            statusStr = "未完赛";
+            statusStr = "未知";
             trClass = "unfinished";
         }
         tbody.append(htmlToElement("<tr data-id='" + t.id + "' data-identifier='" + t.identifier + "' class='" + trClass + "'><td>" + t.identifier + "</td><td>" + school + "</td><td>" + mobile + "</td><td>" + teacher + "<br>" + teacher_mobile + "</td><td>" + statusStr + "</td></tr>"));
     },
-    teamInfo: function(teamID) {
-        if (typeof teamID === "string") {
+    teamInfo: function(identifier, team_id) {
+        if (typeof identifier === "string") {
             var url = app_options.host + "/api/v1/events/get_team_by_identifier";
             $$.ajax({
                 url: url,
                 data: {
-                    identifier: teamID
+                    identifier: identifier
                 },
                 success: function(response) {
                     console.log(response);
@@ -831,6 +850,7 @@ var app = {
                     var players = team.players;
                     if (players.length) {
                         temp.team = team;
+                        temp.team.id = team_id;
                         var template, compiledTemp;
                         if (players.length === 1) {
                             template = $$('#one-player-tpl').html();
@@ -886,7 +906,7 @@ var app = {
         });
         //Subscribe message
         var channel = "/channel/" + token;
-        myApp.cable = ActionCable.createConsumer("ws://www.c1.com/cable?token=" + judgeInfo.authToken);
+        myApp.cable = ActionCable.createConsumer(app_options.ws + "?token=" + judgeInfo.authToken);
         myApp.notification = myApp.cable.subscriptions.create("NotificationChannel", {
             connected: function() {
                 console.log("消息链路已连接");
@@ -1141,7 +1161,7 @@ var app = {
                 schedule_id: doc.schedule_id,
                 kind: doc.kind,
                 th: doc.th,
-                team1_id: 4,
+                team1_id: doc.team.id,
                 score_attribute: doc.score1,
                 last_score: "1",
                 note: doc.remark || "",
@@ -1215,7 +1235,7 @@ myApp.onPageBeforeInit('home', function(page) {
 });
 
 myApp.onPageInit('select', function(page) {
-    $$("#groups,#eventsBoard .tabs").find("*").remove();
+    $$("#groups,#eventsBoard .tabs").empty();
     var event_id = temp.event.id;
 
     function showEvents(events) {
@@ -1273,7 +1293,7 @@ myApp.onPageInit('select', function(page) {
     }
 
     var compete_select = $$('.compete-select');
-    compete_select.find('*').remove();
+    compete_select.empty();
     var template = $$('#compete-select-tpl').html();
     var compiledTemplate = Template7.compile(template);
     var html = compiledTemplate(temp);
@@ -1289,7 +1309,7 @@ myApp.onPageInit('select', function(page) {
         temp.compete.id = id;
         app.getEvents(id, showEvents);
         $$(".comp-tab-wrapper a").removeClass("active");
-        $$("#comp-tab" + temp.compete.id).addClass("active");
+        $$("#comp-tab-" + temp.compete.id).addClass("active");
     });
 
 });
@@ -1306,7 +1326,7 @@ myApp.onPageInit('msg', function(page) {
     });
     temp.unread.ids = [];
     if (temp.compete.id) {
-        temp.competition.forEach(function(c) {
+        temp.competitions.forEach(function(c) {
             if (c.id == temp.compete.id) {
                 var contact = c.emc_contact;
                 $$("#contact p").html(contact);
@@ -1319,7 +1339,7 @@ myApp.onPageInit('player', function() {
     app.getTeams({
         "event_id": temp.event.id,
         "group": temp.event.group,
-        "schedule_id": temp.schedule_id
+        "schedule_id": temp.schedule_id,
     });
     $$(".wrapper－dropdown").on('click', function(event) {
         $$(this).toggleClass("active");
@@ -1329,13 +1349,25 @@ myApp.onPageInit('player', function() {
         var filter = $$(this).attr("name");
         $$(".wrapper－dropdown span").text($$(this).text());
         if (filter === "unfinished") {
-            $$("#playerTable .finished").css("display", "none");
-            $$("#playerTable .unfinished").css("display", null);
+            app.getTeams({
+                "event_id": temp.event.id,
+                "group": temp.event.group,
+                "schedule_id": temp.schedule_id,
+                "has_score": 0
+            });
         } else if (filter === "finished") {
-            $$("#playerTable .unfinished").css("display", "none");
-            $$("#playerTable .finished").css("display", null);
+            app.getTeams({
+                "event_id": temp.event.id,
+                "group": temp.event.group,
+                "schedule_id": temp.schedule_id,
+                "has_score": 1
+            });
         } else {
-            $$("#playerTable tr").css("display", null);
+            app.getTeams({
+                "event_id": temp.event.id,
+                "group": temp.event.group,
+                "schedule_id": temp.schedule_id
+            });
         }
     });
 });
@@ -1642,8 +1674,8 @@ myApp.onPageInit('stopWatch', function(page) {
                             document.getElementById('start').onclick = document.getElementById('reset').onclick = document.getElementById('record').onclick = null;
 
                             total = 0;
-                            for (var i = 0; i < elements.length; i++) {
-                                total = total + unformat(elements[i].value);
+                            for (var j = 0; j < elements.length; i++) {
+                                total = total + unformat(elements[j].value);
                             }
                             console.log(total);
                             document.querySelector('.final-score').value = formatTime(total);

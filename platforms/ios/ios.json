@@ -97,15 +97,15 @@
                             "count": 1
                         },
                         {
+                            "xml": "<feature name=\"HotCodePushLocalDevMode\"><param name=\"ios-package\" value=\"HCPLDPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<preference name=\"loadUrlTimeoutValue\" value=\"60000\" />",
                             "count": 1
                         },
                         {
                             "xml": "<feature name=\"HotCodePush\"><param name=\"ios-package\" value=\"HCPPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"HotCodePushLocalDevMode\"><param name=\"ios-package\" value=\"HCPLDPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         }
                     ],
@@ -227,10 +227,10 @@
         "cordova-plugin-compat": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-hot-code-push-plugin": {
+        "cordova-hot-code-push-local-dev-addon": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-hot-code-push-local-dev-addon": {
+        "cordova-hot-code-push-plugin": {
             "PACKAGE_NAME": "cn.robodou.competition"
         }
     },
@@ -702,19 +702,19 @@
             ]
         },
         {
-            "id": "cordova-hot-code-push-plugin.chcp",
-            "file": "plugins/cordova-hot-code-push-plugin/www/chcp.js",
-            "pluginId": "cordova-hot-code-push-plugin",
-            "clobbers": [
-                "chcp"
-            ]
-        },
-        {
             "id": "cordova-hot-code-push-local-dev-addon.chcpLocalDev",
             "file": "plugins/cordova-hot-code-push-local-dev-addon/www/chcpLocalDev.js",
             "pluginId": "cordova-hot-code-push-local-dev-addon",
             "clobbers": [
                 "chcpLocalDev"
+            ]
+        },
+        {
+            "id": "cordova-hot-code-push-plugin.chcp",
+            "file": "plugins/cordova-hot-code-push-plugin/www/chcp.js",
+            "pluginId": "cordova-hot-code-push-plugin",
+            "clobbers": [
+                "chcp"
             ]
         }
     ],
@@ -741,7 +741,7 @@
         "cordova-plugin-x-toast": "2.5.2",
         "phonegap-plugin-barcodescanner": "6.0.3",
         "cordova-plugin-compat": "1.1.0",
-        "cordova-hot-code-push-plugin": "1.5.2",
-        "cordova-hot-code-push-local-dev-addon": "0.4.2"
+        "cordova-hot-code-push-local-dev-addon": "0.4.2",
+        "cordova-hot-code-push-plugin": "1.5.2"
     }
 }

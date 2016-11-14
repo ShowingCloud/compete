@@ -75,12 +75,12 @@
   <feature name="BarcodeScanner">
     <param name="ios-package" value="CDVBarcodeScanner"/>
   </feature>
-  <feature name="HotCodePush">
-    <param name="ios-package" value="HCPPlugin"/>
-    <param name="onload" value="true"/>
-  </feature>
   <feature name="HotCodePushLocalDevMode">
     <param name="ios-package" value="HCPLDPlugin"/>
+    <param name="onload" value="true"/>
+  </feature>
+  <feature name="HotCodePush">
+    <param name="ios-package" value="HCPPlugin"/>
     <param name="onload" value="true"/>
   </feature>
   <feature name="BLE">
@@ -96,7 +96,7 @@
   <access origin="*"/>
   <allow-navigation href="*"/>
   <chcp>
-    <config-file url="http://localhost:31284/chcp.json"/>
+    <config-file url="https://82f24614.ngrok.io/chcp.json"/>
     <local-development enabled="true"/>
   </chcp>
   <preference name="AllowInlineMediaPlayback" value="false"/>

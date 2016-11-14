@@ -466,19 +466,19 @@ module.exports = [
         ]
     },
     {
-        "id": "cordova-hot-code-push-plugin.chcp",
-        "file": "plugins/cordova-hot-code-push-plugin/www/chcp.js",
-        "pluginId": "cordova-hot-code-push-plugin",
-        "clobbers": [
-            "chcp"
-        ]
-    },
-    {
         "id": "cordova-hot-code-push-local-dev-addon.chcpLocalDev",
         "file": "plugins/cordova-hot-code-push-local-dev-addon/www/chcpLocalDev.js",
         "pluginId": "cordova-hot-code-push-local-dev-addon",
         "clobbers": [
             "chcpLocalDev"
+        ]
+    },
+    {
+        "id": "cordova-hot-code-push-plugin.chcp",
+        "file": "plugins/cordova-hot-code-push-plugin/www/chcp.js",
+        "pluginId": "cordova-hot-code-push-plugin",
+        "clobbers": [
+            "chcp"
         ]
     }
 ];
@@ -507,8 +507,8 @@ module.exports.metadata =
     "cordova-plugin-x-toast": "2.5.2",
     "phonegap-plugin-barcodescanner": "6.0.3",
     "cordova-plugin-compat": "1.1.0",
-    "cordova-hot-code-push-plugin": "1.5.2",
-    "cordova-hot-code-push-local-dev-addon": "0.4.2"
+    "cordova-hot-code-push-local-dev-addon": "0.4.2",
+    "cordova-hot-code-push-plugin": "1.5.2"
 };
 // BOTTOM OF METADATA
 });

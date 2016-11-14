@@ -239,8 +239,6 @@ aside-linker {
 .competeTab1 a {
     height: 31px;
     display: inline-block;
-    /*    background: url(../images/cbg.png) no-repeat center;
-    */
     -webkit-background-size: cover;
     background-size: cover;
     text-align: center;
@@ -259,16 +257,20 @@ aside-linker {
 
 #judge-container {
     background: url(../images/login-border.png) no-repeat center;
-    -webkit-background-size: cover;
-    background-size: cover;
+    background-size: 100% 100%;
     padding: 20px;
     width: 80%;
     margin: 55px auto 0 auto;
     font-size: 1.2em;
-    height: 200px;
+
+}
+
+#judge-info {
+    height: 100px;
 }
 
 #judge-info ul {
+    height: 100px;
     width: 300px;
 }
 
@@ -281,6 +283,7 @@ aside-linker {
 }
 
 #login-container {
+    height: 150px;
     text-align: center;
     color: #f7f7f7;
 }
@@ -816,7 +819,6 @@ div.media-capture {
 .data-tabbar a {
     min-width: 100px;
     display: inline-block;
-    background: url(../images/cbg.png) no-repeat center;
     -webkit-background-size: cover;
     background-size: cover;
     text-align: center;
@@ -943,5 +945,5 @@ div.media-capture {
 }
 
 #schedule a.tab-link.active{
-  box-shadow: 0 0 6px #e4f1ff;
+  text-shadow: 0 0 30px #e4f1ff;
 }
