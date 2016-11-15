@@ -590,6 +590,7 @@ var app = {
                 function(value) {
                     console.log('Success, got ' + value);
                     uuid = value;
+                    $$("#deviceId").text(uuid);
                 },
                 function(error) {
                     console.log('Error ' + error);
@@ -597,6 +598,7 @@ var app = {
                         function(key) {
                             console.log('Set ' + key);
                             uuid = key;
+                            $$("#deviceId").text(uuid);
                         },
                         function(error) {
                             console.log('Error ' + error);
@@ -675,7 +677,12 @@ var app = {
             var _this = $$(this);
             var identifier = _this.data("identifier");
             var team_id = _this.data("id");
-            app.teamInfo(identifier, team_id);
+            if (_this.hasClass("unfinished")) {
+                app.teamInfo(identifier, team_id);
+            } else {
+                app.teamInfo(identifier, team_id);
+                // myApp.alert("请选择未完赛的队伍", "");
+            }
         });
 
         $$(document).on("click", ".data-tabs li", function() {
@@ -706,7 +713,7 @@ var app = {
     },
     showJudge: function(judge) {
         console.log(judge);
-        $$("#judgeId").text(judge.userId);
+        $$("#deviceId").text(uuid);
         $$("#judgeName").text(judge.nickname);
         $$("#login-container").hide();
         $$("#judge-info").show();
@@ -809,13 +816,18 @@ var app = {
         });
     },
     searchTeam: function(code) {
+        var has_team = false;
         teamList.forEach(function(team) {
             if (team.identifier === code) {
                 var tbody = $$("#playerTable tbody");
                 tbody.empty();
                 app.render_team(tbody, team);
+                has_team = true;
             }
         });
+        if (has_team === false) {
+            myApp.alert("没有这个队伍", "");
+        }
     },
     render_team: function(tbody, t) {
         var mobile = t.mobile || "无";
@@ -1460,6 +1472,7 @@ myApp.onPageInit('stopWatch', function(page) {
     if (scoreAttr) {
         console.log(scoreAttr);
         scoreAttr.forEach(function(sa, index) {
+            console.log(sa);
             switch (sa.score_type) {
                 case 3:
                     scoreFrom = 3;
@@ -1467,18 +1480,26 @@ myApp.onPageInit('stopWatch', function(page) {
                     break;
                 case 2:
                     scoreFrom = 2;
-                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="time-score score" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
+                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="time-score score form-control" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
                     break;
                 case 1:
                     scoreFrom = 1;
                     $$(".scrollable").css("height", "500px");
                     $$("#scoreHeader").hide();
-                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="score" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
+                    var div = $$('<div>' + sa.name + '：<input class="score" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
+                    $$("#team1 .scores").append(div);
+                    if (sa.value_type === "2") {
+                        div.find('input').addClass('js-time-picker');
+                    }
+
                     break;
                 case "b1":
                     $$("#team1 .scores").append('<div>' + sa.name + '：<input class="final-score score" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
                     break;
             }
+        });
+        new Picker(document.querySelector('.js-time-picker'), {
+            format: 'mm:ss',
         });
     }
 
