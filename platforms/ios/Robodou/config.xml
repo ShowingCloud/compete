@@ -96,7 +96,7 @@
   <access origin="*"/>
   <allow-navigation href="*"/>
   <chcp>
-    <config-file url="https://82f24614.ngrok.io/chcp.json"/>
+    <config-file url="https://035c4232.ngrok.io/chcp.json"/>
     <local-development enabled="true"/>
   </chcp>
   <preference name="AllowInlineMediaPlayback" value="false"/>

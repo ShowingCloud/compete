@@ -16,6 +16,10 @@
     "hash": "60ff942e8e5b15785dd0765e7ecddfb9"
   },
   {
+    "file": "css/picker.min.css",
+    "hash": "c0fcd6c0a4ef174d11fd8f172f6ccc73"
+  },
+  {
     "file": "data.html",
     "hash": "056e3fcaaf56cef80ec41df78bc982ad"
   },
@@ -97,7 +101,7 @@
   },
   {
     "file": "index.html",
-    "hash": "00d31d310c5c84122673e7381a76a2fe"
+    "hash": "e5ba13537a378798427e5b84e176b182"
   },
   {
     "file": "js/action_cable.js",
@@ -109,7 +113,11 @@
   },
   {
     "file": "js/my-app.js",
-    "hash": "44769e081158db3fd35224fd3d98da00"
+    "hash": "142389493f2a9566111bb6136c11e262"
+  },
+  {
+    "file": "js/picker.min.js",
+    "hash": "b2b093c5a360f0922002f834576234e7"
   },
   {
     "file": "js/pouchdb.cordova-sqlite.js",

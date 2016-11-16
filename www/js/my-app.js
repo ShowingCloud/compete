@@ -38,9 +38,13 @@ var remoteCouch = false;
 
 // apption for app
 var app_options = {
-    auth_host: "http://dev.account.domelab.com",
-    host: "http://dev.robodou.cn",
-    ws: "ws://dev.robodou.cn/cable"
+    // auth_host: "http://dev.account.domelab.com",
+    // host: "http://dev.robodou.cn",
+    // ws: "ws://dev.robodou.cn/cable"
+
+    auth_host: "https://account.domelab.com",
+    host: "http://www.robodou.cn",
+    ws: "wss://ws.robodou.cn/cable"
         // auth_host: "http://i.s1.com",
         // host: "http://www.c1.com",
         // ws: "ws://www.c1.com/cable"
@@ -677,11 +681,12 @@ var app = {
             var _this = $$(this);
             var identifier = _this.data("identifier");
             var team_id = _this.data("id");
+            temp.edit = null;
             if (_this.hasClass("unfinished")) {
                 app.teamInfo(identifier, team_id);
             } else {
-                app.teamInfo(identifier, team_id);
-                // myApp.alert("请选择未完赛的队伍", "");
+                // app.teamInfo(identifier, team_id);
+                myApp.alert("请选择未完赛的队伍", "");
             }
         });
 
@@ -1088,10 +1093,20 @@ var app = {
             var _this = $$(this);
             var value = _this.val();
             var name = _this.attr('name');
-            if (value) {
-                scoreData.score1[name] = value;
-                console.log(scoreData.score1[name]);
+            if (value && value !== "0分0秒0毫秒") {
+                if (_this.hasClass("time-picker")) {
+                    var m = value.slice(0, value.indexOf("分"));
+                    var s = value.slice(value.indexOf("分") + 1, value.indexOf("秒"));
+                    var S = value.slice(value.indexOf("秒") + 1, value.indexOf("毫秒"));
+                    scoreData.score1[name] = m * 60000 + s * 1000 + S;
+                } else {
+                    scoreData.score1[name] = value;
+                }
+
+            } else if (_this.prop('disabled')) {
+                scoreData.score1[name] = null;
             }
+            console.log(scoreData.score1[name]);
         });
 
         if (Object.keys(scoreData.score1).length < $$(".score").length) {
@@ -1261,7 +1276,7 @@ myApp.onPageInit('select', function(page) {
         events.forEach(function(g1, index1) {
             console.log(g1);
             g1.events.forEach(function(g2, index2) {
-                var groupId = g2.group;
+                var groupId = g1.id + "-" + g2.group;
                 var temp_group_id = temp.event.group;
                 var groupName = "group" + "-" + groupId;
                 var tabName = "tab" + "_" + groupId;
@@ -1269,14 +1284,14 @@ myApp.onPageInit('select', function(page) {
                 var tab = $$('<div class="tab" id="' + groupName + '"></div>');
                 $$("#eventsBoard .tabs").append(tab);
                 tab_link.appendTo("#groups");
-                if (!temp_group_id && index2 === 0) {
+                if (!temp_group_id && index1 === 0 && index2 === 0) {
                     tab.addClass("active");
                     tab_link.find("a").addClass("active");
                 }
                 if (g2.z_e) {
                     g2.z_e.forEach(function(ev) {
                         var div = $$('<div data-id="' + ev.id + '">' + ev.name + '</div>');
-                        if (event_id == ev.id && groupId == temp_group_id) {
+                        if (event_id == ev.id && g2.group == temp_group_id) {
                             div.addClass("selected");
                             tab.addClass("active");
                             tab_link.find("a").addClass("active");
@@ -1289,7 +1304,7 @@ myApp.onPageInit('select', function(page) {
                             var event = {
                                 id: $$(this).data("id"),
                                 name: $$(this).text(),
-                                group: groupId
+                                group: g2.group
                             };
 
                             temp.compete = compete;
@@ -1479,30 +1494,82 @@ myApp.onPageInit('stopWatch', function(page) {
                     $$("#team1 .scores").append('<div>' + sa.name + '：<input class="track-score score" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
                     break;
                 case 2:
-                    scoreFrom = 2;
-                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="time-score score form-control" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
+                    var formula_holder = $$("<div class='formula'></div>");
+                    formula_holder.data("formula", sa.formula);
+                    $$("#team1 .scores").append(formula_holder);
+                    // scoreFrom = 2;
+                    // $$("#team1 .scores").append('<div>' + sa.name + '：<input class="time-score score form-control" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
                     break;
-                case 1:
+                case 1: //手动计分
                     scoreFrom = 1;
                     $$(".scrollable").css("height", "500px");
                     $$("#scoreHeader").hide();
-                    var div = $$('<div>' + sa.name + '：<input class="score" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
-                    $$("#team1 .scores").append(div);
+                    var score_wrapper = $$('<div>' + sa.name + '：</div>');
+                    var score_input;
                     if (sa.value_type === "2") {
-                        div.find('input').addClass('js-time-picker');
+                        score_input = $$('<input value="0分0秒0毫秒" class="score time-picker" data-id=' + sa.id + ' name="' + sa.name + '">');
+                    } else if (sa.value_type === "1") {
+                        score_input = $$('<select class="score" data-id=' + sa.id + ' name="' + sa.name + '"></select>');
+                        for (var i = 0; i < 20; i++) {
+                            var option = document.createElement("option");
+                            option.value = i;
+                            option.text = i;
+                            score_input.append(option);
+                        }
+                    } else if (sa.value_type === "3") {
+                        score_input = $$('<input type="radio" class="score" data-id=' + sa.id + ' name="' + sa.name + '">');
                     }
 
+                    score_wrapper.append(score_input);
+                    $$("#team1 .scores").append(score_wrapper);
                     break;
                 case "b1":
                     $$("#team1 .scores").append('<div>' + sa.name + '：<input class="final-score score" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
                     break;
             }
         });
-        new Picker(document.querySelector('.js-time-picker'), {
-            format: 'mm:ss',
+        $$.each($$(".time-picker"), function(i, v) {
+            new Picker(v, {
+                format: 'm分s秒S毫秒',
+                text: {
+                    title: '请选择时间',
+                    cancel: '取消',
+                    confirm: '确认',
+                },
+                translate(type, text) {
+                    const suffixes = {
+                        second: '秒',
+                        minute: '分',
+                        millisecond: "毫秒"
+                    };
+
+                    return Number(text) + suffixes[type];
+                },
+            });
         });
     }
 
+    var lun1 = $$("*[name*='第一']");
+    $$('<div><button id="cancel1">第一轮成绩作废</button></div>').on('click', function() {
+        myApp.confirm("是否把第一轮成绩作废", "", function() {
+            $$.each(lun1, function(index, ele) {
+                $$(ele).val("").prop({
+                    disabled: true
+                });
+            });
+        });
+
+    }).insertAfter($$(lun1[lun1.length - 1]).parent());
+    var lun2 = $$("*[name*='第二']");
+    $$('<div><button id="cancel2">第二轮成绩作废</button></div>').on('click', function() {
+        myApp.confirm("是否把第二轮成绩作废", "", function() {
+            $$.each(lun2, function(index, ele) {
+                $$(ele).val("").prop({
+                    disabled: true
+                });
+            });
+        });
+    }).insertAfter($$(lun2[lun2.length - 1]).parent());
 
     if (temp.playerInfo) {
         $$(".playerInfo").append(temp.playerInfo);
@@ -1516,7 +1583,22 @@ myApp.onPageInit('stopWatch', function(page) {
     if (temp.edit) {
         console.log(temp.edit);
         $$.each(temp.edit.score1, function(key, value) {
-            $$("input[name='" + key + "']").val(value);
+            var input = $$("input[name='" + key + "']");
+            if (value === null) {
+                input.prop('disabled', true).val('');
+                $$("#cancel1, #cancel2").remove();
+            }
+            if (input.hasClass("time-picker")) {
+                var date = new Date(parseInt(value));
+                var str = '';
+                str += date.getUTCMinutes() + "分";
+                str += date.getUTCSeconds() + "秒";
+                str += date.getUTCMilliseconds() + "毫秒";
+                console.log(str);
+                input.val(str);
+            } else {
+                input.val(value);
+            }
         });
 
         $$("#submitScore").on("click", function() {
@@ -1526,8 +1608,18 @@ myApp.onPageInit('stopWatch', function(page) {
                 var value = _this.val();
                 var name = _this.attr('name');
                 if (value) {
-                    score[name] = value;
-                    console.log(value);
+                    if (_this.hasClass("time-picker")) {
+                        var m = value.slice(0, value.indexOf("分"));
+                        var s = value.slice(value.indexOf("分") + 1, value.indexOf("秒"));
+                        var S = value.slice(value.indexOf("秒") + 1, value.indexOf("毫秒"));
+                        score[name] = m * 60000 + s * 1000 + S;
+                    } else {
+                        score[name] = value;
+                        console.log(value);
+                    }
+
+                } else if (_this.prop('disabled')) {
+                    score[name] = null;
                 }
             });
             console.log(score);
