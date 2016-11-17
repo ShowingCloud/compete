@@ -1,0 +1,45 @@
+<div data-page="stopWatch" class="page" id="stopWatch-page">
+  <div class="page-content record-page">
+    <div id="scoreHeader"></div>
+    <div class="scoreBoard">
+      <div>
+        <img class="left-tag" src="images/playerInfo.png">
+        <div class="right-tag" src="images/finish.png" id="submitScore">
+          <span class="btn">完成</span>
+        </div>
+      </div>
+      <div class="scrollable">
+        <div id="teams">
+          <div id="team1" class="team">
+            <div class="playerInfo"></div>
+            <div class="scores"></div>
+            <div class="remarks">
+              <div>备注：
+                <input class="remarkInput">
+              </div>
+              <div class="media-capture">
+                <span id="takePhoto" class="text-button">拍照</span>
+                <span id="takeVideo" class="text-button">视频</span>
+              </div>
+              <div class="preview">
+                <div id="photos"></div>
+                <div id="video"></div>
+              </div>
+            </div>
+            <div class="canvasWrapper">
+              <div>签字确认：</div>
+              <canvas width="450" height="150" id="canvas"></canvas>
+              <div><span id="clearCanvas" class="text-button">清除</span></div>
+            </div>
+          </div>
+
+          <div id="team2" class="team">
+
+          </div>
+        </div>
+        <div class="space"></div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+
+<head>
+  <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: ws: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; connect-src ws://* wss://*  http://* https://* file://* ">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+  <link rel="stylesheet" href="css/framework7.ios.min.css">
+  <link rel="stylesheet" href="css/framework7.ios.colors.min.css">
+  <link rel="stylesheet" href="css/animate.min.css">
+  <link rel="stylesheet" href="css/picker.min.css">
+  <link rel="stylesheet" href="css/my-app.css">
+  <script id="processTemp" type="text/template7">
+    <div class="row competeTab1">
+      {{#each competitions}}
+      <div class="col-auto">
+        <a href="#processTab{{id}}" data-id="{{id}}" class="tab-link"><span class="my-label">{{name}}<span></a>
+      </div>
+      {{/each}}
+    </div>
+    <p class="process-header">比赛流程：</p>
+    <div class="tabs process">
+      {{#each competitions}}
+      <div class="tab {{#unless @index}}active{{/unless}}" id="processTab{{id}}">
+        {{build_schedule competition_schedules}}
+      </div>
+      {{/each}}
+    </div>
+  </script>
+
+  <script id="compete-select-tpl" type="text/template7">
+    {{#each competitions}}
+    <div class="col-auto comp-tab-wrapper">
+      <a id="comp-tab-{{id}}" href="#compete{{id}}" class="tab-link" data-id="{{id}}"><span>{{name}}</span><p></p></a>
+    </div>
+    {{/each}}
+  </script>
+
+  <script id="roundTpl" type="text/template7">
+    <div data-page="round" class="page">
+      <div class="page-content">
+        <div class="round-container">
+          <p class="round-title">请选择比赛阶段</p>
+          {{#each group_schedules}}
+          <div class="round-wrapper" data-schedule_name="{{schedule_name}}" data-schedule_id="{{schedule_id}}">
+            <h2>{{schedule_name}}</h2>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </script>
+  <script id="multi-players-tpl" type="text/template7">
+    <div class="swiper-container">
+      {{#each players}}
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <p>姓名：{{username}}</p>
+          <p>参赛编号：{{@root.identifier}}</p>
+          <p>性别：{{#js_compare "this.gender === 1"}}男{{else}}女{{/js_compare}} </p>
+          <p>学校：{{@root.school_name}}</p>
+          <p class="play-event">参赛项目：{{@root.event_name}} {{@root.comp_name}}</p>
+        </div>
+      </div>
+      {{/each}}
+      <div class="swiper-pagination"></div>
+    </div>
+  </script>
+
+  <script id="one-player-tpl" type="text/template7">
+    {{#each players}}
+    <p>姓名：{{username}}</p>
+    <p>参赛编号：{{@root.identifier}}</p>
+    <p>性别：{{#js_compare "this.gender === 1"}}男{{else}}女{{/js_compare}} </p>
+    <p>学校：{{@root.school_name}}</p>
+    <p class="play-event">参赛项目：{{@root.event_name}} {{@root.comp_name}}</p>
+    {{/each}}
+  </script>
+
+  <script id="data-item-tpl" type="text/template7">
+    <li data-id="{{_id}}">
+      <div class="number-plate">
+        <img src="images/tiaowen.png">
+        <div class="number">{{index}}</div>
+      </div>
+      <div class="player-score">
+        <table>
+          <tr>
+            <td>{{team.identifier}}</td>
+          </tr>
+          <tr>
+            <td>{{compete.name}}</td>
+            <td>{{event.name}}</td>
+          </tr>
+        </table>
+        <!-- <span>成绩1 {{score1.score1}}</span>
+        <span>成绩2 {{score1.score2}}</span> -->
+      </div>
+      <div class="rightCornor">
+        <p>{{date}}</p>
+        {{#if upload}}
+        <p>已上传</p>
+        {{else}}
+        <p class="red-color">未上传</p>
+        {{/if}}
+      </div>
+    </li>
+  </script>
+
+  <title>Robodou Compete</title>
+</head>
+
+<body>
+  <div class="statusbar-overlay"></div>
+  <div class="views">
+    <div class="view view-main">
+
+      <div class="asideBar" id="asideBar">
+
+        <a data-href="index.html" data-view=".view-main">
+          <div id="judge" class="big-icon">
+            <span>裁判</span>
+          </div>
+        </a>
+
+        <a data-href="select.html" data-view=".view-main">
+          <div id="score" class="big-icon">
+            <span>计分</span>
+          </div>
+        </a>
+        <a data-href="data.html" data-view=".view-main">
+          <div id="data" class="big-icon">
+            <span>数据</span>
+          </div>
+        </a>
+        <a data-href="msg.html" data-view=".view-main">
+          <div id="msg" class="big-icon">
+            <span>消息</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="pages">
+        <!-- Page, data-page contains page name-->
+        <div data-page="home" class="page" id="home-page">
+          <!-- Scrollable page content-->
+          <div class="page-content">
+
+            <div id="judge-container">
+
+              <div id="login-container">
+                <div class="input-wrapper">
+                  <label for="username">用户名</label>
+                  <input type="text" id="username" name="username">
+                </div>
+                <div class="input-wrapper">
+                  <label for="password">密码</label>
+                  <input type="password" id="password" name="password">
+                </div>
+                <div id="login-btn">
+                  <span class="btn">登录</span>
+                </div>
+              </div>
+              <div id="judge-info" class="hidden">
+                <ul class="inline-block">
+                  <li>设备号：<span id="deviceId"></span></li>
+                  <li>姓名：<span id="judgeName"></span></li>
+                </ul>
+                <div class="inline-block" id="logout-btn">
+                  <span class="btn">退出</span>
+                </div>
+              </div>
+            </div>
+            <div id="schedule"></div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="cordova.js "></script>
+  <script type="text/javascript" src="js/framework7.min.js "></script>
+  <script type="text/javascript" src="js/pouchdb.min.js "></script>
+  <script type="text/javascript" src="js/action_cable.js"></script>
+  <script src="js/pouchdb.cordova-sqlite.js"></script>
+  <script src="js/picker.min.js"></script>
+  <script type="text/javascript" src="js/my-app.js "></script>
+</body>
+
+</html>

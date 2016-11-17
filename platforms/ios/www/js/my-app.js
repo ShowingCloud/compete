@@ -31,6 +31,12 @@ document.addEventListener('deviceready', function() {
     });
 });
 
+
+//watch screen orientation
+window.addEventListener("orientationchange", function() {
+    console.log(screen.orientation); // e.g. portrait
+});
+
 var teamList;
 
 //Not use remote PouchDb server
@@ -62,7 +68,7 @@ function animateCss(selector, animationName) {
 function date_format(date_str) {
     if (typeof date_str === 'string') {
         var date = new Date(date_str);
-        return date.toISOString().slice(-13, -8);
+        return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(-13, -8);
     } else {
         return false;
     }
@@ -512,6 +518,7 @@ var app = {
                         app.showJudge(judgeInfo);
                         app.onLogin(judgeInfo.authToken);
                         ref.close();
+                        myApp.hidePreloader();
                     }
                 }
             });
@@ -534,12 +541,14 @@ var app = {
                                 }, function(values) {
                                     console.log(values);
                                 });
+                                myApp.showPreloader('正在验证身份。。。');
                             } else {
                                 myApp.alert("请输入用户名和密码", "");
                             }
                         });
                     } else {
                         myApp.alert("错误，请重新登录", "");
+                        myApp.hidePreloader();
                     }
                 }
 
@@ -573,9 +582,9 @@ var app = {
                 }
                 if (status === 500) {
                     window.plugins.toast.showShortCenter("请求超时，请稍候重试");
-                    myApp.hideIndicator();
-                    myApp.hidePreloader();
                 }
+                myApp.hideIndicator();
+                myApp.hidePreloader();
             }
         });
 
@@ -632,8 +641,8 @@ var app = {
             judgeInfo = {};
             temp = {};
             localStorage.removeItem("judgeInfo");
-            if (myApp.cable.subscriptions['subscriptions'].length > 1) {
-                myApp.cable.subscriptions.remove(myApp.cable.subscriptions['subscriptions'][0]);
+            if (myApp.cable.subscriptions.subscriptions.length > 1) {
+                myApp.cable.subscriptions.remove(myApp.cable.subscriptions.subscriptions[0]);
             }
             $$.ajaxSetup({
                 headers: {}
@@ -724,10 +733,12 @@ var app = {
         $$("#judge-info").show();
     },
     getProcess: function() {
+        myApp.showIndicator();
         $$.ajax({
             method: "GET",
             url: app_options.host + "/api/v1/competitions",
             success: function(response) {
+                myApp.hideIndicator();
                 var competitions = JSON.parse(response);
                 console.log(competitions);
                 var process = {
@@ -738,6 +749,9 @@ var app = {
                 var compiledTemp = Template7.compile(processTemp);
                 var html = compiledTemp(process);
                 $$("#schedule").html(html);
+                if (temp.compete.id) {
+                    $$(".competeTab1 .tab-link[data-id='" + temp.compete.id + "']").trigger("click");
+                }
             }
         });
     },
@@ -803,10 +817,12 @@ var app = {
         });
     },
     getTeams: function(params) {
+        myApp.showIndicator();
         $$.ajax({
             url: app_options.host + "/api/v1/events/group_teams",
             data: params,
             success: function(response) {
+                myApp.hideIndicator();
                 var teams = JSON.parse(response);
                 console.log(teams);
                 var tbody = $$("#playerTable tbody");
@@ -1510,7 +1526,7 @@ myApp.onPageInit('stopWatch', function(page) {
                         score_input = $$('<input value="0分0秒0毫秒" class="score time-picker" data-id=' + sa.id + ' name="' + sa.name + '">');
                     } else if (sa.value_type === "1") {
                         score_input = $$('<select class="score" data-id=' + sa.id + ' name="' + sa.name + '"></select>');
-                        for (var i = 0; i < 20; i++) {
+                        for (var i = 0; i <= 100; i++) {
                             var option = document.createElement("option");
                             option.value = i;
                             option.text = i;
@@ -1535,6 +1551,9 @@ myApp.onPageInit('stopWatch', function(page) {
                     title: '请选择时间',
                     cancel: '取消',
                     confirm: '确认',
+                },
+                increment: {
+                    millisecond: 100
                 },
                 translate(type, text) {
                     const suffixes = {
