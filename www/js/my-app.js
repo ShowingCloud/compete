@@ -1500,10 +1500,18 @@ myApp.onPageInit('stopWatch', function(page) {
     console.log(page);
     var scoreFrom;
     var drawed = 0;
+    var rounds = 1;
+    var score_board = $$("<div></div>");
     if (scoreAttr) {
         console.log(scoreAttr);
         scoreAttr.forEach(function(sa, index) {
-            console.log(sa);
+            if (sa.name === "最终成绩") {
+                var formula = sa.formula;
+                if (formula.rounds) {
+                    rounds = formula.rounds;
+                }
+                return
+            }
             switch (sa.score_type) {
                 case 3:
                     scoreFrom = 3;
@@ -1533,11 +1541,11 @@ myApp.onPageInit('stopWatch', function(page) {
                             score_input.append(option);
                         }
                     } else if (sa.value_type === "3") {
-                        score_input = $$('<input type="radio" class="score" data-id=' + sa.id + ' name="' + sa.name + '">');
+                        score_input = $$('<input type="radio" class="score" value="0" data-id=' + sa.id + ' name="' + sa.name + '">是<input type="radio" class="score" value="1" data-id=' + sa.id + ' name="' + sa.name + '">否');
                     }
 
                     score_wrapper.append(score_input);
-                    $$("#team1 .scores").append(score_wrapper);
+                    score_board.append(score_wrapper);
                     break;
                 case "b1":
                     $$("#team1 .scores").append('<div>' + sa.name + '：<input class="final-score score" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
@@ -1568,27 +1576,52 @@ myApp.onPageInit('stopWatch', function(page) {
         });
     }
 
-    var lun1 = $$("*[name*='第一']");
-    $$('<div><button id="cancel1">第一轮成绩作废</button></div>').on('click', function() {
-        myApp.confirm("是否把第一轮成绩作废", "", function() {
-            $$.each(lun1, function(index, ele) {
-                $$(ele).val("").prop({
-                    disabled: true
-                });
-            });
-        });
+    var score_tab_links = $$('<div class="row score-tab-links"></div>');
+    var score_tabs = $$('<div class="tabs score-tabs"></div>');
 
-    }).insertAfter($$(lun1[lun1.length - 1]).parent());
-    var lun2 = $$("*[name*='第二']");
-    $$('<div><button id="cancel2">第二轮成绩作废</button></div>').on('click', function() {
-        myApp.confirm("是否把第二轮成绩作废", "", function() {
-            $$.each(lun2, function(index, ele) {
-                $$(ele).val("").prop({
-                    disabled: true
+    for (var i = 0; i < rounds; i++) {
+        var translate = ["一", "二", "三", "四", "五", "六"];
+        var tab_link = $$('<div class="col-auto">' +
+            '<a href="#round' + (i + 1) + '" class="tab-link"><span>第' + translate[i] + '轮</span></a>' +
+            '</div>');
+        var score_board_clone = $$(score_board[0].cloneNode(true));
+        console.log(score_board);
+        console.log(score_board_clone);
+        score_tab_links.append(tab_link);
+        var score_tab = $$('<div class="tab" id="round' + (i + 1) + '"></div>');
+
+        score_tab.append(score_board_clone);
+        var scores = score_board_clone.find('.score');
+        $$('<div><button id="cancel1">第' + translate[i] + '轮成绩作废</button></div>').on('click', function() {
+            myApp.confirm("是否把第" + translate[i] + "轮成绩作废", "", function() {
+                $$.each(scores, function(index, ele) {
+                    $$(ele).val("").prop({
+                        disabled: true
+                    });
                 });
             });
-        });
-    }).insertAfter($$(lun2[lun2.length - 1]).parent());
+
+        }).appendTo(score_tab);
+        score_tabs.append(score_tab);
+        if (i === 0) {
+            tab_link.find('tab_link').addClass("active");
+            score_tab.addClass("active");
+        }
+    }
+    $$("#team1 .scores").append(score_tab_links).append(score_tabs);
+
+    // var lun1 = $$("");
+    // $$('<div><button id="cancel1">第一轮成绩作废</button></div>').on('click', function() {
+    //     myApp.confirm("是否把第一轮成绩作废", "", function() {
+    //         $$.each(lun1, function(index, ele) {
+    //             $$(ele).val("").prop({
+    //                 disabled: true
+    //             });
+    //         });
+    //     });
+    //
+    // }).insertAfter($$(lun1[lun1.length - 1]).parent());
+
 
     if (temp.playerInfo) {
         $$(".playerInfo").append(temp.playerInfo);

@@ -66,7 +66,7 @@ input {
 
 body {
     color: #f7f7f7;
-    font-family: 'Adobe Heiti Std';
+    font-family: sans-serif;
     background: url(../images/background.png) no-repeat center;
     -webkit-background-size: cover;
     background-size: cover;
@@ -946,5 +946,6 @@ div.media-capture {
 }
 
 #schedule a.tab-link.active{
-  text-shadow: 0 0 30px #e4f1ff;
+  text-shadow: 0 0 10px #e4f1ff;
+  font-weight: bold;
 }
