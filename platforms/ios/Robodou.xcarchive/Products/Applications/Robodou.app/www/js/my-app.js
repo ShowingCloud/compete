@@ -44,53 +44,22 @@ var remoteCouch = false;
 
 // apption for app
 var app_options = {
-    // auth_host: "http://dev.account.domelab.com",
-    // host: "http://dev.robodou.cn",
-    // ws: "ws://dev.robodou.cn/cable"
+    auth_host: "http://dev.account.domelab.com",
+    host: "http://dev.robodou.cn",
+    ws: "ws://dev.robodou.cn/cable"
 
-    auth_host: "https://account.domelab.com",
-    host: "http://www.robodou.cn",
-    ws: "wss://ws.robodou.cn/cable"
-        // auth_host: "http://i.s1.com",
-        // host: "http://www.c1.com",
-        // ws: "ws://www.c1.com/cable"
+    // auth_host: "https://account.domelab.com",
+    // host: "http://www.robodou.cn",
+    // ws: "wss://ws.robodou.cn/cable"
+    // auth_host: "http://192.168.1.115:3000",
+    // host: "http://192.168.1.115:3002",
+    // ws: "ws://192.168.1.115:3002/cable"
+    // auth_host: "http://i.s1.com",
+    // host: "http://www.c1.com",
+    // ws: "ws://www.c1.com/cable"
 };
 
 var scoreAttr = [];
-
-function clone(obj) {
-    var copy;
-
-    // Handle the 3 simple types, and null or undefined
-    if (null == obj || "object" != typeof obj) return obj;
-
-    // Handle Date
-    if (obj instanceof Date) {
-        copy = new Date();
-        copy.setTime(obj.getTime());
-        return copy;
-    }
-
-    // Handle Array
-    if (obj instanceof Array) {
-        copy = [];
-        for (var i = 0, len = obj.length; i < len; i++) {
-            copy[i] = clone(obj[i]);
-        }
-        return copy;
-    }
-
-    // Handle Object
-    if (obj instanceof Object) {
-        copy = {};
-        for (var attr in obj) {
-            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
-        }
-        return copy;
-    }
-
-    throw new Error("Unable to copy obj! Its type isn't supported.");
-}
 
 function animateCss(selector, animationName) {
     var target = $$(selector);
@@ -236,7 +205,10 @@ var track = {
             }
 
         }
-        var h = m = s = ms = 0;
+        var h = 0;
+        var m = 0;
+        var s = 0;
+        var ms = 0;
         var newTime = '';
         time = time % (60 * 60 * 1000);
         m = Math.floor(time / (60 * 1000));
@@ -744,6 +716,10 @@ var app = {
             }
         });
 
+        $$(document).on('change', '.score', function() {
+            $$(this).data('edited', true);
+        });
+
         myApp.onPageBeforeInit('home select data msg player round stopWatch upload', function(page) {
             animateCss('#' + page.name + '-page', 'fadeIn');
         });
@@ -1061,6 +1037,45 @@ var app = {
             duration: 300
         });
     },
+
+    collect_score: function() {
+        var score1 = {};
+        $$("#stopWatch-page .score-tabs .tab").each(function(round_index, score_tab) {
+            var this_tab = $$(score_tab);
+            var valid = this_tab.data('valid');
+            var this_scores = {
+                'valid': valid
+            };
+            this_tab.find(".score").each(function(i, obj) {
+                var _this = $$(this);
+                var value = _this.val();
+                var name = _this.data('name');
+                var id = _this.data('id');
+                var score;
+
+                if (value) {
+                    if (_this.hasClass("time-picker")) {
+                        var m = value.slice(0, value.indexOf("分"));
+                        var s = value.slice(value.indexOf("分") + 1, value.indexOf("秒"));
+                        var S = value.slice(value.indexOf("秒") + 1, value.indexOf("毫秒"));
+                        score = m * 60000 + s * 1000 + S;
+                    } else {
+                        score = value;
+                    }
+
+                } else if (_this.prop('disabled')) {
+                    score = null;
+                }
+                this_scores[id] = {
+                    'val': score,
+                    'name': name
+                };
+            });
+            score1[round_index] = this_scores
+            console.log(score1);
+            return score1;
+        });
+    },
     submitScore: function(drawed) {
         function saveScore() {
             scoreDB.put(scoreData).then(function(response) {
@@ -1133,36 +1148,52 @@ var app = {
         }
         var scoreData = {
             _attachments: {},
-            score1: {},
+            score1: [],
             score2: {},
+            formula: {},
             scoreAttr: scoreAttr
         };
         var remark;
         //Get score1
-        $$(".score").each(function(i, obj) {
-            var _this = $$(this);
-            var value = _this.val();
-            var name = _this.attr('name');
-            if (value && value !== "0分0秒0毫秒") {
-                if (_this.hasClass("time-picker")) {
-                    var m = value.slice(0, value.indexOf("分"));
-                    var s = value.slice(value.indexOf("分") + 1, value.indexOf("秒"));
-                    var S = value.slice(value.indexOf("秒") + 1, value.indexOf("毫秒"));
-                    scoreData.score1[name] = m * 60000 + s * 1000 + S;
-                } else {
-                    scoreData.score1[name] = value;
+        $$("#stopWatch-page .score-tabs .tab").each(function(round_index, score_tab) {
+            var this_tab = $$(score_tab);
+            var valid = this_tab.data('valid');
+            var this_scores = {
+                'valid': valid
+            };
+            this_tab.find(".score").each(function(i, obj) {
+                var _this = $$(this);
+                var value = _this.val();
+                var name = _this.data('name');
+                var id = _this.data('id');
+                var score;
+
+                if (value) {
+                    if (_this.hasClass("time-picker")) {
+                        var m = value.slice(0, value.indexOf("分"));
+                        var s = value.slice(value.indexOf("分") + 1, value.indexOf("秒"));
+                        var S = value.slice(value.indexOf("秒") + 1, value.indexOf("毫秒"));
+                        score = m * 60000 + s * 1000 + S;
+                    } else {
+                        score = value;
+                    }
+
+                } else if (_this.prop('disabled')) {
+                    score = null;
                 }
-
-            } else if (_this.prop('disabled')) {
-                scoreData.score1[name] = null;
-            }
-            console.log(scoreData.score1[name]);
+                this_scores[id] = {
+                    'val': score,
+                    'name': name
+                };
+            });
+            scoreData.score1[round_index] = this_scores;
         });
+        scoreData.formula = $$('.formula').data('formula');
 
-        if (Object.keys(scoreData.score1).length < $$(".score").length) {
-            myApp.alert("分数未填写完整", "");
-            return;
-        }
+        // if (Object.keys(scoreData.score1).length < $$(".score").length) {
+        //     myApp.alert("分数未填写完整", "");
+        //     return;
+        // }
 
         if (!drawed) {
             myApp.alert("请让参赛者签名", "");
@@ -1232,6 +1263,8 @@ var app = {
             binary: true
         }).then(function(doc) {
             console.log(doc);
+            var formula = JSON.stringify(doc.formula);
+            var score_attribute = JSON.stringify(doc.score1);
             var toPost = {
                 event_id: doc.event.id,
                 schedule_name: doc.schedule_name,
@@ -1239,29 +1272,30 @@ var app = {
                 kind: doc.kind,
                 th: doc.th,
                 team1_id: doc.team.id,
-                score_attribute: doc.score1,
-                last_score: "1",
+                score_attribute: score_attribute,
+                formula: formula,
                 note: doc.remark || "",
                 confirm_sign: doc._attachments.signature.data,
                 operator_id: doc.judgeid,
                 device_no: device.uuid
             };
-            console.log(toPost);
+            console.log(JSON.stringify(toPost));
             var form_data = new FormData();
 
             for (var key in toPost) {
-                if (key === "score_attribute") {
-                    for (var key1 in toPost.score_attribute) {
-                        form_data.append("score_attribute" + "[" + key1 + "]", toPost[key][key1]);
-                    }
-                } else if (key === "confirm_sign") {
+                // if ($$.isArray(key)) {
+                //     for (var key1 in toPost[key]) {
+                //
+                //         form_data.append(key + "[]" + "[" + key1 + "]", toPost[key][key1]);
+                //     }
+                // } else
+                if (key === "confirm_sign") {
                     form_data.append(key, toPost[key], "signature.jpg");
                 } else {
                     form_data.append(key, toPost[key]);
                 }
 
             }
-
             $$.ajax({
                 method: "POST",
                 url: app_options.host + "/api/v1/scores/upload_scores",
@@ -1293,6 +1327,9 @@ var app = {
                     }
                 }
             });
+
+            // var data = Object.toFormData(toPost);
+            // console.log(data);
 
         }).catch(function(err) {
             console.log(err);
@@ -1541,15 +1578,18 @@ myApp.onPageInit('stopWatch', function(page) {
         scoreAttr.forEach(function(sa, index) {
             if (sa.name === "最终成绩") {
                 var formula = sa.formula;
+                var formula_holder = $$("<div class='formula'></div>");
+                formula_holder.data("formula", formula);
+                $$("#team1 .scores").append(formula_holder);
                 if (formula.rounds) {
                     rounds = formula.rounds;
                 }
-                return
+                return;
             }
             switch (sa.score_type) {
                 case 3:
                     scoreFrom = 3;
-                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="track-score score" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
+                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="track-score score" data-id=' + sa.id + ' data-name="score' + (index + 1) + '"></div>');
                     break;
                 case 2:
                     var formula_holder = $$("<div class='formula'></div>");
@@ -1565,9 +1605,9 @@ myApp.onPageInit('stopWatch', function(page) {
                     var score_wrapper = $$('<div>' + sa.name + '：</div>');
                     var score_input;
                     if (sa.value_type === "2") {
-                        score_input = $$('<input value="0分0秒0毫秒" class="score time-picker" data-id=' + sa.id + ' name="' + sa.name + '">');
+                        score_input = $$('<input class="score time-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
                     } else if (sa.value_type === "1") {
-                        score_input = $$('<select class="score" data-id=' + sa.id + ' name="' + sa.name + '"></select>');
+                        score_input = $$('<select class="score" data-id=' + sa.id + ' data-name="' + sa.name + '"><option value="" selected>请选择</option></select>');
                         for (var i = 0; i <= 100; i++) {
                             var option = document.createElement("option");
                             option.value = i;
@@ -1575,86 +1615,86 @@ myApp.onPageInit('stopWatch', function(page) {
                             score_input.append(option);
                         }
                     } else if (sa.value_type === "3") {
-                        score_input = $$('<input type="radio" class="score" value="0" data-id=' + sa.id + ' name="' + sa.name + '">是<input type="radio" class="score" value="1" data-id=' + sa.id + ' name="' + sa.name + '">否');
+                        score_input = $$('<input type="radio" class="score" value="0" data-id=' + sa.id + ' data-name="' + sa.name + '">是<input type="radio" class="score" value="1" data-id=' + sa.id + ' data-name="' + sa.name + '">否');
                     }
 
                     score_wrapper.append(score_input);
                     score_board.append(score_wrapper);
                     break;
                 case "b1":
-                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="final-score score" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
+                    $$("#team1 .scores").append('<div>' + sa.name + '：<input class="final-score score" data-id=' + sa.id + ' data-name="score' + (index + 1) + '"></div>');
                     break;
             }
         });
-        $$.each($$(".time-picker"), function(i, v) {
-            new Picker(v, {
-                format: 'm分s秒S毫秒',
-                text: {
-                    title: '请选择时间',
-                    cancel: '取消',
-                    confirm: '确认',
-                },
-                increment: {
-                    millisecond: 100
-                },
-                translate(type, text) {
-                    const suffixes = {
-                        second: '秒',
-                        minute: '分',
-                        millisecond: "毫秒"
-                    };
 
-                    return Number(text) + suffixes[type];
-                },
-            });
-        });
     }
 
     var score_tab_links = $$('<div class="row score-tab-links"></div>');
     var score_tabs = $$('<div class="tabs score-tabs"></div>');
+    var translate = ["一", "二", "三", "四", "五", "六"];
 
-    for (var i = 0; i < rounds; i++) {
-        var translate = ["一", "二", "三", "四", "五", "六"];
+    for (var i = 1; i <= rounds; i++) {
+        var lun = '第' + translate[i - 1] + '轮';
         var tab_link = $$('<div class="col-auto">' +
-            '<a href="#round' + (i + 1) + '" class="tab-link"><span>第' + translate[i] + '轮</span></a>' +
+            '<a href="#round' + i + '" class="tab-link"><span>' + lun + '</span></a>' +
             '</div>');
-        var score_board_clone = $$(Object.assign({}, score_board)[0]);
-        console.log(score_board);
-        console.log(score_board_clone);
+        var score_board_clone = $$(score_board[0].cloneNode(true));
         score_tab_links.append(tab_link);
-        var score_tab = $$('<div class="tab" id="round' + (i + 1) + '"></div>');
+        var score_tab = $$('<div class="tab" id="round' + i + '"></div>');
 
-        score_tab.append(score_board_clone);
-        var scores = score_board_clone.find('.score');
-        $$('<div><button id="cancel1">第' + translate[i] + '轮成绩作废</button></div>').on('click', function() {
-            myApp.confirm("是否把第" + translate[i] + "轮成绩作废", "", function() {
-                $$.each(scores, function(index, ele) {
-                    $$(ele).val("").prop({
-                        disabled: true
-                    });
-                });
-            });
-
-        }).appendTo(score_tab);
+        score_tab.append(score_board_clone).data('valid', true);
+        $$('<div><button class="cancel-round" data-round="' + i + '">' + lun + '成绩作废</button></div>').appendTo(score_tab);
         score_tabs.append(score_tab);
-        if (i === 0) {
+        if (i === 1) {
             tab_link.find('tab_link').addClass("active");
             score_tab.addClass("active");
         }
     }
     $$("#team1 .scores").append(score_tab_links).append(score_tabs);
 
-    // var lun1 = $$("");
-    // $$('<div><button id="cancel1">第一轮成绩作废</button></div>').on('click', function() {
-    //     myApp.confirm("是否把第一轮成绩作废", "", function() {
-    //         $$.each(lun1, function(index, ele) {
-    //             $$(ele).val("").prop({
-    //                 disabled: true
-    //             });
-    //         });
-    //     });
-    //
-    // }).insertAfter($$(lun1[lun1.length - 1]).parent());
+    $$(".cancel-round").click(function() {
+        var round = $$(this).data('round');
+        var selector = "#round" + round + " .score";
+        var scores = $$(selector);
+        myApp.confirm("是否把第" + translate[parseInt(round) - 1] + "轮成绩作废", "", function() {
+            $$("#round" + round).data('valid', false);
+            $$.each(scores, function(index, ele) {
+                $$(ele).val("").prop({
+                    disabled: true
+                });
+            });
+        });
+    });
+
+    $$.each($$(".time-picker"), function(i, v) {
+        new Picker(v, {
+            date: "0分0秒0毫秒",
+            format: 'm分s秒S毫秒',
+            text: {
+                title: '请选择时间',
+                cancel: '取消',
+                confirm: '确认',
+            },
+            increment: {
+                millisecond: 100
+            },
+            translate(type, text) {
+                const suffixes = {
+                    second: '秒',
+                    minute: '分',
+                    millisecond: "毫秒"
+                };
+
+                return Number(text) + suffixes[type];
+            },
+        });
+    });
+
+    $$.each($$(".scores input[type=radio]"), function(i, v) {
+        var _this = $$(v);
+        var round_id = _this.parents(".tab").data('round');
+        _this.name = _this.data('name') + round_id;
+    });
 
 
     if (temp.playerInfo) {
@@ -1668,23 +1708,32 @@ myApp.onPageInit('stopWatch', function(page) {
 
     if (temp.edit) {
         console.log(temp.edit);
-        $$.each(temp.edit.score1, function(key, value) {
-            var input = $$("input[name='" + key + "']");
-            if (value === null) {
-                input.prop('disabled', true).val('');
-                $$("#cancel1, #cancel2").remove();
-            }
-            if (input.hasClass("time-picker")) {
-                var date = new Date(parseInt(value));
-                var str = '';
-                str += date.getUTCMinutes() + "分";
-                str += date.getUTCSeconds() + "秒";
-                str += date.getUTCMilliseconds() + "毫秒";
-                console.log(str);
-                input.val(str);
-            } else {
-                input.val(value);
-            }
+        $$.each(temp.edit.score1, function(index1, value1) {
+
+            var tab = $$("#round" + index1);
+            $$.each(value1, function(key, value2) {
+
+                if (key === 'valid') {
+                    tab.data('valid', value2);
+                } else {
+                    var input = $$("input[data-id='" + key + "']");
+                    if (value2.val === null) {
+                        input.prop('disabled', true).val('');
+                        $$("#cancel1, #cancel2").remove();
+                    }
+                    if (input.hasClass("time-picker")) {
+                        var date = new Date(parseInt(value2.val));
+                        var str = '';
+                        str += date.getUTCMinutes() + "分";
+                        str += date.getUTCSeconds() + "秒";
+                        str += date.getUTCMilliseconds() + "毫秒";
+                        input.val(str);
+                    } else {
+                        input.val(value2.val);
+                    }
+                }
+            });
+
         });
 
         $$("#submitScore").on("click", function() {
@@ -1812,7 +1861,10 @@ myApp.onPageInit('stopWatch', function(page) {
             }
 
             function formatTime(time) {
-                var h = m = s = ms = 0;
+                var h = 0;
+                var m = 0;
+                var s = 0;
+                var ms = 0;
                 var newTime = '';
 
                 time = time % (60 * 60 * 1000);

@@ -945,7 +945,7 @@ div.media-capture {
     border-radius: 50%;
 }
 
-#schedule a.tab-link.active{
+#schedule a.tab-link.active, .score-tab-links .active{
   text-shadow: 0 0 10px #e4f1ff;
   font-weight: bold;
 }
