@@ -210,7 +210,7 @@
 		</data>
 		<key>CDVLaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib</key>
 		<data>
-		Zh2j6JTyyGnBlle/CkUhZm8RNJ4=
+		mlZffzZe1r07UqLK4h6v2MQSVuI=
 		</data>
 		<key>CDVLaunchScreen.storyboardc/Info.plist</key>
 		<data>
@@ -218,7 +218,7 @@
 		</data>
 		<key>CDVLaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib</key>
 		<data>
-		aqRJTDDgM+XbYDr8hEAlkWAJVNQ=
+		06WhMPeLqHKwxShOHrPO2RF5FcI=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -282,7 +282,7 @@
 		</data>
 		<key>MainViewController.nib</key>
 		<data>
-		w+UffQgxi5cmeowZ0aWt9gJYFYE=
+		6TggLYL91BenLk4ZmbxZCXPt6iI=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -311,7 +311,7 @@
 		</data>
 		<key>scannerOverlay.nib</key>
 		<data>
-		QINGxVmC+LOo0iQsF5YzW1vyoCg=
+		lGNSKMuyojiPHnXtlsN+OAnV/2E=
 		</data>
 		<key>www/cordova-js-src/exec.js</key>
 		<data>
@@ -343,7 +343,7 @@
 		</data>
 		<key>www/css/my-app.css</key>
 		<data>
-		EfbuYKbegS3DnNdzBdCc33dAxA4=
+		wHck1l3CEplizFLhZTM2+SQkOnI=
 		</data>
 		<key>www/css/picker.min.css</key>
 		<data>
@@ -431,7 +431,7 @@
 		</data>
 		<key>www/index.html</key>
 		<data>
-		pFcY+Ni63Ih67WePZN8/TUI31Os=
+		1nVMNhenJisoOYHgQIkM7HKOijA=
 		</data>
 		<key>www/js/action_cable.js</key>
 		<data>
@@ -443,7 +443,7 @@
 		</data>
 		<key>www/js/my-app.js</key>
 		<data>
-		u2wjg3JwsMZ50BHMx31Hqn4n2Cc=
+		0BrrYNKwxlmDBWFm8IlOULX3jVY=
 		</data>
 		<key>www/js/object-to-formdata.min.js</key>
 		<data>
@@ -1246,11 +1246,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Zh2j6JTyyGnBlle/CkUhZm8RNJ4=
+			mlZffzZe1r07UqLK4h6v2MQSVuI=
 			</data>
 			<key>hash2</key>
 			<data>
-			1/wK7kT8iWh/90dtmXpuuRhxlog+pJyQ1KovQGKwP08=
+			rV+qiuLqMxSmXh+mqNkk/MPQQLpiY/g7xS/xaH4pGyU=
 			</data>
 		</dict>
 		<key>CDVLaunchScreen.storyboardc/Info.plist</key>
@@ -1268,11 +1268,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			aqRJTDDgM+XbYDr8hEAlkWAJVNQ=
+			06WhMPeLqHKwxShOHrPO2RF5FcI=
 			</data>
 			<key>hash2</key>
 			<data>
-			j6hJ4x1Ufbl6A6czDDHXgS7FgnT39PGUvWNSoqFeLrU=
+			xHwo4t3HTbaguAchdqxKtbRxqyU8BJqXsG+HFtQ9ZI0=
 			</data>
 		</dict>
 		<key>LaunchImage-568h@2x.png</key>
@@ -1433,11 +1433,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			w+UffQgxi5cmeowZ0aWt9gJYFYE=
+			6TggLYL91BenLk4ZmbxZCXPt6iI=
 			</data>
 			<key>hash2</key>
 			<data>
-			KTRak4u6CHaWIXldXx3qC2yxeel9oB9Ss7csaGSkjxU=
+			7rfwkaUJX711fnfym3t2uFVuAiPFHasa0obiVfzCmZw=
 			</data>
 		</dict>
 		<key>SAMKeychain.bundle/en.lproj/SAMKeychain.strings</key>
@@ -1490,11 +1490,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			QINGxVmC+LOo0iQsF5YzW1vyoCg=
+			lGNSKMuyojiPHnXtlsN+OAnV/2E=
 			</data>
 			<key>hash2</key>
 			<data>
-			iNszVvnuM2yUQxm4a0/543KIBaggG5F0NCiC2DnI3NA=
+			jORFQv7aC28jqElsNjE3N1W8PajHraJbS7MlW6zNb7I=
 			</data>
 		</dict>
 		<key>www/cordova-js-src/exec.js</key>
@@ -1578,11 +1578,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			EfbuYKbegS3DnNdzBdCc33dAxA4=
+			wHck1l3CEplizFLhZTM2+SQkOnI=
 			</data>
 			<key>hash2</key>
 			<data>
-			hl7eCyC+PD9tFQeNNGaXXhQ0+L3oM1WL0TGyaInir+U=
+			2gy/FiERtQ7QrDYYzZdR+VEBB49oNPS0t9csNRx9TSs=
 			</data>
 		</dict>
 		<key>www/css/picker.min.css</key>
@@ -1820,11 +1820,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			pFcY+Ni63Ih67WePZN8/TUI31Os=
+			1nVMNhenJisoOYHgQIkM7HKOijA=
 			</data>
 			<key>hash2</key>
 			<data>
-			QEAEscgcIib67W8FOAvZKCXSqUeYHWvBn0/AwSIBuWs=
+			tEUO5b2FxfbQT/kmBg589BdSJmEj8ecF25sJ5Rq+MYg=
 			</data>
 		</dict>
 		<key>www/js/action_cable.js</key>
@@ -1853,11 +1853,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			u2wjg3JwsMZ50BHMx31Hqn4n2Cc=
+			0BrrYNKwxlmDBWFm8IlOULX3jVY=
 			</data>
 			<key>hash2</key>
 			<data>
-			KPfX0m1nZZwqo6H+P1DRKNdK8B4I6w3YOBb0kiX+jDw=
+			vALf/Jbz5rnRNnt17wMsmZJqr7lwWgYXrFKR4hojdUg=
 			</data>
 		</dict>
 		<key>www/js/object-to-formdata.min.js</key>

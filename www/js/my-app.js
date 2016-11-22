@@ -470,7 +470,7 @@ var app = {
             $$("#asideBar a").on("click", function(e) {
                 var href = $$(this).data("href");
                 var comp_id = temp.compete.id;
-                if (temp.compete.id) {
+                if (temp.compete.id || href === "index.html") {
                     if (mainView.activePage.name === "stopWatch") {
                         if (href !== "stopWatch.html") {
                             myApp.confirm("是否放弃本次记分？", "", function(goto) {
@@ -1040,12 +1040,16 @@ var app = {
 
     collect_score: function() {
         var score1 = {};
+        var all_missed = [];
         $$("#stopWatch-page .score-tabs .tab").each(function(round_index, score_tab) {
             var this_tab = $$(score_tab);
             var valid = this_tab.data('valid');
             var this_scores = {
                 'valid': valid
             };
+            var missed = [];
+            var unchecked_radios = [];
+            var checked_radios = [];
             this_tab.find(".score").each(function(i, obj) {
                 var _this = $$(this);
                 var value = _this.val();
@@ -1058,22 +1062,49 @@ var app = {
                         var m = value.slice(0, value.indexOf("分"));
                         var s = value.slice(value.indexOf("分") + 1, value.indexOf("秒"));
                         var S = value.slice(value.indexOf("秒") + 1, value.indexOf("毫秒"));
-                        score = m * 60000 + s * 1000 + S;
+                        score = parseInt(m) * 60000 + parseInt(s) * 1000 + parseInt(S);
+                    } else if (_this.attr('type') === "radio") {
+                        if (_this.prop("checked")) {
+                            checked_radios.push(id);
+                            score = value;
+                        } else {
+                            unchecked_radios.push(id);
+                            return;
+                        }
                     } else {
                         score = value;
                     }
 
                 } else if (_this.prop('disabled')) {
                     score = null;
+                } else {
+                    missed.push(id);
+                    return;
                 }
                 this_scores[id] = {
                     'val': score,
                     'name': name
                 };
             });
-            score1[round_index] = this_scores
-            console.log(score1);
+            if (unchecked_radios.length > checked_radios.length) {
+                missed.push(unchecked_radios);
+            }
+            if (missed.length) {
+                all_missed[round_index] = missed;
+                return;
+            } else {
+                score1[round_index] = this_scores;
+                console.log(score1);
+            }
+
         });
+
+        if (all_missed.length) {
+            myApp.alert("分数未填写完整", "");
+            return false;
+        } else {
+            return score1;
+        }
     },
     submitScore: function(drawed) {
         function saveScore() {
@@ -1153,40 +1184,11 @@ var app = {
             scoreAttr: scoreAttr
         };
         var remark;
-        //Get score1
-        $$("#stopWatch-page .score-tabs .tab").each(function(round_index, score_tab) {
-            var this_tab = $$(score_tab);
-            var valid = this_tab.data('valid');
-            var this_scores = {
-                'valid': valid
-            };
-            this_tab.find(".score").each(function(i, obj) {
-                var _this = $$(this);
-                var value = _this.val();
-                var name = _this.data('name');
-                var id = _this.data('id');
-                var score;
 
-                if (value) {
-                    if (_this.hasClass("time-picker")) {
-                        var m = value.slice(0, value.indexOf("分"));
-                        var s = value.slice(value.indexOf("分") + 1, value.indexOf("秒"));
-                        var S = value.slice(value.indexOf("秒") + 1, value.indexOf("毫秒"));
-                        score = m * 60000 + s * 1000 + S;
-                    } else {
-                        score = value;
-                    }
-
-                } else if (_this.prop('disabled')) {
-                    score = null;
-                }
-                this_scores[id] = {
-                    'val': score,
-                    'name': name
-                };
-            });
-            scoreData.score1[round_index] = this_scores;
-        });
+        scoreData.score1 = app.collect_score();
+        if (!scoreData.score1) {
+            return;
+        }
         scoreData.formula = $$('.formula').data('formula');
 
         // if (Object.keys(scoreData.score1).length < $$(".score").length) {
@@ -1199,7 +1201,7 @@ var app = {
             return;
         }
         //Get remark
-        remark = $$("#remarkInput").val();
+        remark = $$(".remarkInput").val();
         if (remark) {
             scoreData.remark = remark;
         }
@@ -1614,7 +1616,7 @@ myApp.onPageInit('stopWatch', function(page) {
                             score_input.append(option);
                         }
                     } else if (sa.value_type === "3") {
-                        score_input = $$('<input type="radio" class="score" value="0" data-id=' + sa.id + ' data-name="' + sa.name + '">是<input type="radio" class="score" value="1" data-id=' + sa.id + ' data-name="' + sa.name + '">否');
+                        score_input = $$('<input type="radio" class="score" value="1" data-id=' + sa.id + ' data-name="' + sa.name + '">是<input type="radio" class="score" value="0" data-id=' + sa.id + ' data-name="' + sa.name + '">否');
                     }
 
                     score_wrapper.append(score_input);
@@ -1637,6 +1639,9 @@ myApp.onPageInit('stopWatch', function(page) {
         var tab_link = $$('<div class="col-auto">' +
             '<a href="#round' + i + '" class="tab-link"><span>' + lun + '</span></a>' +
             '</div>');
+        if (i === 1) {
+            tab_link.find(".tab-link").addClass("active");
+        }
         var score_board_clone = $$(score_board[0].cloneNode(true));
         score_tab_links.append(tab_link);
         var score_tab = $$('<div class="tab" id="round' + i + '"></div>');
@@ -1691,8 +1696,9 @@ myApp.onPageInit('stopWatch', function(page) {
 
     $$.each($$(".scores input[type=radio]"), function(i, v) {
         var _this = $$(v);
-        var round_id = _this.parents(".tab").data('round');
-        _this.name = _this.data('name') + round_id;
+        var round = _this.parents(".tab").attr('id');
+        var new_name = _this.data('name') + round;
+        _this.attr('name', new_name);
     });
 
 
@@ -1709,13 +1715,12 @@ myApp.onPageInit('stopWatch', function(page) {
         console.log(temp.edit);
         $$.each(temp.edit.score1, function(index1, value1) {
 
-            var tab = $$("#round" + index1);
+            var tab = $$("#round" + (parseInt(index1) + 1));
             $$.each(value1, function(key, value2) {
-
                 if (key === 'valid') {
                     tab.data('valid', value2);
                 } else {
-                    var input = $$("input[data-id='" + key + "']");
+                    var input = tab.find(".score[data-id='" + key + "']");
                     if (value2.val === null) {
                         input.prop('disabled', true).val('');
                         $$("#cancel1, #cancel2").remove();
@@ -1727,6 +1732,14 @@ myApp.onPageInit('stopWatch', function(page) {
                         str += date.getUTCSeconds() + "秒";
                         str += date.getUTCMilliseconds() + "毫秒";
                         input.val(str);
+                    } else if (input.attr('type') === "radio") {
+                        input.each(function() {
+                            var _this_radio = $$(this);
+                            if (_this_radio.val() === value2.val) {
+                                _this_radio.prop('checked', true);
+                            }
+                        });
+
                     } else {
                         input.val(value2.val);
                     }
@@ -1734,34 +1747,16 @@ myApp.onPageInit('stopWatch', function(page) {
             });
 
         });
+        $$(".remarkInput").val(temp.edit.remark);
 
         $$("#submitScore").on("click", function() {
             var score = {};
-            $$(".score").each(function(i, obj) {
-                var _this = $$(this);
-                var value = _this.val();
-                var name = _this.attr('name');
-                if (value) {
-                    if (_this.hasClass("time-picker")) {
-                        var m = value.slice(0, value.indexOf("分"));
-                        var s = value.slice(value.indexOf("分") + 1, value.indexOf("秒"));
-                        var S = value.slice(value.indexOf("秒") + 1, value.indexOf("毫秒"));
-                        score[name] = m * 60000 + s * 1000 + S;
-                    } else {
-                        score[name] = value;
-                        console.log(value);
-                    }
-
-                } else if (_this.prop('disabled')) {
-                    score[name] = null;
-                }
-            });
-            console.log(score);
-            if (Object.keys(score).length < $$(".score").length) {
-                myApp.alert("分数未填写完整", "");
+            score = app.collect_score();
+            if (!score) {
                 return;
             }
             temp.edit.score1 = score;
+            temp.edit.remark = $$(".remarkInput").val();
             scoreDB.put(temp.edit).then(function(response) {
                 app.uploadScore(response.id, function() {
                     myApp.alert("分数上传成功", "", function() {
@@ -1776,7 +1771,7 @@ myApp.onPageInit('stopWatch', function(page) {
             });
         });
 
-        $$(".canvasWrapper").hide();
+        $$(".canvasWrapper,#takePhoto,#takeVideo").hide();
         return;
     }
     $$("#takePhoto").on("click", function() {

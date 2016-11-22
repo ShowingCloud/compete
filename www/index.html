@@ -81,8 +81,9 @@
   </script>
   <script id="multi-players-tpl" type="text/template7">
     <div class="swiper-container">
-      {{#each players}}
       <div class="swiper-wrapper">
+        {{#each players}}
+
         <div class="swiper-slide">
           <p>姓名：{{username}}</p>
           <p>参赛编号：{{@root.identifier}}</p>
@@ -90,8 +91,9 @@
           <p>学校：{{@root.school_name}}</p>
           <p class="play-event">参赛项目：{{@root.event_name}} {{@root.comp_name}}</p>
         </div>
+
+        {{/each}}
       </div>
-      {{/each}}
       <div class="swiper-pagination"></div>
     </div>
   </script>
