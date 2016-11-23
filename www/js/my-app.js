@@ -44,19 +44,14 @@ var remoteCouch = false;
 
 // apption for app
 var app_options = {
-    auth_host: "http://dev.account.domelab.com",
-    host: "http://dev.robodou.cn",
-    ws: "ws://dev.robodou.cn/cable"
+    // auth_host: "http://dev.account.domelab.com",
+    // host: "http://dev.robodou.cn",
+    // ws: "ws://dev.robodou.cn/cable"
 
-    // auth_host: "https://account.domelab.com",
-    // host: "http://www.robodou.cn",
-    // ws: "wss://ws.robodou.cn/cable"
-    // auth_host: "http://192.168.1.115:3000",
-    // host: "http://192.168.1.115:3002",
-    // ws: "ws://192.168.1.115:3002/cable"
-    // auth_host: "http://i.s1.com",
-    // host: "http://www.c1.com",
-    // ws: "ws://www.c1.com/cable"
+    auth_host: "https://account.domelab.com",
+    host: "http://www.robodou.cn",
+    ws: "wss://ws.robodou.cn/cable"
+
 };
 
 var scoreAttr = [];
@@ -562,7 +557,6 @@ var app = {
         });
     },
     bind: function() {
-
         //Globle ajax setup
         $$.ajaxSetup({
             timeout: 10000,
@@ -585,12 +579,20 @@ var app = {
                         });
 
                     }
-                }
-                if (status === 500) {
-                    window.plugins.toast.showShortCenter("请求超时，请稍候重试");
+                } else
+                if (status >= 500) {
+                    window.plugins.toast.showLongBottom("服务器错误(" + status + ")，请联系服务器管理员");
+                    myApp.hidePreloader();
+                } else
+                if (status === 'timeout') {
+                    window.plugins.toast.showLongBottom("网络请求超时，请检查网络稍后重试");
+                    myApp.hidePreloader();
+                } else {
+                    window.plugins.toast.showLongBottom("网络请求出错(" + status + ")");
+                    myApp.hidePreloader();
                 }
                 myApp.hideIndicator();
-                myApp.hidePreloader();
+                // myApp.hidePreloader();
             }
         });
 
@@ -1039,7 +1041,7 @@ var app = {
     },
 
     collect_score: function() {
-        var score1 = {};
+        var score1 = [];
         var all_missed = [];
         $$("#stopWatch-page .score-tabs .tab").each(function(round_index, score_tab) {
             var this_tab = $$(score_tab);
@@ -1112,11 +1114,11 @@ var app = {
                 app.uploadScore(response.id, function() {
                     myApp.hidePreloader();
                     myApp.alert("成绩已上传", "", function() {
-                        mainView.router.back();
+                        mainView.router.loadPage('player.html');
                     });
                 }, function() {
                     myApp.alert("成绩上传失败，请稍后再上传", "", function() {
-                        mainView.router.back();
+                        mainView.router.loadPage('player.html');
                     });
                 });
             }).catch(function(err) {
@@ -1217,6 +1219,7 @@ var app = {
         }, "image/jpeg", 0.95);
         scoreData._id = temp.compete.id + ";" + temp.event.id + ";" + temp.schedule_id + ";" + temp.th + ";" + temp.team.identifier;
         scoreData.create_at = new Date().toISOString();
+        scoreData.update_at = new Date().toISOString();
         scoreData.team = temp.team;
         scoreData.judgeid = judgeInfo.userId;
         scoreData.event = temp.event;
@@ -1280,16 +1283,9 @@ var app = {
                 operator_id: doc.judgeid,
                 device_no: device.uuid
             };
-            console.log(JSON.stringify(toPost));
             var form_data = new FormData();
 
             for (var key in toPost) {
-                // if ($$.isArray(key)) {
-                //     for (var key1 in toPost[key]) {
-                //
-                //         form_data.append(key + "[]" + "[" + key1 + "]", toPost[key][key1]);
-                //     }
-                // } else
                 if (key === "confirm_sign") {
                     form_data.append(key, toPost[key], "signature.jpg");
                 } else {
@@ -1297,6 +1293,8 @@ var app = {
                 }
 
             }
+
+
             $$.ajax({
                 method: "POST",
                 url: app_options.host + "/api/v1/scores/upload_scores",
@@ -1509,11 +1507,11 @@ myApp.onPageInit('data', function(page) {
         include_docs: true,
         attachments: false
     }).then(function(result) {
-        console.log(result);
+        // console.log(result);
         var template = $$("#data-item-tpl").html();
         var compiledTemp = Template7.compile(template);
         result.rows.forEach(function(element, index) {
-            console.log(element);
+            // console.log(element);
             var doc = element.doc;
             if (!doc.upload) {
                 toUpload.push(doc._id);
@@ -1522,7 +1520,7 @@ myApp.onPageInit('data', function(page) {
             if (!compid.includes(id)) {
                 compid.push(id);
                 $$(".data-tabbar").append('<a href="#dataTab' + id + '" class="tab-link">' + doc.compete.name + '</a>');
-                $$(".data-tabs").append('<ul class="tab active" id="dataTab' + id + '"></ul>');
+                $$(".data-tabs").append('<ul class="tab" id="dataTab' + id + '"></ul>');
             }
             var num = (index + 1).toString();
             var pad = "00";
@@ -1540,7 +1538,6 @@ myApp.onPageInit('data', function(page) {
         $$("#notUploaded").text(length);
         $$(".upload-all").on("click", function() {
             if (length) {
-                console.log(toUpload);
                 var uploadCount = 0;
                 var uploadSuccess = 0;
                 myApp.showPreloader("正在上传");
@@ -1551,10 +1548,11 @@ myApp.onPageInit('data', function(page) {
                         uploadCount++;
                         if (uploadCount === length) {
                             myApp.hidePreloader();
+                            console.log("sucess:" + uploadSuccess);
                             if (uploadSuccess === length) {
-                                mainView.router.loadPage('Uploaded.html');
+                                mainView.router.loadPage('uploaded.html');
                             } else {
-                                myApp.alert("部分上传失败", "");
+                                myApp.alert((length - uploadSuccess) + "个上传失败", "");
                             }
                         }
                     });
@@ -1680,7 +1678,7 @@ myApp.onPageInit('stopWatch', function(page) {
                 confirm: '确认',
             },
             increment: {
-                millisecond: 100
+                millisecond: 10
             },
             translate(type, text) {
                 const suffixes = {
@@ -1750,17 +1748,25 @@ myApp.onPageInit('stopWatch', function(page) {
         $$(".remarkInput").val(temp.edit.remark);
 
         $$("#submitScore").on("click", function() {
-            var score = {};
+            var score = [];
             score = app.collect_score();
             if (!score) {
                 return;
             }
             temp.edit.score1 = score;
             temp.edit.remark = $$(".remarkInput").val();
+            temp.edit.update_at = new Date().toISOString();
+            scoreDB.get(temp.edit._id, function(err, doc) {
+                if (err) {
+                    return console.log(err);
+                }
+                temp.edit._rev = doc._rev;
+            });
+
             scoreDB.put(temp.edit).then(function(response) {
                 app.uploadScore(response.id, function() {
                     myApp.alert("分数上传成功", "", function() {
-                        mainView.router.back();
+                        mainView.router.loadPage('data.html');
                     });
 
                 }, function() {
