@@ -171,7 +171,6 @@ function printData(byteArrayData) {
     var hex = [],
         h, x, len = byteArrayData.length;
 
-
     for (var i = 0; i < len; i++) {
         x = byteArrayData[i];
         h = x.toString(16);
@@ -182,6 +181,40 @@ function printData(byteArrayData) {
 }
 
 var track = {
+    qrscan: function() {
+        cordova.plugins.barcodeScanner.scan(
+            function(result) {
+                if (result.text) {
+                    var code = result.text;
+                    track.scan(code);
+                } else {
+                    console.log("No QR Result");
+                }
+            },
+            function(error) {
+                myApp.alert("扫描失败: " + error);
+            }
+        );
+    },
+    getManufacturerData: function(scanRecord) {
+        var arrayBufferToIntArray = function(buffer) {
+            var result;
+            if (buffer) {
+                var typedArray = new Uint8Array(buffer);
+                result = [];
+                for (var i = 0; i < typedArray.length; i++) {
+                    result[i] = typedArray[i];
+                }
+            }
+            return result;
+        };
+        var mfgData = arrayBufferToIntArray(scanRecord.kCBAdvDataManufacturerData);
+        if (mfgData) {
+            return mfgData.slice(2).reverse().toString();
+        } else {
+            return "";
+        }
+    },
     action: {
         "run": "开始",
         "openDoor": "开门",
@@ -247,8 +280,12 @@ var track = {
         txCharacteristic: "6e400006-b5a3-f393-e0a9-e50e24dcca9e", // 蓝牙tx UUID
         rxCharacteristic: "6e400007-b5a3-f393-e0a9-e50e24dcca9e" // 蓝牙rx UUID
     },
-    scan: function() {
+    scan: function(target_address) {
         myApp.showPreloader("正在搜寻赛道，请靠近赛道");
+        track.target_address = null;
+        if (target_address) {
+            track.target_address = target_address;
+        }
         track.status.find = 0;
         ble.startScan([track.service.serviceUUID], track.onDiscoverDevice, app.onError);
         setTimeout(function() {
@@ -265,20 +302,29 @@ var track = {
         }, 10000);
     },
     onDiscoverDevice: function(device) {
-        myApp.hidePreloader();
-        window.plugins.toast.showShortCenter("已找到赛道");
-        ble.stopScan(function() {
-            console.log("Scan complete");
-            console.log(device);
-            track.connect(device.id);
-            track.status.find = 1;
-        }, function() {
-            console.log("stopScan failed");
-        });
-
+        function onTarget(device) {
+            myApp.hidePreloader();
+            window.plugins.toast.showShortCenter("已找到赛道");
+            ble.stopScan(function() {
+                console.log("Scan complete");
+                console.log(device);
+                track.connect(device.id);
+                track.status.find = 1;
+            }, function() {
+                console.log("stopScan failed");
+            });
+        }
+        if (track.target_address) {
+            if (getManufacturerData(device.advertising) === track.target_address) {
+                onTarget(device);
+            }
+        } else {
+            onTarget(device);
+        }
     },
     connect: function(deviceId) {
         var onConnect = function() {
+            console.log("conected to:" + deviceId);
             window.plugins.toast.showShortCenter("已连接赛道");
             ble.startNotification(deviceId, track.service.serviceUUID, track.service.rxCharacteristic, track.onData, track.onError);
             track.service.deviceId = deviceId;

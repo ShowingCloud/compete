@@ -303,6 +303,7 @@ var track = {
                     track.reset();
                     track.status.playing = 0;
                     var time = d[5] + d[4] * 256 + d[3] * 256 * 256 + d[2] * 256 * 256 * 256;
+                    console.log(time + "毫秒");
                     if (time > temp.event.limit * 1000) {
                         myApp.alert("已超时：" + track.formatTime(time) + "秒", "");
                         racke.render(temp.event.limit * 1000);
