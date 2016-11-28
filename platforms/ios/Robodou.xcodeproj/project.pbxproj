@@ -5,14 +5,12 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		0028331784A747A292D014EC /* UIImage+CropScaleOrientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 846B410033CC407E8104F2D4 /* UIImage+CropScaleOrientation.m */; };
 		0207DA581B56EA530066E2B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0207DA571B56EA530066E2B4 /* Images.xcassets */; };
 		04A7D39817734BE4B95AE79B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDB847EA90CB4EA59AF49F7B /* AVFoundation.framework */; };
 		0D6120C92FD64F75999212DF /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B772EC34AE43289B025A33 /* libiconv.dylib */; };
 		15987E409F914D96A700C602 /* CDVLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = CF2C79F7CBFE49BCB5F36B14 /* CDVLogger.m */; };
-		1A9BCDD41E07401F9B524383 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F0F5C6E468547B6B8780C54 /* SystemConfiguration.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1D3623260D0F684500981E51 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* AppDelegate.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		267588A683A046CF8E05BACE /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F34CC34258804A7796B99F2F /* CoreBluetooth.framework */; };
@@ -142,7 +140,6 @@
 		6714D60F539546CC8AD968FF /* CDVVibration.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = CDVVibration.h; path = "cordova-plugin-vibration/CDVVibration.h"; sourceTree = "<group>"; };
 		672C1300C859402081C54CA2 /* CDVCamera.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = CDVCamera.m; path = "cordova-plugin-camera/CDVCamera.m"; sourceTree = "<group>"; };
 		6AFF5BF81D6E424B00AB3073 /* CDVLaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = CDVLaunchScreen.storyboard; path = Robodou/CDVLaunchScreen.storyboard; sourceTree = SOURCE_ROOT; };
-		6F0F5C6E468547B6B8780C54 /* SystemConfiguration.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		702E10C5B70C4974BBA01E4A /* CDVViewController+SplashScreen.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = "CDVViewController+SplashScreen.m"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.m"; sourceTree = "<group>"; };
 		705FCEB718594CA3AAE00D0B /* BLECentralPlugin.m */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.objc; name = BLECentralPlugin.m; path = "cordova-plugin-ble-central/BLECentralPlugin/BLECentralPlugin.m"; sourceTree = "<group>"; };
 		716782813BBD4BED91708C07 /* CBPeripheral+Extensions.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "CBPeripheral+Extensions.h"; path = "cordova-plugin-ble-central/BLECentralPlugin/CBPeripheral+Extensions.h"; sourceTree = "<group>"; };
@@ -205,7 +202,6 @@
 				4BA3D898915E490BAC106637 /* ImageIO.framework in Frameworks */,
 				814FB50DD1A442238B6C88E7 /* CoreLocation.framework in Frameworks */,
 				04A7D39817734BE4B95AE79B /* AVFoundation.framework in Frameworks */,
-				1A9BCDD41E07401F9B524383 /* SystemConfiguration.framework in Frameworks */,
 				685DC9C028964B7DBC2DEA32 /* CoreTelephony.framework in Frameworks */,
 				D4A3F8969D9E4407873A8DC7 /* Security.framework in Frameworks */,
 				D73E0DD06D42468BBF7F0A21 /* libsqlite3.dylib in Frameworks */,
@@ -294,7 +290,6 @@
 				85E9AF6D16184089A7B75427 /* ImageIO.framework */,
 				134BF06FBF194790A1C34A9E /* CoreLocation.framework */,
 				FDB847EA90CB4EA59AF49F7B /* AVFoundation.framework */,
-				6F0F5C6E468547B6B8780C54 /* SystemConfiguration.framework */,
 				40C9D3DE87C24BD188CF7BA4 /* CoreTelephony.framework */,
 				11E1A9C68E9E442689F5E4CF /* Security.framework */,
 				9B1397F0A81F4B8E9E2ADE77 /* libsqlite3.dylib */,
@@ -594,6 +589,10 @@
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 7LELT6VDSN;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"Robodou/Plugins/cordova-plugin-webserver\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -628,6 +627,10 @@
 				COPY_PHASE_STRIP = YES;
 				DEVELOPMENT_TEAM = 7LELT6VDSN;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"Robodou/Plugins/cordova-plugin-webserver\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Robodou/Robodou-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;

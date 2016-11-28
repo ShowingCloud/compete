@@ -136,7 +136,9 @@
                             "xml": "<string> </string>",
                             "count": 1
                         }
-                    ]
+                    ],
+                    "NSAppTransportSecurity": [],
+                    "WKWebViewPluginEmbeddedServerPort": []
                 }
             }
         }
