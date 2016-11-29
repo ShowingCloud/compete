@@ -9,7 +9,7 @@ var myApp = new Framework7({
     tapHold: true,
     modalButtonOk: '确定',
     modalButtonCancel: '取消',
-    modalTitle: 'Robodou',
+    modalTitle: '',
     smartSelectPickerCloseText: '完成'
 });
 
@@ -973,7 +973,8 @@ var app = {
                         compiledTemp = Template7.compile(template);
                         temp.playerInfo = compiledTemp(team);
                         console.log(temp);
-                        mainView.router.loadPage('stopWatch.html?' + $$.serializeObject(team));
+                        mainView.router.loadPage('stopWatch.html');
+
                     }
                 }
             });
@@ -1109,7 +1110,6 @@ var app = {
     },
 
     collect_score: function() {
-        var result;
         var score1 = [];
         var all_missed = [];
         $$("#stopWatch-page .score-tabs .tab").each(function(round_index, score_tab) {
@@ -1149,8 +1149,8 @@ var app = {
                 } else if (_this.prop('disabled')) {
                     score = null;
                 } else {
-                    score = null;
                     missed.push(id);
+                    return;
                 }
                 this_scores[id] = {
                     'val': score,
@@ -1161,9 +1161,12 @@ var app = {
                 missed.push(unchecked_radios);
             }
 
-            score1[round_index] = this_scores;
+
             if (missed.length) {
                 all_missed[round_index] = missed;
+                score1[round_index] = null;
+            } else {
+                score1[round_index] = this_scores;
             }
 
         });
@@ -1173,79 +1176,112 @@ var app = {
         };
 
     },
-    submitScore: function(drawed) {
-        function saveScore() {
-            scoreDB.put(scoreData).then(function(response) {
-                app.uploadScore(response.id, function() {
-                    myApp.hidePreloader();
-                    myApp.hideIndicator();
-                    myApp.alert("成绩已上传", "", function() {
-                        mainView.router.loadPage('player.html');
-                    });
-                }, function() {
-                    myApp.hideIndicator();
-                    myApp.alert("成绩上传失败，请稍后再上传", "", function() {
-                        mainView.router.loadPage('player.html');
-                    });
-                });
-            }).catch(function(err) {
-                myApp.hideIndicator();
-                console.log(err);
-                if (err.status === 409) {
-                    alert("数据冲突，该队伍成绩之前已录入");
+    saveScore: function(scoreData, scb) {
+
+        scoreDB.get(scoreData._id, function(err, doc) {
+            if (err) {
+                if (err.name !== 'not_found') {
+                    return console.log(err);
                 }
+            } else {
+                scoreData._rev = doc._rev;
+            }
+            scoreDB.put(scoreData, function(err, response) {
+                if (err) {
+                    return console.log(err);
+                }
+                myApp.hideIndicator();
+                if (typeof scb === "function") {
+                    scb(response.id);
+                }
+            });
+        });
+    },
+    submitScore: function(drawed) {
+        function doUpload(score_id) {
+            app.uploadScore(score_id, function() {
+                myApp.hidePreloader();
+                myApp.hideIndicator();
+                myApp.alert("成绩已上传", "", function() {
+                    mainView.router.loadPage('player.html');
+                });
+            }, function() {
+                myApp.hideIndicator();
+                myApp.alert("成绩上传失败，请稍后再上传", "", function() {
+                    mainView.router.loadPage('player.html');
+                });
             });
         }
 
-        function saveVideo() {
-            function videoTranscodeSuccess(result) {
-                myApp.hidePreloader();
-                scoreData.video = result;
-                saveScore();
-                VideoEditor.getVideoInfo(
-                    function(info) {
-                        console.log('getVideoInfoSuccess, info: ' + JSON.stringify(info, null, 2));
-                    },
-                    function(error) {
-                        console.log(error);
-                    }, {
-                        fileUri: result
-                    }
-                );
-            }
+        var temp_score = app.collect_score();
 
-            function videoTranscodeError(err) {
-                myApp.hidePreloader();
-                console.log('videoTranscodeError, err: ' + err);
-            }
-            if ($$("#video source").length) {
-                myApp.showPreloader("视频转码中，请稍等。。。");
-                VideoEditor.transcodeVideo(
-                    videoTranscodeSuccess,
-                    videoTranscodeError, {
-                        fileUri: $$("#video source").attr("src"),
-                        outputFileName: new Date().toISOString(),
-                        outputFileType: VideoEditorOptions.OutputFileType.MPEG4,
-                        optimizeForNetworkUse: VideoEditorOptions.OptimizeForNetworkUse.YES,
-                        saveToLibrary: true,
-                        maintainAspectRatio: true,
-                        width: 480,
-                        height: 360,
-                        videoBitrate: 720000,
-                        audioChannels: 2,
-                        audioSampleRate: 44100,
-                        audioBitrate: 128000, // 128 kilobits
-                        progress: function(info) {
-                            console.log('transcodeVideo progress callback, info: ' + info);
-                        }
-                    }
-                );
-
-
-            } else {
-                saveScore();
-            }
+        if (temp_score.missed.length) {
+            myApp.hideIndicator();
+            myApp.alert("分数未填写完整", "");
+            return;
         }
+
+        if (!drawed) {
+            myApp.alert("请让参赛者签名", "");
+            myApp.hideIndicator();
+            return;
+        }
+
+        var score = app.buildScore(temp_score.score1);
+        score.missed = 0;
+        console.log(score);
+        app.saveScore(score, doUpload);
+    },
+    buildScore: function(score1) {
+        // function saveVideo() {
+        //     function videoTranscodeSuccess(result) {
+        //         myApp.hidePreloader();
+        //         scoreData.video = result;
+        //         app.saveScore(scoreData, doUpload);
+        //         VideoEditor.getVideoInfo(
+        //             function(info) {
+        //                 console.log('getVideoInfoSuccess, info: ' + JSON.stringify(info, null, 2));
+        //             },
+        //             function(error) {
+        //                 console.log(error);
+        //             }, {
+        //                 fileUri: result
+        //             }
+        //         );
+        //     }
+        //
+        //     function videoTranscodeError(err) {
+        //         myApp.hidePreloader();
+        //         console.log('videoTranscodeError, err: ' + err);
+        //     }
+        //     if ($$("#video source").length) {
+        //         myApp.showPreloader("视频转码中，请稍等。。。");
+        //         VideoEditor.transcodeVideo(
+        //             videoTranscodeSuccess,
+        //             videoTranscodeError, {
+        //                 fileUri: $$("#video source").attr("src"),
+        //                 outputFileName: new Date().toISOString(),
+        //                 outputFileType: VideoEditorOptions.OutputFileType.MPEG4,
+        //                 optimizeForNetworkUse: VideoEditorOptions.OptimizeForNetworkUse.YES,
+        //                 saveToLibrary: true,
+        //                 maintainAspectRatio: true,
+        //                 width: 480,
+        //                 height: 360,
+        //                 videoBitrate: 720000,
+        //                 audioChannels: 2,
+        //                 audioSampleRate: 44100,
+        //                 audioBitrate: 128000, // 128 kilobits
+        //                 progress: function(info) {
+        //                     console.log('transcodeVideo progress callback, info: ' + info);
+        //                 }
+        //             }
+        //         );
+        //
+        //
+        //     } else {
+        //         return scoreData;
+        //     }
+        // }
         var scoreData = {
             _attachments: {},
             score1: [],
@@ -1254,24 +1290,8 @@ var app = {
             scoreAttr: scoreAttr
         };
         var remark;
-
-        scoreData.score1 = app.collect_score();
-        if (!scoreData.score1) {
-            myApp.hideIndicator();
-            return;
-        }
+        scoreData.score1 = score1;
         scoreData.formula = $$('.formula').data('formula');
-
-        // if (Object.keys(scoreData.score1).length < $$(".score").length) {
-        //     myApp.alert("分数未填写完整", "");
-        //     return;
-        // }
-
-        if (!drawed) {
-            myApp.alert("请让参赛者签名", "");
-            myApp.hideIndicator();
-            return;
-        }
         //Get remark
         remark = $$(".remarkInput").val();
         if (remark) {
@@ -1299,36 +1319,36 @@ var app = {
         scoreData.schedule_id = temp.schedule_id;
         scoreData.th = temp.th;
         scoreData.upload = false;
-        var images = $$("#photos img");
-        if (images.length) {
-            scoreData.img = [];
-            images.each(function(index, img) {
-                var uri = img.src;
-                var ext = uri.split('.').pop();
-                var filename = new Date().valueOf().toString() + index + "." + ext;
-                var fail = function(err) {
-                    console.log(err);
-                };
-                window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(destination) {
-                    window.resolveLocalFileSystemURL(uri, function(file) {
-                        file.moveTo(destination, filename, function(e) {
-                            console.log(e);
-                            // file.remove(function(){console.log("removed")},fail);
-                            console.log("file copyed");
-                            scoreData.img.push(e.nativeURL);
-                            if (scoreData.img.length === images.length) {
-                                console.log("img done");
-                                saveVideo();
-                            }
-                        });
-                    }, fail);
-                }, fail);
-            });
-
-        } else {
-            saveVideo();
-        }
-
+        return scoreData;
+        // var images = $$("#photos img");
+        // if (images.length) {
+        //     scoreData.img = [];
+        //     images.each(function(index, img) {
+        //         var uri = img.src;
+        //         var ext = uri.split('.').pop();
+        //         var filename = new Date().valueOf().toString() + index + "." + ext;
+        //         var fail = function(err) {
+        //             console.log(err);
+        //         };
+        //         window.resolveLocalFileSystemURL(cordova.file.dataDirectory, function(destination) {
+        //             window.resolveLocalFileSystemURL(uri, function(file) {
+        //                 file.moveTo(destination, filename, function(e) {
+        //                     console.log(e);
+        //                     // file.remove(function(){console.log("removed")},fail);
+        //                     console.log("file copyed");
+        //                     scoreData.img.push(e.nativeURL);
+        //                     if (scoreData.img.length === images.length) {
+        //                         console.log("img done");
+        //                         saveVideo();
+        //                     }
+        //                 });
+        //             }, fail);
+        //         }, fail);
+        //     });
+        //
+        // } else {
+        //     saveVideo();
+        // }
     },
 
     uploadScore: function(doc_id, success, fail, complete) {
@@ -1588,6 +1608,9 @@ myApp.onPageInit('data', function(page) {
         result.rows.forEach(function(element, index) {
             // console.log(element);
             var doc = element.doc;
+            if (doc.missed) {
+                return;
+            }
             if (!doc.upload) {
                 toUpload.push(doc._id);
             }
@@ -1643,6 +1666,45 @@ myApp.onPageInit('data', function(page) {
 
 myApp.onPageInit('stopWatch', function(page) {
     console.log(page);
+
+    function loadScore(score) {
+        $$.each(score, function(index1, value1) {
+            var tab = $$("#round" + (parseInt(index1) + 1));
+            if (!value1) {
+                return;
+            }
+            $$.each(value1, function(key, value2) {
+                if (key === 'valid') {
+                    tab.data('valid', value2);
+                } else {
+                    var input = tab.find(".score[data-id='" + key + "']");
+                    if (value2.val === null) {
+                        input.prop('disabled', true).val('');
+                        $$("#cancel1, #cancel2").remove();
+                    }
+                    if (input.hasClass("time-picker")) {
+                        var date = new Date(parseInt(value2.val));
+                        var str = '';
+                        str += date.getUTCMinutes() + "分";
+                        str += date.getUTCSeconds() + "秒";
+                        str += date.getUTCMilliseconds() + "毫秒";
+                        input.val(str);
+                    } else if (input.attr('type') === "radio") {
+                        input.each(function() {
+                            var _this_radio = $$(this);
+                            if (_this_radio.val() === value2.val) {
+                                _this_radio.prop('checked', true);
+                            }
+                        });
+
+                    } else {
+                        input.val(value2.val);
+                    }
+                }
+            });
+
+        });
+    }
     var scoreFrom;
     var drawed = 0;
     var rounds = 1;
@@ -1666,9 +1728,6 @@ myApp.onPageInit('stopWatch', function(page) {
                     $$("#team1 .scores").append('<div>' + sa.name + '：<input class="track-score score" data-id=' + sa.id + ' data-name="score' + (index + 1) + '"></div>');
                     break;
                 case 2:
-                    var formula_holder = $$("<div class='formula'></div>");
-                    formula_holder.data("formula", sa.formula);
-                    $$("#team1 .scores").append(formula_holder);
                     // scoreFrom = 2;
                     // $$("#team1 .scores").append('<div>' + sa.name + '：<input class="time-score score form-control" data-id=' + sa.id + ' name="score' + (index + 1) + '"></div>');
                     break;
@@ -1847,52 +1906,19 @@ myApp.onPageInit('stopWatch', function(page) {
     }
 
     if (temp.edit) {
+        console.log("edit");
         console.log(temp.edit);
-        $$.each(temp.edit.score1, function(index1, value1) {
-
-            var tab = $$("#round" + (parseInt(index1) + 1));
-            $$.each(value1, function(key, value2) {
-                if (key === 'valid') {
-                    tab.data('valid', value2);
-                } else {
-                    var input = tab.find(".score[data-id='" + key + "']");
-                    if (value2.val === null) {
-                        input.prop('disabled', true).val('');
-                        $$("#cancel1, #cancel2").remove();
-                    }
-                    if (input.hasClass("time-picker")) {
-                        var date = new Date(parseInt(value2.val));
-                        var str = '';
-                        str += date.getUTCMinutes() + "分";
-                        str += date.getUTCSeconds() + "秒";
-                        str += date.getUTCMilliseconds() + "毫秒";
-                        input.val(str);
-                    } else if (input.attr('type') === "radio") {
-                        input.each(function() {
-                            var _this_radio = $$(this);
-                            if (_this_radio.val() === value2.val) {
-                                _this_radio.prop('checked', true);
-                            }
-                        });
-
-                    } else {
-                        input.val(value2.val);
-                    }
-                }
-            });
-
-        });
+        loadScore(temp.edit.score1);
         $$(".remarkInput").val(temp.edit.remark);
 
         $$("#score-submit").on("click", function() {
             myApp.showIndicator();
-            var score = [];
-            score = app.collect_score();
-            if (!score) {
+            var score = app.collect_score();
+            if (score.missed.length) {
                 myApp.hideIndicator();
                 return;
             }
-            temp.edit.score1 = score;
+            temp.edit.score1 = score.score1;
             temp.edit.remark = $$(".remarkInput").val();
             temp.edit.update_at = new Date().toISOString();
             scoreDB.get(temp.edit._id, function(err, doc) {
@@ -1922,8 +1948,17 @@ myApp.onPageInit('stopWatch', function(page) {
             });
         });
 
-        $$(".canvasWrapper,#takePhoto,#takeVideo").hide();
+        $$(".canvasWrapper,#takePhoto,#takeVideo,#score-save").hide();
         return;
+    } else {
+        var score_id = temp.compete.id + ";" + temp.event.id + ";" + temp.schedule_id + ";" + temp.th + ";" + temp.team.identifier;
+        scoreDB.get(score_id, function(err, doc) {
+            if (err) {
+                return console.log(err);
+            } else {
+                loadScore(doc.score1);
+            }
+        });
     }
     $$("#takePhoto").on("click", function() {
         var quantity = $$("#photos img").length;
@@ -1949,6 +1984,23 @@ myApp.onPageInit('stopWatch', function(page) {
     $$("#score-submit").on("click", function() {
         myApp.showIndicator();
         app.submitScore(drawed);
+    });
+    $$("#score-save").on("click", function() {
+        myApp.showIndicator();
+        var temp_score = app.collect_score();
+        console.log(temp_score);
+        if (temp_score.missed.length && temp_score.missed[0]) {
+            myApp.hideIndicator();
+            myApp.alert("至少完成一轮");
+            return;
+        }
+        var score = app.buildScore(temp_score.score1);
+        score.missed = temp_score.missed.length;
+        app.saveScore(score, function() {
+            myApp.confirm("保存成功,是否返回列表？", "", function() {
+                mainView.router.loadPage('player.html');
+            });
+        });
     });
     console.log(scoreFrom);
     if (scoreFrom === 3) {
