@@ -391,9 +391,10 @@ aside-linker {
     border-bottom: 20px solid #4c6683;
     border-right: 20px solid transparent;
     height: 0;
-    width: 100px;
     line-height: 20px;
     text-align: center;
+    font-size: 12px;
+    padding: 0px 0px 0px 2px;
 }
 
 #groups ul {
@@ -415,7 +416,7 @@ aside-linker {
 }
 
 #eventsBoard .tab div {
-    font-size: 1em;
+    font-size: 1.1em;
     border: 1px solid #6f6f6f;
     padding: 5px 20px;
     margin: 5px;
