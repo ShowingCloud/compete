@@ -45,13 +45,13 @@ var remoteCouch = false;
 
 // apption for app
 var app_options = {
-    // auth_host: "http://dev.account.domelab.com",
-    // host: "http://dev.robodou.cn"     ,
-    // ws: "ws://dev.robodou.cn/cable"
+    auth_host: "http://dev.account.domelab.com",
+    host: "http://dev.robodou.cn",
+    ws: "ws://dev.robodou.cn/cable"
 
-    auth_host: "https://account.domelab.com",
-    host: "http://www.robodou.cn",
-    ws: "wss://ws.robodou.cn/cable"
+    // auth_host: "https://account.domelab.com",
+    // host: "http://www.robodou.cn",
+    // ws: "wss://ws.robodou.cn/cable"
 
 };
 
@@ -810,6 +810,9 @@ var app = {
         });
         $$(document).on('click', '.btn-reset', function() {
             track.reset();
+        });
+        $$(document).on('click', '.back-tag', function() {
+            mainView.router.back();
         });
 
         myApp.onPageBeforeInit('home select data msg player round stopWatch upload', function(page) {
@@ -1742,7 +1745,7 @@ myApp.onPageInit('stopWatch', function(page) {
 
         });
     }
-    var scoreFrom;
+    var scoreFrom = [];
     var drawed = 0;
     var rounds = 1;
     var score_board = $$("<div></div>");
@@ -1763,22 +1766,19 @@ myApp.onPageInit('stopWatch', function(page) {
                 }
                 return;
             }
+            scoreFrom.push(sa.score_type);
             switch (sa.score_type) {
                 case 5:
                 case 4: //蓝牙赛道
-                    scoreFrom = 4;
                     // $$("#team1 .scores").append('<div>' + sa.name + '：<input class="track-score score" data-id=' + sa.id + ' data-name="score' + (index + 1) + '"></div>');
                     score_input = $$('<input class="score ble-score" data-id=' + sa.id + ' data-name="' + sa.name + '">');
                     break;
                 case 3:
                     break;
                 case 2: //秒表
-                    scoreFrom = 2;
                     score_input = $$('<input class="score time-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
                     break;
                 case 1: //手动计分
-                    scoreFrom = 1;
-
                     if (sa.value_type === "2") {
                         score_input = $$('<input class="score float-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
                     } else if (sa.value_type === "1") {
@@ -1904,7 +1904,6 @@ myApp.onPageInit('stopWatch', function(page) {
         var float_picker = myApp.picker({
             input: this,
             formatValue: function(picker, values) {
-
                 return values[0] === "00" ? values[1] : values[0] + values[1];
             },
             cols: [{
@@ -1927,28 +1926,39 @@ myApp.onPageInit('stopWatch', function(page) {
             }]
         });
     });
+    $$(".time-picker").each(function() {
+        var float_picker = myApp.picker({
+            input: this,
+            formatValue: function(picker, values) {
 
-    $$.each($$(".time-picker"), function(i, v) {
-        new Picker(v, {
-            date: "0分0秒0毫秒",
-            format: 'm分s秒S毫秒',
-            text: {
-                title: '请选择时间',
-                cancel: '取消',
-                confirm: '确认',
+                return values[0] + values[1] + values[2];
             },
-            increment: {
-                millisecond: 10
-            },
-            translate(type, text) {
-                const suffixes = {
-                    second: '秒',
-                    minute: '分',
-                    millisecond: "毫秒"
-                };
+            cols: [{
 
-                return Number(text) + suffixes[type];
-            },
+                values: (function() {
+                    var arr = [];
+                    for (var i = 0; i <= 9; i++) {
+                        arr.push(i < 10 ? '0' + i + '分' : i + '分');
+                    }
+                    return arr;
+                })(),
+            }, {
+                values: (function() {
+                    var arr = [];
+                    for (var i = 0; i <= 59; i++) {
+                        arr.push(i < 10 ? '0' + i + '秒' : i + '秒');
+                    }
+                    return arr;
+                })(),
+            }, {
+                values: (function() {
+                    var arr = [];
+                    for (var i = 0; i <= 990; i = i + 10) {
+                        arr.push(i < 10 ? '0' + i + '毫秒' : i + '毫秒');
+                    }
+                    return arr;
+                })(),
+            }]
         });
     });
 
@@ -2067,152 +2077,150 @@ myApp.onPageInit('stopWatch', function(page) {
         });
     });
     console.log("scoreFrom:" + scoreFrom);
-    if (scoreFrom === 5) {
-        $$(".scoreBoard").append('<div class="speed-dial"><a href="#" class="floating-button"><i class="icon icon-plus"></i><i class="icon icon-close"></i></a><div class="speed-dial-buttons"><a class="btn-connect" href="#"><i class="icon icon-connect"></i></a><a class="btn-reset" href="#"><i class="icon icon-reset"></i></a></div></div>');
-    } else if (scoreFrom === 4) {
-        $$(".scoreBoard").append('<div class="speed-dial"><a href="#" class="floating-button"><i class="icon icon-plus"></i><i class="icon icon-close"></i></a><div class="speed-dial-buttons"><a class="btn-connect" href="#"><i class="icon icon-connect"></i></a><a class="btn-start" href="#"><i class="icon icon-start"></i></a><a class="btn-reset" href="#"><i class="icon icon-reset"></i></a></div></div>');
+    if (scoreFrom.includes(5)) {
+        $$(".scoreBoard").append('<div class="speed-dial speed-dial-opened"><a href="#" class="floating-button"><i class="icon f7-icons">add</i><i class="icon f7-icons">close</i></a><div class="speed-dial-buttons"><a class="btn-connect" href="#"><i class="icon icon-connect">接入</i></a><a class="btn-reset" href="#"><i class="icon icon-reset">重置</i></a></div></div>');
+    } else if (scoreFrom.includes(4)) {
+        $$(".scoreBoard").append('<div class="speed-dial speed-dial-opened"><a href="#" class="floating-button"><i class="icon f7-icons">add</i><i class="icon f7-icons">close</i></a><div class="speed-dial-buttons"><a class="btn-connect" href="#"><i class="icon icon-connect">接入</i></a><a class="btn-start" href="#"><i class="icon icon-start">开始</i></a><a class="btn-reset" href="#"><i class="icon icon-reset">重置</i></a></div></div>');
         // $$("#scoreHeader").html('<div id="runWrapper"><img src="images/run.png" usemap="#runmap"><map name="runmap"><area id="run" shape="poly" coords="26,0,433,0,452,29,389,118,72,118,8,28"></map></div>');
         // document.getElementById('run').onclick = function() {
         //     track.run();
         // };
-
-    } else if (scoreFrom === 2) {
-        // $$("#scoreHeader").html('<div id="stopwatch"><div id="time"></div><div class="btn-wrapper"><span id="reset" class="sm-circle-btn">重置</span> <span id="record" class="sm-circle-btn">录入</span><span id="start" class="sm-circle-btn">开始</span></div></div>');
-        // (function() {
-        //     var Stopwatch = function() {
-        //         var startAt = 0;
-        //         var lapTime = 0;
-        //
-        //         var now = function() {
-        //             return (new Date()).getTime();
-        //         };
-        //
-        //         this.start = function() {
-        //             startAt = startAt ? startAt : now();
-        //         };
-        //
-        //         this.stop = function() {
-        //             lapTime = startAt ? lapTime + now() - startAt : lapTime;
-        //             startAt = 0;
-        //         };
-        //
-        //         this.reset = function() {
-        //             lapTime = startAt = 0;
-        //         };
-        //
-        //         this.time = function() {
-        //             return lapTime + (startAt ? now() - startAt : 0);
-        //         };
-        //     };
-        //     var x = new Stopwatch();
-        //     var $time;
-        //     var clocktimer;
-        //     var total;
-        //     var timeLimit = temp.event.time_limit * 1000;
-        //
-        //     var timeoutHander = function() {
-        //         myApp.alert("已超时", "");
-        //     };
-        //
-        //     function pad(num, size) {
-        //         var a = num;
-        //         if (a.toString().length > size) {
-        //             return a.toString().substring(0, size);
-        //         } else {
-        //             var s = "0000" + num;
-        //             return s.substr(s.length - size);
-        //         }
-        //
-        //     }
-        //
-        //     function formatTime(time) {
-        //         var h = 0;
-        //         var m = 0;
-        //         var s = 0;
-        //         var ms = 0;
-        //         var newTime = '';
-        //
-        //         time = time % (60 * 60 * 1000);
-        //         m = Math.floor(time / (60 * 1000));
-        //         time = time % (60 * 1000);
-        //         s = Math.floor(time / 1000);
-        //         ms = time % 1000;
-        //
-        //         newTime = pad(m, 2) + ':' + pad(s, 2) + ':' + pad(ms, 2);
-        //         return newTime;
-        //     }
-        //
-        //     function show() {
-        //         $time = document.getElementById('time');
-        //         update();
-        //     }
-        //
-        //     function update() {
-        //         var timeNow = x.time();
-        //
-        //         if (timeNow >= timeLimit) {
-        //             stop();
-        //             $time.innerHTML = formatTime(timeLimit);
-        //             timeoutHander();
-        //         } else {
-        //             $time.innerHTML = formatTime(timeNow);
-        //         }
-        //     }
-        //
-        //     function start() {
-        //         clocktimer = setInterval(update, 1);
-        //         x.start();
-        //         $$("#start").text("停止");
-        //         document.getElementById('start').onclick = stop;
-        //     }
-        //
-        //     function stop() {
-        //         x.stop();
-        //         clearInterval(clocktimer);
-        //         document.getElementById('start').onclick = start;
-        //         $$("#start").text("开始");
-        //     }
-        //
-        //     function reset() {
-        //         stop();
-        //         x.reset();
-        //         update();
-        //     }
-        //
-        //     function record() {
-        //         stop();
-        //         var elements = document.getElementsByClassName("time-score");
-        //         for (var i = 0; i < elements.length; i++) {
-        //             if (!elements[i].value && $time.innerHTML !== "00:00:00") {
-        //                 elements[i].value = $time.innerHTML;
-        //                 if (i === elements.length - 1) {
-        //                     reset();
-        //                     document.getElementById('start').onclick = document.getElementById('reset').onclick = document.getElementById('record').onclick = null;
-        //
-        //                     total = 0;
-        //                     for (var j = 0; j < elements.length; i++) {
-        //                         total = total + unformat(elements[j].value);
-        //                     }
-        //                     console.log(total);
-        //                     document.querySelector('.final-score').value = formatTime(total);
-        //                 }
-        //                 break;
-        //             }
-        //         }
-        //         x.reset();
-        //     }
-        //
-        //     function unformat(data) {
-        //         var a = data.split(":");
-        //         return a[0] * 60 * 1000 + a[1] * 1000 + a[2] * 10;
-        //     }
-        //     show();
-        //     document.getElementById('start').onclick = start;
-        //     document.getElementById('reset').onclick = reset;
-        //     document.getElementById('record').onclick = record;
-        // }());
-
     }
+
+    // $$("#scoreHeader").html('<div id="stopwatch"><div id="time"></div><div class="btn-wrapper"><span id="reset" class="sm-circle-btn">重置</span> <span id="record" class="sm-circle-btn">录入</span><span id="start" class="sm-circle-btn">开始</span></div></div>');
+    // (function() {
+    //     var Stopwatch = function() {
+    //         var startAt = 0;
+    //         var lapTime = 0;
+    //
+    //         var now = function() {
+    //             return (new Date()).getTime();
+    //         };
+    //
+    //         this.start = function() {
+    //             startAt = startAt ? startAt : now();
+    //         };
+    //
+    //         this.stop = function() {
+    //             lapTime = startAt ? lapTime + now() - startAt : lapTime;
+    //             startAt = 0;
+    //         };
+    //
+    //         this.reset = function() {
+    //             lapTime = startAt = 0;
+    //         };
+    //
+    //         this.time = function() {
+    //             return lapTime + (startAt ? now() - startAt : 0);
+    //         };
+    //     };
+    //     var x = new Stopwatch();
+    //     var $time;
+    //     var clocktimer;
+    //     var total;
+    //     var timeLimit = temp.event.time_limit * 1000;
+    //
+    //     var timeoutHander = function() {
+    //         myApp.alert("已超时", "");
+    //     };
+    //
+    //     function pad(num, size) {
+    //         var a = num;
+    //         if (a.toString().length > size) {
+    //             return a.toString().substring(0, size);
+    //         } else {
+    //             var s = "0000" + num;
+    //             return s.substr(s.length - size);
+    //         }
+    //
+    //     }
+    //
+    //     function formatTime(time) {
+    //         var h = 0;
+    //         var m = 0;
+    //         var s = 0;
+    //         var ms = 0;
+    //         var newTime = '';
+    //
+    //         time = time % (60 * 60 * 1000);
+    //         m = Math.floor(time / (60 * 1000));
+    //         time = time % (60 * 1000);
+    //         s = Math.floor(time / 1000);
+    //         ms = time % 1000;
+    //
+    //         newTime = pad(m, 2) + ':' + pad(s, 2) + ':' + pad(ms, 2);
+    //         return newTime;
+    //     }
+    //
+    //     function show() {
+    //         $time = document.getElementById('time');
+    //         update();
+    //     }
+    //
+    //     function update() {
+    //         var timeNow = x.time();
+    //
+    //         if (timeNow >= timeLimit) {
+    //             stop();
+    //             $time.innerHTML = formatTime(timeLimit);
+    //             timeoutHander();
+    //         } else {
+    //             $time.innerHTML = formatTime(timeNow);
+    //         }
+    //     }
+    //
+    //     function start() {
+    //         clocktimer = setInterval(update, 1);
+    //         x.start();
+    //         $$("#start").text("停止");
+    //         document.getElementById('start').onclick = stop;
+    //     }
+    //
+    //     function stop() {
+    //         x.stop();
+    //         clearInterval(clocktimer);
+    //         document.getElementById('start').onclick = start;
+    //         $$("#start").text("开始");
+    //     }
+    //
+    //     function reset() {
+    //         stop();
+    //         x.reset();
+    //         update();
+    //     }
+    //
+    //     function record() {
+    //         stop();
+    //         var elements = document.getElementsByClassName("time-score");
+    //         for (var i = 0; i < elements.length; i++) {
+    //             if (!elements[i].value && $time.innerHTML !== "00:00:00") {
+    //                 elements[i].value = $time.innerHTML;
+    //                 if (i === elements.length - 1) {
+    //                     reset();
+    //                     document.getElementById('start').onclick = document.getElementById('reset').onclick = document.getElementById('record').onclick = null;
+    //
+    //                     total = 0;
+    //                     for (var j = 0; j < elements.length; i++) {
+    //                         total = total + unformat(elements[j].value);
+    //                     }
+    //                     console.log(total);
+    //                     document.querySelector('.final-score').value = formatTime(total);
+    //                 }
+    //                 break;
+    //             }
+    //         }
+    //         x.reset();
+    //     }
+    //
+    //     function unformat(data) {
+    //         var a = data.split(":");
+    //         return a[0] * 60 * 1000 + a[1] * 1000 + a[2] * 10;
+    //     }
+    //     show();
+    //     document.getElementById('start').onclick = start;
+    //     document.getElementById('reset').onclick = reset;
+    //     document.getElementById('record').onclick = record;
+    // }());
 
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext("2d");

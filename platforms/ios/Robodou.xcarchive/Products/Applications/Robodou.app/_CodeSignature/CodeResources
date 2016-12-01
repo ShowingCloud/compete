@@ -210,7 +210,7 @@
 		</data>
 		<key>CDVLaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib</key>
 		<data>
-		g4LlgbrfoNeFWr4s+Obge+7udgI=
+		P3KmF9lPKlJyZJfqCyPIizPGd7U=
 		</data>
 		<key>CDVLaunchScreen.storyboardc/Info.plist</key>
 		<data>
@@ -218,7 +218,7 @@
 		</data>
 		<key>CDVLaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib</key>
 		<data>
-		RFJcy0QQTqXIFalGXNRpxUXC1BI=
+		tVvx0FFqHJFrQvdUs2i8dlQHbnM=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -282,7 +282,7 @@
 		</data>
 		<key>MainViewController.nib</key>
 		<data>
-		pLiiLbumhUIlkvPmpNQpu7ZO77c=
+		uN8cl8mdznYz4waswrw/1hB+VYU=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -311,7 +311,7 @@
 		</data>
 		<key>scannerOverlay.nib</key>
 		<data>
-		Ky98elWuEXIaX77xwE3cXG/wZg4=
+		/FtcfTGSi147g/kW8IVcoW9hxG4=
 		</data>
 		<key>www/cordova-js-src/exec.js</key>
 		<data>
@@ -343,15 +343,31 @@
 		</data>
 		<key>www/css/my-app.css</key>
 		<data>
-		SIk3IU5qGRdDAfjEKufkLLza7YU=
-		</data>
-		<key>www/css/picker.min.css</key>
-		<data>
-		6T3xRPJoygdKn92/g541S1MW/2c=
+		Z1LaHfjZi+3oKYzHsuwG3hddAGw=
 		</data>
 		<key>www/data.html</key>
 		<data>
 		895YfgmSzw7GKZq+gG33eJVIf+Q=
+		</data>
+		<key>www/fonts/Framework7Icons-Regular.eot</key>
+		<data>
+		cBJVl1j47DgGOMYHPqd6u5HyQDw=
+		</data>
+		<key>www/fonts/Framework7Icons-Regular.svg</key>
+		<data>
+		l9IMITl3NF+oBnes9nwz/Faw3Z4=
+		</data>
+		<key>www/fonts/Framework7Icons-Regular.ttf</key>
+		<data>
+		RbZj9VBrJnk8qhSWFtN9NNUKVBY=
+		</data>
+		<key>www/fonts/Framework7Icons-Regular.woff</key>
+		<data>
+		i3NUxKrKCdxRK3RstxzWP5nYpsw=
+		</data>
+		<key>www/fonts/Framework7Icons-Regular.woff2</key>
+		<data>
+		p1xij9FujA7Ge2vLiPETOk1iRaU=
 		</data>
 		<key>www/images/background.png</key>
 		<data>
@@ -431,7 +447,7 @@
 		</data>
 		<key>www/index.html</key>
 		<data>
-		yVv8mMpzqmwzTWAEbUZSA8EY2bw=
+		q+nYxU4/eucxwLKBB47qnMD+rik=
 		</data>
 		<key>www/js/action_cable.js</key>
 		<data>
@@ -443,11 +459,7 @@
 		</data>
 		<key>www/js/my-app.js</key>
 		<data>
-		poghGD8XkPHBbkSITSzBdQ/S0rI=
-		</data>
-		<key>www/js/picker.min.js</key>
-		<data>
-		b8TFv+LM6yH35sGBrT56A8/Ax2w=
+		vjArHGGXWwEnGRLzwzkIygDXo2w=
 		</data>
 		<key>www/js/pouchdb.cordova-sqlite.js</key>
 		<data>
@@ -711,7 +723,7 @@
 		</data>
 		<key>www/stopWatch.html</key>
 		<data>
-		3LU23drxlxwsYhXENWQMS+rZZ60=
+		OaVgqh0l0ldLKUOEir7pk7tbnjE=
 		</data>
 		<key>www/uploaded.html</key>
 		<data>
@@ -1238,11 +1250,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			g4LlgbrfoNeFWr4s+Obge+7udgI=
+			P3KmF9lPKlJyZJfqCyPIizPGd7U=
 			</data>
 			<key>hash2</key>
 			<data>
-			aIBJ5fdhGW+IhvdnpRaf0wmPNO6h/59rettgkU89cls=
+			pnBrTQc5Z3Zmw92JBb9J4/iONdYony/bPCi+UmZ+7tk=
 			</data>
 		</dict>
 		<key>CDVLaunchScreen.storyboardc/Info.plist</key>
@@ -1260,11 +1272,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			RFJcy0QQTqXIFalGXNRpxUXC1BI=
+			tVvx0FFqHJFrQvdUs2i8dlQHbnM=
 			</data>
 			<key>hash2</key>
 			<data>
-			QMc9tYZNc49PSpG70kgrgaN2QXxsHIGsY/9dHoMNYBE=
+			+a4FX0ucG5A2Nq2JljiLOPvKGzEpPgFL2XDgIEIy2wo=
 			</data>
 		</dict>
 		<key>LaunchImage-568h@2x.png</key>
@@ -1425,11 +1437,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			pLiiLbumhUIlkvPmpNQpu7ZO77c=
+			uN8cl8mdznYz4waswrw/1hB+VYU=
 			</data>
 			<key>hash2</key>
 			<data>
-			RylsUqxlj0C47HELpm8dLs+mx8K3G78RqI3LsTJfL1s=
+			uKytu732puvmdgYhc0XPYRjXceXguuyjRwjnCKtkOuc=
 			</data>
 		</dict>
 		<key>SAMKeychain.bundle/en.lproj/SAMKeychain.strings</key>
@@ -1482,11 +1494,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Ky98elWuEXIaX77xwE3cXG/wZg4=
+			/FtcfTGSi147g/kW8IVcoW9hxG4=
 			</data>
 			<key>hash2</key>
 			<data>
-			kD/Tz2+y/R0fvthYMimrIVD8SZDIDOmeK07tig/Ek58=
+			907kgpK2a9mOt7oz2sDPcnsmfp5eUmV9eVHcT2iG9lk=
 			</data>
 		</dict>
 		<key>www/cordova-js-src/exec.js</key>
@@ -1570,22 +1582,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			SIk3IU5qGRdDAfjEKufkLLza7YU=
+			Z1LaHfjZi+3oKYzHsuwG3hddAGw=
 			</data>
 			<key>hash2</key>
 			<data>
-			XF0tOlYouT+GlY6cHijWRyCLGLYugyksUkeUTLCX+2s=
-			</data>
-		</dict>
-		<key>www/css/picker.min.css</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			6T3xRPJoygdKn92/g541S1MW/2c=
-			</data>
-			<key>hash2</key>
-			<data>
-			+gCMt3aEp78Jd1sfbe7Tek7GFFHtOLD33h4lfU3dp8g=
+			lh+9qezo4rgwB8qW2dTpqnvL1lnyWYNWJjLP1Gb4Sqg=
 			</data>
 		</dict>
 		<key>www/data.html</key>
@@ -1597,6 +1598,61 @@
 			<key>hash2</key>
 			<data>
 			al9HKFbNfCb80T3XrFougME9k7iPVBhLlY6qYjMfzjM=
+			</data>
+		</dict>
+		<key>www/fonts/Framework7Icons-Regular.eot</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			cBJVl1j47DgGOMYHPqd6u5HyQDw=
+			</data>
+			<key>hash2</key>
+			<data>
+			zXRszmBAPi3QA+QZ2w3+Tl1rG+vk/Pc0QSnuQ+XrjRg=
+			</data>
+		</dict>
+		<key>www/fonts/Framework7Icons-Regular.svg</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			l9IMITl3NF+oBnes9nwz/Faw3Z4=
+			</data>
+			<key>hash2</key>
+			<data>
+			I04a9457yVOyNaeOVc0trGmn27wC2VYlVVIWklfZYVg=
+			</data>
+		</dict>
+		<key>www/fonts/Framework7Icons-Regular.ttf</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			RbZj9VBrJnk8qhSWFtN9NNUKVBY=
+			</data>
+			<key>hash2</key>
+			<data>
+			FVydX8YeGGKgBvDe2eFNm74OXXQ5cqHWZKaJROIGE48=
+			</data>
+		</dict>
+		<key>www/fonts/Framework7Icons-Regular.woff</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			i3NUxKrKCdxRK3RstxzWP5nYpsw=
+			</data>
+			<key>hash2</key>
+			<data>
+			d9TRQuaidsy6sLpo5EQIagAp53M9I2oLpPORpd8yCNI=
+			</data>
+		</dict>
+		<key>www/fonts/Framework7Icons-Regular.woff2</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			p1xij9FujA7Ge2vLiPETOk1iRaU=
+			</data>
+			<key>hash2</key>
+			<data>
+			giuQVrZhHblSbugS6U2WRgmI3P2FBQAF6x3ZtwTChIU=
 			</data>
 		</dict>
 		<key>www/images/background.png</key>
@@ -1812,11 +1868,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			yVv8mMpzqmwzTWAEbUZSA8EY2bw=
+			q+nYxU4/eucxwLKBB47qnMD+rik=
 			</data>
 			<key>hash2</key>
 			<data>
-			2suvQTqWSn11rBkATp1bMfQJ4jnTADb2IkzbdNZhtFA=
+			kzNScKiGtTeVCeDdeRxIesNBpAF3I0qOAeOyM2OgUHo=
 			</data>
 		</dict>
 		<key>www/js/action_cable.js</key>
@@ -1845,22 +1901,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			poghGD8XkPHBbkSITSzBdQ/S0rI=
+			vjArHGGXWwEnGRLzwzkIygDXo2w=
 			</data>
 			<key>hash2</key>
 			<data>
-			gHvLHjQ9J8WQDG+sgQ0Q1R4hgle2nfQ7UZPO3m0iSU8=
-			</data>
-		</dict>
-		<key>www/js/picker.min.js</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			b8TFv+LM6yH35sGBrT56A8/Ax2w=
-			</data>
-			<key>hash2</key>
-			<data>
-			UQsvPgRnpp43k/P0+UPCdYMLlvFSELzwNBTRW3Sbzig=
+			XTsEfpFXOSdLcvXbWcVOHybIbQBGLdbf18YJghpWiHM=
 			</data>
 		</dict>
 		<key>www/js/pouchdb.cordova-sqlite.js</key>
@@ -2582,11 +2627,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			3LU23drxlxwsYhXENWQMS+rZZ60=
+			OaVgqh0l0ldLKUOEir7pk7tbnjE=
 			</data>
 			<key>hash2</key>
 			<data>
-			2rhhf0NN9sypXv9yCus6VJqwQvZzGMnNJ3ibRmxzCPs=
+			uvmaz9ExeplLllAN45r56o/XQgTsBSjaG5Hfphzpl3w=
 			</data>
 		</dict>
 		<key>www/uploaded.html</key>
