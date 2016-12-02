@@ -355,12 +355,15 @@ var track = {
     connect: function(deviceId) {
         var onConnect = function() {
             console.log("conected to:" + deviceId);
-            window.plugins.toast.showShortCenter("已连接赛道");
             ble.startNotification(deviceId, track.service.serviceUUID, track.service.rxCharacteristic, track.onData, track.onError);
             track.service.deviceId = deviceId;
             track.sendOrder();
+            $$(".speed-dial").addClass("connected");
+            $$(".speed-dial .btn-connect").removeClass('btn-connect').addClass('btn-disconnect').text('断开');
+            window.plugins.toast.showShortCenter("已连接赛道");
         };
         ble.connect(deviceId, onConnect, function() {
+            track.onDisconnected();
             myApp.alert("连接赛道失败，请重试", "");
         });
     },
@@ -447,13 +450,23 @@ var track = {
         }
 
     },
-    disconnect: function() {
-        ble.disconnect(deviceId, function() {
+    disconnect: function(device_id) {
+        if (device_id) {
+            target_id = device_id;
+        } else {
+            target_id = deviceId;
+        }
+        ble.disconnect(target_id, function() {
             window.plugins.toast.showShortCenter("已断开");
+            track.onDisconnected();
             track.order = null;
         }, function() {
             window.plugins.toast.showShortCenter("蓝牙未能断开");
         });
+    },
+    onDisconnected: function() {
+        $$(".speed-dial").removeClass("connected");
+        $$(".speed-dial .btn-disconnect").removeClass('btn-disconnect').addClass('btn-connect').text('接入');
     },
     errorConnect: function(error) {
         if (error) {
@@ -632,7 +645,7 @@ var app = {
             });
         });
     },
-    bind: function() {
+    bind: function() { //event Handling
         //Globle ajax setup
         $$.ajaxSetup({
             timeout: 10000,
@@ -804,6 +817,9 @@ var app = {
 
         $$(document).on('click', '.btn-connect', function() {
             track.qrscan();
+        });
+        $$(document).on('click', '.btn-disconnect', function() {
+            track.disconnect(track.service.deviceId);
         });
         $$(document).on('click', '.btn-start', function() {
             track.run();
@@ -1771,7 +1787,7 @@ myApp.onPageInit('stopWatch', function(page) {
                 case 5:
                 case 4: //蓝牙赛道
                     // $$("#team1 .scores").append('<div>' + sa.name + '：<input class="track-score score" data-id=' + sa.id + ' data-name="score' + (index + 1) + '"></div>');
-                    score_input = $$('<input class="score ble-score" data-id=' + sa.id + ' data-name="' + sa.name + '">');
+                    score_input = $$('<input class="score ble-score" disabled="true" data-id=' + sa.id + ' data-name="' + sa.name + '">');
                     break;
                 case 3:
                     break;
@@ -2079,8 +2095,24 @@ myApp.onPageInit('stopWatch', function(page) {
     console.log("scoreFrom:" + scoreFrom);
     if (scoreFrom.includes(5)) {
         $$(".scoreBoard").append('<div class="speed-dial speed-dial-opened"><a href="#" class="floating-button"><i class="icon f7-icons">add</i><i class="icon f7-icons">close</i></a><div class="speed-dial-buttons"><a class="btn-connect" href="#"><i class="icon icon-connect">接入</i></a><a class="btn-reset" href="#"><i class="icon icon-reset">重置</i></a></div></div>');
+        if (track.service.deviceId) {
+            ble.isConnected(track.service.deviceId, function() {
+                $$(".speed-dial").addClass("connected");
+                $$(".speed-dial .btn-connect").removeClass('btn-connect').addClass('btn-disconnect').text('断开');
+            }, function() {
+                track.onDisconnected();
+            });
+        }
     } else if (scoreFrom.includes(4)) {
         $$(".scoreBoard").append('<div class="speed-dial speed-dial-opened"><a href="#" class="floating-button"><i class="icon f7-icons">add</i><i class="icon f7-icons">close</i></a><div class="speed-dial-buttons"><a class="btn-connect" href="#"><i class="icon icon-connect">接入</i></a><a class="btn-start" href="#"><i class="icon icon-start">开始</i></a><a class="btn-reset" href="#"><i class="icon icon-reset">重置</i></a></div></div>');
+        if (track.service.deviceId) {
+            ble.isConnected(track.service.deviceId, function() {
+                $$(".speed-dial").addClass("connected");
+                $$(".speed-dial .btn-connect").removeClass('btn-connect').addClass('btn-disconnect').text('断开');
+            }, function() {
+                track.onDisconnected();
+            });
+        }
         // $$("#scoreHeader").html('<div id="runWrapper"><img src="images/run.png" usemap="#runmap"><map name="runmap"><area id="run" shape="poly" coords="26,0,433,0,452,29,389,118,72,118,8,28"></map></div>');
         // document.getElementById('run').onclick = function() {
         //     track.run();

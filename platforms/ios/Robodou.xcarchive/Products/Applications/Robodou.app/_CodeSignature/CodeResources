@@ -210,7 +210,7 @@
 		</data>
 		<key>CDVLaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib</key>
 		<data>
-		P3KmF9lPKlJyZJfqCyPIizPGd7U=
+		tB7q0OH/lYzQ6cA0DBtGCjzqSrE=
 		</data>
 		<key>CDVLaunchScreen.storyboardc/Info.plist</key>
 		<data>
@@ -218,7 +218,7 @@
 		</data>
 		<key>CDVLaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib</key>
 		<data>
-		tVvx0FFqHJFrQvdUs2i8dlQHbnM=
+		nEZRQP4xTmYnuZortrjv/eDENWM=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -282,7 +282,7 @@
 		</data>
 		<key>MainViewController.nib</key>
 		<data>
-		uN8cl8mdznYz4waswrw/1hB+VYU=
+		7EC2rzSIJR4r/oWulkDeOUAqIaw=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -311,7 +311,7 @@
 		</data>
 		<key>scannerOverlay.nib</key>
 		<data>
-		/FtcfTGSi147g/kW8IVcoW9hxG4=
+		MeyDGsiO+OyxR390g61lqPHiRAk=
 		</data>
 		<key>www/cordova-js-src/exec.js</key>
 		<data>
@@ -343,7 +343,7 @@
 		</data>
 		<key>www/css/my-app.css</key>
 		<data>
-		Z1LaHfjZi+3oKYzHsuwG3hddAGw=
+		ESlyY20XOpPw1qfYwLpIxHLk3PE=
 		</data>
 		<key>www/data.html</key>
 		<data>
@@ -459,7 +459,7 @@
 		</data>
 		<key>www/js/my-app.js</key>
 		<data>
-		vjArHGGXWwEnGRLzwzkIygDXo2w=
+		S8gzmtpixScNfuoOxMk31SzXKXc=
 		</data>
 		<key>www/js/pouchdb.cordova-sqlite.js</key>
 		<data>
@@ -1250,11 +1250,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			P3KmF9lPKlJyZJfqCyPIizPGd7U=
+			tB7q0OH/lYzQ6cA0DBtGCjzqSrE=
 			</data>
 			<key>hash2</key>
 			<data>
-			pnBrTQc5Z3Zmw92JBb9J4/iONdYony/bPCi+UmZ+7tk=
+			N79maqvu40qRyWx8xjo7PCXRiLvWmqLNieOtGydW+gk=
 			</data>
 		</dict>
 		<key>CDVLaunchScreen.storyboardc/Info.plist</key>
@@ -1272,11 +1272,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			tVvx0FFqHJFrQvdUs2i8dlQHbnM=
+			nEZRQP4xTmYnuZortrjv/eDENWM=
 			</data>
 			<key>hash2</key>
 			<data>
-			+a4FX0ucG5A2Nq2JljiLOPvKGzEpPgFL2XDgIEIy2wo=
+			fZT+g1/sjlFcVlRMD7je94PngUFth4pC7OjW7S1Se3M=
 			</data>
 		</dict>
 		<key>LaunchImage-568h@2x.png</key>
@@ -1437,11 +1437,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			uN8cl8mdznYz4waswrw/1hB+VYU=
+			7EC2rzSIJR4r/oWulkDeOUAqIaw=
 			</data>
 			<key>hash2</key>
 			<data>
-			uKytu732puvmdgYhc0XPYRjXceXguuyjRwjnCKtkOuc=
+			Zf2cXX8HntVbzgwaBXd7MNWmGY7rEpz+NvJm5QujSLU=
 			</data>
 		</dict>
 		<key>SAMKeychain.bundle/en.lproj/SAMKeychain.strings</key>
@@ -1494,11 +1494,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			/FtcfTGSi147g/kW8IVcoW9hxG4=
+			MeyDGsiO+OyxR390g61lqPHiRAk=
 			</data>
 			<key>hash2</key>
 			<data>
-			907kgpK2a9mOt7oz2sDPcnsmfp5eUmV9eVHcT2iG9lk=
+			tnSMRBQ7hDWRtPd4KcGiJmYUE40Wb17bJN7qc1CT/Bs=
 			</data>
 		</dict>
 		<key>www/cordova-js-src/exec.js</key>
@@ -1582,11 +1582,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Z1LaHfjZi+3oKYzHsuwG3hddAGw=
+			ESlyY20XOpPw1qfYwLpIxHLk3PE=
 			</data>
 			<key>hash2</key>
 			<data>
-			lh+9qezo4rgwB8qW2dTpqnvL1lnyWYNWJjLP1Gb4Sqg=
+			Vp9AlIy4CcmeecNqeWily/047dMW2psaTrf5tMk2kHg=
 			</data>
 		</dict>
 		<key>www/data.html</key>
@@ -1901,11 +1901,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			vjArHGGXWwEnGRLzwzkIygDXo2w=
+			S8gzmtpixScNfuoOxMk31SzXKXc=
 			</data>
 			<key>hash2</key>
 			<data>
-			XTsEfpFXOSdLcvXbWcVOHybIbQBGLdbf18YJghpWiHM=
+			NU6+8CGN7AKhkBjsGr+/7isrAU0SGFzPCIoni2wSb34=
 			</data>
 		</dict>
 		<key>www/js/pouchdb.cordova-sqlite.js</key>

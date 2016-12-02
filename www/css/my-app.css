@@ -1001,3 +1001,19 @@ div.media-capture {
   font-size: 1.2em;
   margin-left: -30px
 }
+
+.speed-dial a{
+  background-color: #ffa531;
+}
+
+.speed-dial .active-state{
+  background-color: rgba(255, 165, 49, 0.89);;
+}
+
+.speed-dial.connected a{
+  background-color: #84a3ff;
+}
+
+.speed-dial.connected .active-state {
+  background-color: rgba(132, 163, 255, 0.8);
+}
