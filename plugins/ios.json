@@ -49,9 +49,6 @@
         "cordova-plugin-screen-orientation": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-plugin-secure-storage": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
         "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
@@ -73,11 +70,14 @@
         "cordova-plugin-x-toast": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
         "phonegap-plugin-barcodescanner": {
             "CAMERA_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-plugin-compat": {
+        "cordova-plugin-secure-storage": {
             "PACKAGE_NAME": "cn.robodou.competition"
         }
     },

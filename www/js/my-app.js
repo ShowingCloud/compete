@@ -1605,6 +1605,7 @@ myApp.onPageInit('player', function() {
         "group": temp.event.group,
         "schedule_id": temp.schedule_id,
     });
+    $$("#player-title").text(temp.compete.name + " " + temp.event.name + " " + temp.schedule_name);
     $$(".wrapper－dropdown").on('click', function(event) {
         $$(this).toggleClass("active");
         event.stopPropagation();
@@ -1808,7 +1809,7 @@ myApp.onPageInit('stopWatch', function(page) {
                         score_input = $$('<input class="score integer-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
 
                     } else if (sa.value_type === "3") {
-                        score_input = $$('<input type="radio" class="score" value="1" data-id=' + sa.id + ' data-name="' + sa.name + '">是<input type="radio" class="score" value="0" data-id=' + sa.id + ' data-name="' + sa.name + '">否');
+                        score_input = $$('<input type="radio" class="score" checked="true" value="1" data-id=' + sa.id + ' data-name="' + sa.name + '">是<input type="radio" class="score" value="0" data-id=' + sa.id + ' data-name="' + sa.name + '">否');
                     }
 
                     break;
@@ -1977,14 +1978,26 @@ myApp.onPageInit('stopWatch', function(page) {
             }]
         });
     });
+    var radios = $$(".scores input[type=radio]");
+    if (radios.length) {
+        $$(".integer-picker").each(function() {
+            $$(this).parent().hide().val("0");
+        });
+        $$.each(radios, function(i, v) {
+            var _this = $$(v);
+            var round = _this.parents(".tab").attr('id');
+            var new_name = _this.data('name') + round;
+            _this.attr('name', new_name);
+            _this.on('change', function() {
+                if (_this.val() === "1") {
+                    _this.parents(".tab").find(".integer-picker").parent().val("0").hide();
+                } else {
+                    _this.parents(".tab").find(".integer-picker").parent().show();
+                }
+            });
 
-    $$.each($$(".scores input[type=radio]"), function(i, v) {
-        var _this = $$(v);
-        var round = _this.parents(".tab").attr('id');
-        var new_name = _this.data('name') + round;
-        _this.attr('name', new_name);
-    });
-
+        });
+    }
 
     if (temp.playerInfo) {
         $$(".playerInfo").append(temp.playerInfo);

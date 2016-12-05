@@ -382,20 +382,6 @@ module.exports = [
         ]
     },
     {
-        "id": "cordova-plugin-secure-storage.SecureStorage",
-        "file": "plugins/cordova-plugin-secure-storage/www/securestorage.js",
-        "pluginId": "cordova-plugin-secure-storage",
-        "clobbers": [
-            "SecureStorage"
-        ]
-    },
-    {
-        "id": "cordova-plugin-secure-storage.sjcl_ss",
-        "file": "plugins/cordova-plugin-secure-storage/www/sjcl_ss.js",
-        "pluginId": "cordova-plugin-secure-storage",
-        "runs": true
-    },
-    {
         "id": "cordova-plugin-splashscreen.SplashScreen",
         "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
         "pluginId": "cordova-plugin-splashscreen",
@@ -464,6 +450,20 @@ module.exports = [
         "clobbers": [
             "cordova.plugins.barcodeScanner"
         ]
+    },
+    {
+        "id": "cordova-plugin-secure-storage.SecureStorage",
+        "file": "plugins/cordova-plugin-secure-storage/www/securestorage.js",
+        "pluginId": "cordova-plugin-secure-storage",
+        "clobbers": [
+            "SecureStorage"
+        ]
+    },
+    {
+        "id": "cordova-plugin-secure-storage.sjcl_ss",
+        "file": "plugins/cordova-plugin-secure-storage/www/sjcl_ss.js",
+        "pluginId": "cordova-plugin-secure-storage",
+        "runs": true
     }
 ];
 module.exports.metadata = 
@@ -481,7 +481,6 @@ module.exports.metadata =
     "cordova-plugin-media-capture": "1.4.0",
     "cordova-plugin-network-information": "1.3.0",
     "cordova-plugin-screen-orientation": "1.4.2",
-    "cordova-plugin-secure-storage": "2.6.0",
     "cordova-plugin-splashscreen": "4.0.0",
     "cordova-plugin-sqlite-2": "1.0.4",
     "cordova-plugin-statusbar": "2.2.0",
@@ -489,8 +488,9 @@ module.exports.metadata =
     "cordova-plugin-video-editor": "1.1.2",
     "cordova-plugin-whitelist": "1.3.0",
     "cordova-plugin-x-toast": "2.5.2",
-    "phonegap-plugin-barcodescanner": "6.0.3",
-    "cordova-plugin-compat": "1.1.0"
+    "cordova-plugin-compat": "1.1.0",
+    "phonegap-plugin-barcodescanner": "6.0.4",
+    "cordova-plugin-secure-storage": "2.6.3"
 };
 // BOTTOM OF METADATA
 });

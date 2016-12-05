@@ -136,22 +136,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-secure-storage": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-secure-storage@2.6.0"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "phonegap-plugin-barcodescanner": {
-        "source": {
-            "type": "registry",
-            "id": "phonegap-plugin-barcodescanner@6.0.3"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-device": {
         "source": {
             "type": "registry",
@@ -172,6 +156,22 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-media-capture@1.4.0"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "phonegap-plugin-barcodescanner": {
+        "source": {
+            "type": "registry",
+            "id": "phonegap-plugin-barcodescanner@~6.0.4"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-secure-storage": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-secure-storage@2.6.3"
         },
         "is_top_level": true,
         "variables": {}

@@ -109,6 +109,18 @@ exports.defineAutoTests = function() {
             }, handlers.errorHandler, SERVICE);
         });
 
+        it('should call the error handler when setting a value that is not a string', function (done) {
+            spyOn(handlers, 'errorHandler').and.callFake(function () {
+                expect(handlers.successHandler).not.toHaveBeenCalled();
+                done();
+            });
+            spyOn(handlers, 'successHandler');
+
+            ss = new cordova.plugins.SecureStorage(function () {
+                ss.get(handlers.successHandler, handlers.errorHandler, {'foo': 'bar'});
+            }, handlers.errorHandler, SERVICE);
+        });
+
 
         it('should be able to remove a key/value', function (done) {
             spyOn(handlers, 'successHandler').and.callFake(function (res) {
@@ -211,6 +223,62 @@ exports.defineAutoTests = function() {
                 }, function () {}, 'foo', 'foo');
             }, handlers.errorHandler, SERVICE);
         });
+
+        it('should be able to handle simultaneous sets and gets', function (done) {
+            var count = 0,
+                total = 5,
+                decrypt_success, encrypt_success,
+                i, values = {};
+
+            spyOn(handlers, 'errorHandler');
+
+            for (i=0 ; i < total ; i++) {
+                values[i] = i.toString();
+            }
+
+            decrypt_success = function () {
+                count ++;
+                if (count === total) {
+                    expect(handlers.errorHandler).not.toHaveBeenCalled();
+                    done();
+                }
+            };
+
+            function decrypt() {
+                count = 0;
+                for (i = 0 ; i < total; i++) {
+                    ss.get(
+                        decrypt_success,
+                        handlers.errorHandler,
+                        i.toString()
+                    );
+                }
+            }
+
+            encrypt_success = function () {
+                count ++;
+                if (count === total) {
+                    decrypt();
+                }
+            };
+
+            function encrypt() {
+                count = 0;
+                for (i = 0 ; i < total; i++) {
+                    ss.set(
+                        encrypt_success,
+                        handlers.errorHandler,
+                        i.toString(), values[i]
+                    );
+                }
+            }
+
+            ss = new cordova.plugins.SecureStorage(function () {
+                encrypt();
+            }, handlers.errorHandler, SERVICE);
+
+        });
+
     });
 
     if (cordova.platformId === 'android') {

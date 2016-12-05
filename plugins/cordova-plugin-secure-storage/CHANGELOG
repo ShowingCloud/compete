@@ -1,6 +1,25 @@
 Changelog
 =========
 
+2.6.3 - 2016-11-21
+------------------
+
+- Android now thread-safe, fixes the issue with concurrent decryptions failing.
+  [demetris-manikas]
+
+2.6.2 - 2016-11-18
+------------------
+
+- Introduce a queue for decryption on Android so that only one
+  happens at a time. Fixes #75.
+  [ggozad]
+
+2.6.1 - 2016-11-09
+------------------
+
+- Make sure only string values are stored.
+  [demetris-manikas]
+
 2.6.0 - 2016-10-26
 ------------------
 
@@ -37,8 +56,7 @@ Changelog
 2.4.1 - 2016-07-28
 ------------------
 
-- Make intitializing SecureStorage fail on android if screen-lock settings not appropriate.
-  Introdudce secureDevice as an android-only function to bring up screen-lock settings with only appropriate options.
+- Make intitializing SecureStorage fail on android if screen-lock settings not appropriate. Introdudce secureDevice as an android-only function to bring up screen-lock settings with only appropriate options.
   [ggozad, jdard, demetris-manikas]
 
 2.4.0 - 2016-07-04
