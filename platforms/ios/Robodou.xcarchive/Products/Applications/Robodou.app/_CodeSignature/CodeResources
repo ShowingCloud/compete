@@ -222,7 +222,7 @@
 		</data>
 		<key>CDVLaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib</key>
 		<data>
-		F7LrhSr3nGKHeKgFmlKXtwKqUbU=
+		ElUctjEGHWrXOrIPGLNShe/3Nz0=
 		</data>
 		<key>CDVLaunchScreen.storyboardc/Info.plist</key>
 		<data>
@@ -230,7 +230,7 @@
 		</data>
 		<key>CDVLaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib</key>
 		<data>
-		8vWbHOcA5SOn2Z8e/qofCed1t5A=
+		DM9uj/FWZvwReGGf7a6+upB3B8E=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -294,7 +294,7 @@
 		</data>
 		<key>MainViewController.nib</key>
 		<data>
-		vSzHhj8Br8zlvG7UtZpiuLVMzYQ=
+		e6wJnhdoJuV7PFVBCVTFl+37tfM=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -323,7 +323,7 @@
 		</data>
 		<key>scannerOverlay.nib</key>
 		<data>
-		AT5Uliq9oP6LjI0JOxw1QUU+Qn8=
+		eF8nmQLHXfQ+Znlq27zosaatm8s=
 		</data>
 		<key>www/cordova-js-src/exec.js</key>
 		<data>
@@ -471,7 +471,7 @@
 		</data>
 		<key>www/js/my-app.js</key>
 		<data>
-		dcQhsTah6iLS9UeK7Y1FSB27Ssg=
+		l1MGILeTdTmjTzE+FBJB2Pjc4hg=
 		</data>
 		<key>www/js/pouchdb.cordova-sqlite.js</key>
 		<data>
@@ -1295,11 +1295,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			F7LrhSr3nGKHeKgFmlKXtwKqUbU=
+			ElUctjEGHWrXOrIPGLNShe/3Nz0=
 			</data>
 			<key>hash2</key>
 			<data>
-			GIhCsDcL2Iutme9VPSvZoi1KRylhYCxJitVeXHQq9O4=
+			5zCpguv4uoRR8s38kRH1s26zKZL+ZukSHS9yYVWA8hE=
 			</data>
 		</dict>
 		<key>CDVLaunchScreen.storyboardc/Info.plist</key>
@@ -1317,11 +1317,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			8vWbHOcA5SOn2Z8e/qofCed1t5A=
+			DM9uj/FWZvwReGGf7a6+upB3B8E=
 			</data>
 			<key>hash2</key>
 			<data>
-			jFsAN6Ws5RlsINHF0vzQs2TOwMDElECjbg9LNuSsQ1M=
+			LnXSn5GY2bsY5+RXH1gozJ/3lD9fvoFZ8NjrRm2Lio0=
 			</data>
 		</dict>
 		<key>LaunchImage-568h@2x.png</key>
@@ -1482,11 +1482,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			vSzHhj8Br8zlvG7UtZpiuLVMzYQ=
+			e6wJnhdoJuV7PFVBCVTFl+37tfM=
 			</data>
 			<key>hash2</key>
 			<data>
-			IZg8gYlUnBIpZaQWN6TVC3JwASNRLZCYa4/71TTlrZo=
+			uuKLYYpoG8ddDMSKugLJz8Ns3cTeSiXBhNoaiXOVnfg=
 			</data>
 		</dict>
 		<key>SAMKeychain.bundle/en.lproj/SAMKeychain.strings</key>
@@ -1539,11 +1539,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			AT5Uliq9oP6LjI0JOxw1QUU+Qn8=
+			eF8nmQLHXfQ+Znlq27zosaatm8s=
 			</data>
 			<key>hash2</key>
 			<data>
-			OBQojkq0J8Vn1z2vieLgp4Fa2dV22i6209KB4I61g+Q=
+			7yq6pJcbW4h/RrG7wKPu/YOvvMzwo0C5yP92iAGkRB8=
 			</data>
 		</dict>
 		<key>www/cordova-js-src/exec.js</key>
@@ -1946,11 +1946,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			dcQhsTah6iLS9UeK7Y1FSB27Ssg=
+			l1MGILeTdTmjTzE+FBJB2Pjc4hg=
 			</data>
 			<key>hash2</key>
 			<data>
-			Y9Wt/i7plr5aaF8RKDYyZO1CCJItRPnC2EVnr9Y0U+k=
+			0FQVlwm5aFbzg7ZxV2/Y4mAHOh60F2y3FUpc2mSTEG0=
 			</data>
 		</dict>
 		<key>www/js/pouchdb.cordova-sqlite.js</key>

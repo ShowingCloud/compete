@@ -828,7 +828,9 @@ var app = {
             track.reset();
         });
         $$(document).on('click', '.back-tag', function() {
-            mainView.router.back();
+            myApp.confirm("是否返回，数据不会保存", "", function() {
+                mainView.router.back();
+            });
         });
 
         myApp.onPageBeforeInit('home select data msg player round stopWatch upload', function(page) {
