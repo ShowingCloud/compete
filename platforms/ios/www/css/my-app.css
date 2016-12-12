@@ -527,7 +527,7 @@ aside-linker {
     color: #c9e3ff;
 }
 
-#playerTable .wrapper－dropdown {
+#playerTable .wrapper-dropdown {
     position: relative;
     border: 0;
     width: 253px;
@@ -561,11 +561,11 @@ aside-linker {
     overflow-y: scroll;
 }
 
-#playerTable .wrapper－dropdown.active ul {
+#playerTable .wrapper-dropdown.active ul {
     display: block;
 }
 
-#playerTable .wrapper－dropdown.active .up-arrow {
+#playerTable .wrapper-dropdown.active .up-arrow {
     display: block;
 }
 

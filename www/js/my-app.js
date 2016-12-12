@@ -45,13 +45,13 @@ var remoteCouch = false;
 
 // apption for app
 var app_options = {
-    auth_host: "http://dev.account.domelab.com",
-    host: "http://dev.robodou.cn",
-    ws: "ws://dev.robodou.cn/cable"
+    // auth_host: "http://dev.account.domelab.com",
+    // host: "http://dev.robodou.cn",
+    // ws: "ws://dev.robodou.cn/cable"
 
-    // auth_host: "https://account.domelab.com",
-    // host: "http://www.robodou.cn",
-    // ws: "wss://ws.robodou.cn/cable"
+    auth_host: "https://account.domelab.com",
+    host: "http://www.robodou.cn",
+    ws: "wss://ws.robodou.cn/cable"
 
 };
 
@@ -646,9 +646,26 @@ var app = {
         });
     },
     bind: function() { //event Handling
-        //Globle ajax setup
+        $$(document).on('ajaxSuccess', function(e) {
+            var xhr = e.detail.xhr;
+            if (xhr.requestParameters.method === "GET") {
+                if (xhr.requestUrl.includes(app_options.host)) {
+                    var response = xhr.response;
+                    if (!response) {
+                        return;
+                    }
+                    if (typeof response !== "string") {
+                        response = JSON.stringify(response);
+                    }
+                    sessionStorage.setItem(xhr.requestUrl, response);
+                }
+
+            }
+        });
+        //Globle setup
         $$.ajaxSetup({
-            timeout: 10000,
+            cache: true,
+            timeout: 12000,
             error: function(xhr, status) {
                 console.log(status);
                 console.log(xhr);
@@ -679,6 +696,16 @@ var app = {
                 } else {
                     window.plugins.toast.showLongBottom("网络请求出错(" + status + ")");
                     myApp.hidePreloader();
+                    if (status === 0) {
+                        var request = sessionStorage.getItem(xhr.requestUrl);
+                        if (!request) {
+                            return;
+                        }
+                        if (xhr.requestParameters.dataType === "json") {
+                            request = JSON.parse(request);
+                        }
+                        xhr.requestParameters.success(request);
+                    }
                 }
                 myApp.hideIndicator();
                 // myApp.hidePreloader();
@@ -725,7 +752,7 @@ var app = {
 
 
         $$(document).click(function() {
-            $$('.wrapper－dropdown').removeClass('active');
+            $$('.wrapper-dropdown').removeClass('active');
         });
 
         //Check uuid
@@ -735,6 +762,47 @@ var app = {
 
         $$('#score').on('taphold', function() {
             track.scan();
+        });
+
+        $$(document).on('taphold', "#playerTable .wrapper-dropdown", function() {
+            myApp.showIndicator();
+            $$.ajax({
+                url: app_options.host + "/api/v1/events/group_teams",
+                data: {
+                    "event_id": temp.event.id,
+                    "group": temp.event.group,
+                    "schedule_id": temp.schedule_id,
+                },
+                success: function(response) {
+                    var teams = JSON.parse(response),
+                        length = teams.length,
+                        get_success = 0,
+                        get_complete = 0;
+                    teams.forEach(function(team) {
+                        var url = app_options.host + "/api/v1/events/get_team_by_identifier";
+                        $$.ajax({
+                            url: url,
+                            data: {
+                                identifier: team.identifier
+                            },
+                            success: function() {
+                                get_success++;
+                            },
+                            complete: function() {
+                                get_complete++;
+                                if (get_complete === length) {
+                                    myApp.hideIndicator();
+                                    if (get_success === length) {
+                                        myApp.alert("队伍详情缓存成功");
+                                    } else {
+                                        myApp.alert((length - get_success) + "个队伍详情缓存失败，请重试");
+                                    }
+                                }
+                            }
+                        });
+                    });
+                }
+            });
         });
 
         //Handling logout
@@ -1608,13 +1676,13 @@ myApp.onPageInit('player', function() {
         "schedule_id": temp.schedule_id,
     });
     $$("#player-title").text(temp.compete.name + " " + temp.event.name + " " + temp.schedule_name);
-    $$(".wrapper－dropdown").on('click', function(event) {
+    $$(".wrapper-dropdown").on('click', function(event) {
         $$(this).toggleClass("active");
         event.stopPropagation();
     });
-    $$(".wrapper－dropdown li").on('click', function() {
+    $$(".wrapper-dropdown li").on('click', function() {
         var filter = $$(this).attr("name");
-        $$(".wrapper－dropdown span").text($$(this).text());
+        $$(".wrapper-dropdown span").text($$(this).text());
         if (filter === "unfinished") {
             app.getTeams({
                 "event_id": temp.event.id,
@@ -1777,7 +1845,7 @@ myApp.onPageInit('stopWatch', function(page) {
             var score_input;
             if (sa.name === "最终成绩") {
                 var formula = sa.formula;
-                var formula_holder = $$("<div class='formula'></div>");
+                var formula_holder = $$("<div class='formula'class='formula'></div>");
                 formula_holder.data("formula", formula);
                 $$("#team1 .scores").append(formula_holder);
                 if (formula.rounds) {
@@ -1795,7 +1863,7 @@ myApp.onPageInit('stopWatch', function(page) {
                 case 3:
                     break;
                 case 2: //秒表
-                    score_input = $$('<input class="score time-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
+                    sccore_input = $$('<input class="score time-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
                     break;
                 case 1: //手动计分
                     if (sa.value_type === "2") {
