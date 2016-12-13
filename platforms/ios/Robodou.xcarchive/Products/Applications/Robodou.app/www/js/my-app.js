@@ -45,13 +45,13 @@ var remoteCouch = false;
 
 // apption for app
 var app_options = {
-    // auth_host: "http://dev.account.domelab.com",
-    // host: "http://dev.robodou.cn",
-    // ws: "ws://dev.robodou.cn/cable"
+    auth_host: "http://dev.account.domelab.com",
+    host: "http://dev.robodou.cn",
+    ws: "ws://dev.robodou.cn/cable"
 
-    auth_host: "https://account.domelab.com",
-    host: "http://www.robodou.cn",
-    ws: "wss://ws.robodou.cn/cable"
+    // auth_host: "https://account.domelab.com",
+    // host: "http://www.robodou.cn",
+    // ws: "wss://ws.robodou.cn/cable"
 
 };
 
@@ -270,7 +270,7 @@ var track = {
         s = Math.floor(time / 1000);
         ms = time % 1000;
 
-        newTime = pad(m, 2) + ':' + pad(s, 2) + ':' + pad(ms, 2);
+        newTime = pad(m, 2) + '分' + pad(s, 2) + '秒' + pad(ms, 2) + "毫秒";
         return newTime;
     },
     unformat: function(data) {
@@ -328,7 +328,7 @@ var track = {
         }, 10000);
     },
     onDiscoverDevice: function(device) {
-        // console.log(track.getManufacturerData(device.advertising));
+        console.log(track.getManufacturerData(device.advertising));
 
         function onTarget(device) {
             myApp.hidePreloader();
@@ -383,10 +383,10 @@ var track = {
                     track.status.playing = 0;
                     var time = d[5] + d[4] * 256 + d[3] * 256 * 256 + d[2] * 256 * 256 * 256;
                     if (time > temp.event.limit * 1000) {
-                        myApp.alert("已超时：" + track.formatTime(time) + "秒", "");
+                        myApp.alert("已超时：" + parseFloat(time / 1000).toFixed(2), "");
                         racke.render(temp.event.limit * 1000);
                     } else {
-                        myApp.confirm(track.formatTime(time), "", function() {
+                        myApp.confirm("本次用时：" + parseFloat(time / 1000).toFixed(2), "", function() {
                             track.render(time);
                         });
                     }
@@ -513,22 +513,23 @@ var track = {
         });
     },
     render: function(time) {
-        var elements = document.getElementsByClassName("track-score");
-        for (var i = 0; i < elements.length; i++) {
-            if (!elements[i].value) {
-                elements[i].value = track.formatTime(time);
-                if (i === elements.length - 1) {
-                    window.plugins.toast.showLongCenter("本次记分已完成");
-                    document.getElementById('run').onclick = null;
-                    total = 0;
-                    for (var j = 0; j < elements.length; i++) {
-                        total = total + track.unformat(elements[j].value);
-                    }
-                    $$(".active ble-score").val(track.formatTime(total));
-                }
-                break;
-            }
-        }
+        $$(".active .ble-score").val(parseFloat(time / 1000).toFixed(2));
+        // var elements = document.getElementsByClassName("track-score");
+        // for (var i = 0; i < elements.length; i++) {
+        //     if (!elements[i].value) {
+        //         elements[i].value = track.formatTime(time);
+        //         if (i === elements.length - 1) {
+        //             window.plugins.toast.showLongCenter("本次记分已完成");
+        //             document.getElementById('run').onclick = null;
+        //             total = 0;
+        //             for (var j = 0; j < elements.length; i++) {
+        //                 total = total + track.unformat(elements[j].value);
+        //             }
+        //             $$(".active ble-score").val(track.formatTime(total));
+        //         }
+        //         break;
+        //     }
+        // }
     }
 };
 
@@ -760,9 +761,9 @@ var app = {
             myApp.alert(uuid, '');
         });
 
-        $$('#score').on('taphold', function() {
-            track.scan();
-        });
+        // $$('#score').on('taphold', function() {
+        //     track.scan();
+        // });
 
         $$(document).on('taphold', "#playerTable .wrapper-dropdown", function() {
             myApp.showIndicator();
@@ -779,27 +780,30 @@ var app = {
                         get_success = 0,
                         get_complete = 0;
                     teams.forEach(function(team) {
-                        var url = app_options.host + "/api/v1/events/get_team_by_identifier";
-                        $$.ajax({
-                            url: url,
-                            data: {
-                                identifier: team.identifier
-                            },
-                            success: function() {
-                                get_success++;
-                            },
-                            complete: function() {
-                                get_complete++;
-                                if (get_complete === length) {
-                                    myApp.hideIndicator();
-                                    if (get_success === length) {
-                                        myApp.alert("队伍详情缓存成功");
-                                    } else {
-                                        myApp.alert((length - get_success) + "个队伍详情缓存失败，请重试");
+                        setTimeout(function() {
+                            var url = app_options.host + "/api/v1/events/get_team_by_identifier";
+                            $$.ajax({
+                                url: url,
+                                data: {
+                                    identifier: team.identifier
+                                },
+                                success: function() {
+                                    get_success++;
+                                },
+                                complete: function() {
+                                    get_complete++;
+                                    if (get_complete === length) {
+                                        myApp.hideIndicator();
+                                        if (get_success === length) {
+                                            myApp.alert("队伍详情缓存成功");
+                                        } else {
+                                            myApp.alert((length - get_success) + "个队伍详情缓存失败，请重试");
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        }, 1000);
+
                     });
                 }
             });
@@ -1259,7 +1263,7 @@ var app = {
                         var m = value.slice(0, value.indexOf("分"));
                         var s = value.slice(value.indexOf("分") + 1, value.indexOf("秒"));
                         var S = value.slice(value.indexOf("秒") + 1, value.indexOf("毫秒"));
-                        score = parseInt(m) * 60000 + parseInt(s) * 1000 + parseInt(S);
+                        score = parseInt(m) * 60000 + parseInt(s) * 1000 + parseFloat(S / 1000).toFixed(2);
                     } else if (_this.attr('type') === "radio") {
                         if (_this.prop("checked")) {
                             checked_radios.push(id);
@@ -1810,7 +1814,13 @@ myApp.onPageInit('stopWatch', function(page) {
                         $$("#cancel1, #cancel2").remove();
                     }
                     if (input.hasClass("time-picker")) {
-                        var date = new Date(parseInt(value2.val));
+                        var dateStr = value2.val;
+                        var date;
+                        if (dateStr.includes('.')) {
+                            date = new Date(parseFloat(value2.val) * 1000);
+                        } else {
+                            date = new Date(parseFloat(value2.val));
+                        }
                         var str = '';
                         str += date.getUTCMinutes() + "分";
                         str += date.getUTCSeconds() + "秒";
@@ -2051,7 +2061,7 @@ myApp.onPageInit('stopWatch', function(page) {
     var radios = $$(".scores input[type=radio]");
     if (radios.length) {
         $$(".integer-picker").each(function() {
-            $$(this).parent().hide().val("0");
+            $$(this).val("0").parent().hide();
         });
         $$.each(radios, function(i, v) {
             var _this = $$(v);
@@ -2060,7 +2070,7 @@ myApp.onPageInit('stopWatch', function(page) {
             _this.attr('name', new_name);
             _this.on('change', function() {
                 if (_this.val() === "1") {
-                    _this.parents(".tab").find(".integer-picker").parent().val("0").hide();
+                    _this.parents(".tab").find(".integer-picker").val("0").parent().hide();
                 } else {
                     _this.parents(".tab").find(".integer-picker").parent().show();
                 }
