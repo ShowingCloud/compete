@@ -35,7 +35,10 @@ document.addEventListener('deviceready', function() {
 
 //watch screen orientation
 window.addEventListener("orientationchange", function() {
-    console.log(screen.orientation); // e.g. portrait
+    console.log(screen.orientation);
+    if (screen.orientation.includes("portrait")) {
+        screen.lockOrientation('landscape');
+    }
 });
 
 var teamList;
@@ -780,30 +783,27 @@ var app = {
                         get_success = 0,
                         get_complete = 0;
                     teams.forEach(function(team) {
-                        setTimeout(function() {
-                            var url = app_options.host + "/api/v1/events/get_team_by_identifier";
-                            $$.ajax({
-                                url: url,
-                                data: {
-                                    identifier: team.identifier
-                                },
-                                success: function() {
-                                    get_success++;
-                                },
-                                complete: function() {
-                                    get_complete++;
-                                    if (get_complete === length) {
-                                        myApp.hideIndicator();
-                                        if (get_success === length) {
-                                            myApp.alert("队伍详情缓存成功");
-                                        } else {
-                                            myApp.alert((length - get_success) + "个队伍详情缓存失败，请重试");
-                                        }
+                        var url = app_options.host + "/api/v1/events/get_team_by_identifier";
+                        $$.ajax({
+                            url: url,
+                            data: {
+                                identifier: team.identifier
+                            },
+                            success: function() {
+                                get_success++;
+                            },
+                            complete: function() {
+                                get_complete++;
+                                if (get_complete === length) {
+                                    myApp.hideIndicator();
+                                    if (get_success === length) {
+                                        myApp.alert("队伍详情缓存成功");
+                                    } else {
+                                        myApp.alert((length - get_success) + "个队伍详情缓存失败，请重试");
                                     }
                                 }
-                            });
-                        }, 1000);
-
+                            }
+                        });
                     });
                 }
             });
@@ -970,6 +970,7 @@ var app = {
                     animatePages: false
                 });
             } else {
+                app.getScoreAttr(event_id, schedules[0].schedule_id);
                 temp.kind = schedules[0].kind;
                 temp.schedule_name = schedules[0].schedule_name;
                 temp.schedule_id = schedules[0].schedule_id;
@@ -1014,9 +1015,10 @@ var app = {
         //     }
         // });
     },
-    getScoreAttr: function(event_id) {
+    getScoreAttr: function(event_id, schedule_id) {
         $$.getJSON(app_options.host + "/api/v1/events/score_attrs", {
-            "event_id": event_id
+            "event_id": event_id,
+            "schedule_id": schedule_id
         }, function(response) {
             if (response.length) {
                 scoreAttr = response;
@@ -1419,14 +1421,32 @@ var app = {
             formula: {},
             scoreAttr: scoreAttr
         };
-        var remark;
+        var remark, out_of_rounds;
         scoreData.score1 = score1;
         scoreData.formula = $$('.formula').data('formula');
         //Get remark
         remark = $$(".remarkInput").val();
+
         if (remark) {
             scoreData.remark = remark;
         }
+
+        //Get out_of_rounds score
+        out_of_rounds = [].slice.call(document.querySelectorAll(".out_of_rounds"));
+        if (out_of_rounds.length) {
+            scoreData.out_of_rounds = out_of_rounds.map(function(e) {
+                var value = e.value;
+                var name = e.dataset.name;
+                var id = e.dataset.id;
+                return {
+                    id: {
+                        val: value,
+                        name: name
+                    }
+                };
+            });
+        }
+
         //Get signature
         var CanvasElement = document.getElementById("canvas");
 
@@ -1488,7 +1508,11 @@ var app = {
         }).then(function(doc) {
             console.log(doc);
             var formula = JSON.stringify(doc.formula);
-            var score_attribute = JSON.stringify(doc.score1);
+            var score1 = doc.score1;
+            if (doc.out_of_rounds && doc.out_of_rounds.length) {
+                score1.push(doc.out_of_rounds);
+            }
+            var score_attribute = JSON.stringify(score1);
             var toPost = {
                 event_id: doc.event.id,
                 schedule_name: doc.schedule_name,
@@ -1615,7 +1639,7 @@ myApp.onPageInit('select', function(page) {
                         temp.compete = compete;
                         temp.event = event;
                         app.getSchedule(event.id, event.group);
-                        app.getScoreAttr(event.id);
+
                     });
                 };
                 if ($$.isArray(g2.z_e)) {
@@ -1715,6 +1739,7 @@ myApp.onPageInit('round', function() {
         var data = $$(this).dataset();
         temp.schedule_name = data.schedule_name;
         temp.schedule_id = data.schedule_id;
+        app.getScoreAttr(temp.event.id, data.schedule_id);
         mainView.router.loadPage("player.html");
     });
 });
@@ -1798,7 +1823,11 @@ myApp.onPageInit('data', function(page) {
 myApp.onPageInit('stopWatch', function(page) {
     console.log(page);
 
-    function loadScore(score) {
+    function loadScore(score, out_of_rounds) {
+        $$.each(out_of_rounds, function(key, value) {
+            var input = $$(".out_of_rounds[data-id='" + key + "']");
+            input.val(value.val);
+        });
         $$.each(score, function(index1, value1) {
             var tab = $$("#round" + (parseInt(index1) + 1));
             if (!value1) {
@@ -1855,12 +1884,18 @@ myApp.onPageInit('stopWatch', function(page) {
             var score_input;
             if (sa.name === "最终成绩") {
                 var formula = sa.formula;
-                var formula_holder = $$("<div class='formula'class='formula'></div>");
+                var formula_holder = $$("<div class='formula'></div>");
                 formula_holder.data("formula", formula);
                 $$("#team1 .scores").append(formula_holder);
                 if (formula.rounds) {
                     rounds = formula.rounds;
                 }
+                return;
+            }
+            if (sa.in_rounds === false) {
+                score_input = $$('<input class="score out_of_rounds" data-id=' + sa.id + ' data-name="' + sa.name + '">');
+                score_wrapper.append(score_input);
+                score_wrapper.insertAfter("#team1 .scores");
                 return;
             }
             scoreFrom.push(sa.score_type);
@@ -1873,7 +1908,7 @@ myApp.onPageInit('stopWatch', function(page) {
                 case 3:
                     break;
                 case 2: //秒表
-                    sccore_input = $$('<input class="score time-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
+                    score_input = $$('<input class="score time-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
                     break;
                 case 1: //手动计分
                     if (sa.value_type === "2") {
@@ -2070,9 +2105,9 @@ myApp.onPageInit('stopWatch', function(page) {
             _this.attr('name', new_name);
             _this.on('change', function() {
                 if (_this.val() === "1") {
-                    _this.parents(".tab").find(".integer-picker").val("0").parent().hide();
+                    _this.parents(".tab").find(".integer-picker, .float_picker").val("0").parent().hide();
                 } else {
-                    _this.parents(".tab").find(".integer-picker").parent().show();
+                    _this.parents(".tab").find(".integer-picker, .float_picker").parent().show();
                 }
             });
 
@@ -2091,7 +2126,7 @@ myApp.onPageInit('stopWatch', function(page) {
     if (temp.edit) {
         console.log("edit");
         console.log(temp.edit);
-        loadScore(temp.edit.score1);
+        loadScore(temp.edit.score1, temp.edit.out_of_rounds);
         $$(".remarkInput").val(temp.edit.remark);
 
         $$("#score-submit").on("click", function() {
@@ -2139,7 +2174,7 @@ myApp.onPageInit('stopWatch', function(page) {
             if (err) {
                 return console.log(err);
             } else {
-                loadScore(doc.score1);
+                loadScore(doc.score1, doc.out_of_rounds);
             }
         });
     }

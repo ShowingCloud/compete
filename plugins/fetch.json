@@ -40,30 +40,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-whitelist": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-whitelist@1"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-console": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-console@~1.0.3"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-vibration": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-vibration@~2.1.1"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-battery-status": {
         "source": {
             "type": "registry",
@@ -172,6 +148,30 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-secure-storage@2.6.3"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-vibration": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-vibration@~2.1.1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-console": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-console@~1.0.3"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-whitelist": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-whitelist@1"
         },
         "is_top_level": true,
         "variables": {}

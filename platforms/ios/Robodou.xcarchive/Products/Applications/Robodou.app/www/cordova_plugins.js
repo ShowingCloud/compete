@@ -49,22 +49,6 @@ module.exports = [
         ]
     },
     {
-        "id": "cordova-plugin-console.console",
-        "file": "plugins/cordova-plugin-console/www/console-via-logger.js",
-        "pluginId": "cordova-plugin-console",
-        "clobbers": [
-            "console"
-        ]
-    },
-    {
-        "id": "cordova-plugin-console.logger",
-        "file": "plugins/cordova-plugin-console/www/logger.js",
-        "pluginId": "cordova-plugin-console",
-        "clobbers": [
-            "cordova.logger"
-        ]
-    },
-    {
         "id": "cordova-plugin-device.device",
         "file": "plugins/cordova-plugin-device/www/device.js",
         "pluginId": "cordova-plugin-device",
@@ -406,15 +390,6 @@ module.exports = [
         ]
     },
     {
-        "id": "cordova-plugin-vibration.notification",
-        "file": "plugins/cordova-plugin-vibration/www/vibration.js",
-        "pluginId": "cordova-plugin-vibration",
-        "merges": [
-            "navigator.notification",
-            "navigator"
-        ]
-    },
-    {
         "id": "cordova-plugin-video-editor.VideoEditor",
         "file": "plugins/cordova-plugin-video-editor/www/VideoEditor.js",
         "pluginId": "cordova-plugin-video-editor",
@@ -464,6 +439,31 @@ module.exports = [
         "file": "plugins/cordova-plugin-secure-storage/www/sjcl_ss.js",
         "pluginId": "cordova-plugin-secure-storage",
         "runs": true
+    },
+    {
+        "id": "cordova-plugin-vibration.notification",
+        "file": "plugins/cordova-plugin-vibration/www/vibration.js",
+        "pluginId": "cordova-plugin-vibration",
+        "merges": [
+            "navigator.notification",
+            "navigator"
+        ]
+    },
+    {
+        "id": "cordova-plugin-console.console",
+        "file": "plugins/cordova-plugin-console/www/console-via-logger.js",
+        "pluginId": "cordova-plugin-console",
+        "clobbers": [
+            "console"
+        ]
+    },
+    {
+        "id": "cordova-plugin-console.logger",
+        "file": "plugins/cordova-plugin-console/www/logger.js",
+        "pluginId": "cordova-plugin-console",
+        "clobbers": [
+            "cordova.logger"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -472,7 +472,6 @@ module.exports.metadata =
     "cordova-plugin-battery-status": "1.2.0",
     "cordova-plugin-ble-central": "1.1.3",
     "cordova-plugin-camera": "2.3.0",
-    "cordova-plugin-console": "1.0.4",
     "cordova-plugin-device": "1.1.3",
     "cordova-plugin-file": "4.3.0",
     "cordova-plugin-file-transfer": "1.6.0",
@@ -484,13 +483,14 @@ module.exports.metadata =
     "cordova-plugin-splashscreen": "4.0.0",
     "cordova-plugin-sqlite-2": "1.0.4",
     "cordova-plugin-statusbar": "2.2.0",
-    "cordova-plugin-vibration": "2.1.2",
     "cordova-plugin-video-editor": "1.1.2",
-    "cordova-plugin-whitelist": "1.3.0",
     "cordova-plugin-x-toast": "2.5.2",
     "cordova-plugin-compat": "1.1.0",
     "phonegap-plugin-barcodescanner": "6.0.4",
-    "cordova-plugin-secure-storage": "2.6.3"
+    "cordova-plugin-secure-storage": "2.6.3",
+    "cordova-plugin-vibration": "2.1.3",
+    "cordova-plugin-console": "1.0.5",
+    "cordova-plugin-whitelist": "1.3.1"
 };
 // BOTTOM OF METADATA
 });

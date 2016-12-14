@@ -222,7 +222,7 @@
 		</data>
 		<key>CDVLaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib</key>
 		<data>
-		XcHuKaCcWqzfV6UOfX0zVw0zwHQ=
+		WkrQ5AKLWwiMWsxhzIsLFDPcvgU=
 		</data>
 		<key>CDVLaunchScreen.storyboardc/Info.plist</key>
 		<data>
@@ -230,7 +230,7 @@
 		</data>
 		<key>CDVLaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib</key>
 		<data>
-		HT/mnBCtY1kWgnlxjFMVsEpKeuw=
+		w/ThpQJHL3oQ2MykHbw5tshTPXk=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -294,7 +294,7 @@
 		</data>
 		<key>MainViewController.nib</key>
 		<data>
-		gEkusfCMalmzb+EPnpzYYQpMU3Y=
+		ap0Ua23b6gIg1+oGkgSo7WWe+ss=
 		</data>
 		<key>PkgInfo</key>
 		<data>
@@ -315,7 +315,7 @@
 		</data>
 		<key>config.xml</key>
 		<data>
-		tfhacKskWZX/UqK0frOirEvPWYc=
+		blseXOGLaLJFj/4fFLStIDuFalA=
 		</data>
 		<key>embedded.mobileprovision</key>
 		<data>
@@ -323,7 +323,7 @@
 		</data>
 		<key>scannerOverlay.nib</key>
 		<data>
-		V525E9ITsUekZ5+nCzMmrjlloUk=
+		fnW4/8RsUF1OeXnvjVPp5dw3m70=
 		</data>
 		<key>www/cordova-js-src/exec.js</key>
 		<data>
@@ -339,7 +339,7 @@
 		</data>
 		<key>www/cordova_plugins.js</key>
 		<data>
-		Fugwdj18Yp4w9KvUvBtRbvuEkKM=
+		FUVnHrkxbtPKJZ5sXzu0rCB+ksQ=
 		</data>
 		<key>www/css/animate.min.css</key>
 		<data>
@@ -471,7 +471,7 @@
 		</data>
 		<key>www/js/my-app.js</key>
 		<data>
-		VLErp/JljzbB5eLoNJm7+1wX9Io=
+		hqTwqj8LILXdA1lkSQ8Den4xj9w=
 		</data>
 		<key>www/js/pouchdb.cordova-sqlite.js</key>
 		<data>
@@ -1295,11 +1295,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			XcHuKaCcWqzfV6UOfX0zVw0zwHQ=
+			WkrQ5AKLWwiMWsxhzIsLFDPcvgU=
 			</data>
 			<key>hash2</key>
 			<data>
-			xjpjR/McMunB3uHxG0iwvVqUvqmOyYOzBo1Dkh2X7Q4=
+			omgk6YeUG7F8nxtpSAzLVMs8gYwbizsJ/A9tFo4+kGY=
 			</data>
 		</dict>
 		<key>CDVLaunchScreen.storyboardc/Info.plist</key>
@@ -1317,11 +1317,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			HT/mnBCtY1kWgnlxjFMVsEpKeuw=
+			w/ThpQJHL3oQ2MykHbw5tshTPXk=
 			</data>
 			<key>hash2</key>
 			<data>
-			uFZ2Aehcih1LG7+3Y5HOpsQn30ibKD4g4WIVclPt5p0=
+			Z62D+lDXwNePwGh0WTezYkx6YFpkuqAwcT0e5woH/f8=
 			</data>
 		</dict>
 		<key>LaunchImage-568h@2x.png</key>
@@ -1482,11 +1482,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			gEkusfCMalmzb+EPnpzYYQpMU3Y=
+			ap0Ua23b6gIg1+oGkgSo7WWe+ss=
 			</data>
 			<key>hash2</key>
 			<data>
-			hkFjn9WP/7TX2KxPW4yuTNy7xJ7kITiW+X8Iw2E49Wo=
+			F+XKzqiwVLfuy3J5mSiakKV92C4DLmXw2etuKFXZ2c0=
 			</data>
 		</dict>
 		<key>SAMKeychain.bundle/en.lproj/SAMKeychain.strings</key>
@@ -1517,11 +1517,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			tfhacKskWZX/UqK0frOirEvPWYc=
+			blseXOGLaLJFj/4fFLStIDuFalA=
 			</data>
 			<key>hash2</key>
 			<data>
-			kaP6qt/j3UCa6rFmx1LCXdPdCvbCILj8n8UbzcF0RbE=
+			BRc9KI9Jj9rIPApwMbhBSh2Zh+OGKAvA4Qr1YcU7lrc=
 			</data>
 		</dict>
 		<key>embedded.mobileprovision</key>
@@ -1539,11 +1539,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			V525E9ITsUekZ5+nCzMmrjlloUk=
+			fnW4/8RsUF1OeXnvjVPp5dw3m70=
 			</data>
 			<key>hash2</key>
 			<data>
-			5sOmJILpMjJCY35xsvIWYIgjQWqMMHdJU7v6SSLDGhE=
+			LKy+6iJ6xn8GuG60piK3JWug0sdRZI1qp3D/RwMt7IA=
 			</data>
 		</dict>
 		<key>www/cordova-js-src/exec.js</key>
@@ -1583,11 +1583,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Fugwdj18Yp4w9KvUvBtRbvuEkKM=
+			FUVnHrkxbtPKJZ5sXzu0rCB+ksQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			o4FlO3eKel1wTdrBpHJMFqIztnHRQU0SWlFUEX5WNV0=
+			DqIImlz4iX3E0URXOgNVsWm4zhEyQas2O+pj3TDbRJ0=
 			</data>
 		</dict>
 		<key>www/css/animate.min.css</key>
@@ -1946,11 +1946,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			VLErp/JljzbB5eLoNJm7+1wX9Io=
+			hqTwqj8LILXdA1lkSQ8Den4xj9w=
 			</data>
 			<key>hash2</key>
 			<data>
-			ljoc78VrC4t51fsIeZ+iYKMhWzwdIs5SBeYMY+tR5GM=
+			v1HaAodStr0jrrH/XaxsFzImGGCAXnzV7uizBzJgFwU=
 			</data>
 		</dict>
 		<key>www/js/pouchdb.cordova-sqlite.js</key>

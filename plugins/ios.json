@@ -19,9 +19,6 @@
             "PHOTOLIBRARY_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-plugin-console": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
         "cordova-plugin-device": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
@@ -58,13 +55,7 @@
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-plugin-vibration": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
         "cordova-plugin-video-editor": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
-        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-x-toast": {
@@ -78,6 +69,15 @@
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-secure-storage": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-vibration": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "cn.robodou.competition"
         }
     },
