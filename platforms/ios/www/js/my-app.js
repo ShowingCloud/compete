@@ -48,13 +48,13 @@ var remoteCouch = false;
 
 // apption for app
 var app_options = {
-    auth_host: "http://dev.account.domelab.com",
-    host: "http://dev.robodou.cn",
-    ws: "ws://dev.robodou.cn/cable"
+    // auth_host: "http://dev.account.domelab.com",
+    // host: "http://dev.robodou.cn",
+    // ws: "ws://dev.robodou.cn/cable"
 
-    // auth_host: "https://account.domelab.com",
-    // host: "http://www.robodou.cn",
-    // ws: "wss://ws.robodou.cn/cable"
+    auth_host: "https://account.domelab.com",
+    host: "http://www.robodou.cn",
+    ws: "wss://ws.robodou.cn/cable"
 
 };
 
@@ -1438,12 +1438,12 @@ var app = {
                 var value = e.value;
                 var name = e.dataset.name;
                 var id = e.dataset.id;
-                return {
-                    id: {
-                        val: value,
-                        name: name
-                    }
+                var this_score = {};
+                this_score[id] = {
+                    val: value,
+                    name: name
                 };
+                return this_score;
             });
         }
 
@@ -1508,11 +1508,18 @@ var app = {
         }).then(function(doc) {
             console.log(doc);
             var formula = JSON.stringify(doc.formula);
-            var score1 = doc.score1;
+            var score1 = {
+                process: doc.score1
+            };
             if (doc.out_of_rounds && doc.out_of_rounds.length) {
-                score1.push(doc.out_of_rounds);
+                doc.out_of_rounds.forEach(function(score) {
+                    for (var prop in score) {
+                        score1[score[prop].name] = score[prop].val;
+                    }
+                });
             }
             var score_attribute = JSON.stringify(score1);
+            console.log(score_attribute);
             var toPost = {
                 event_id: doc.event.id,
                 schedule_name: doc.schedule_name,
@@ -1537,8 +1544,6 @@ var app = {
                 }
 
             }
-
-
             $$.ajax({
                 method: "POST",
                 url: app_options.host + "/api/v1/scores/upload_scores",
@@ -1548,7 +1553,7 @@ var app = {
                 success: function(response) {
                     if (response.status === false) {
                         if (typeof fail === "function") {
-                            fail();
+                            fail(response);
                         }
                     } else {
                         doc.upload = "Yes";
@@ -1561,7 +1566,7 @@ var app = {
                 error: function(error) {
                     console.log(error);
                     if (typeof fail === "function") {
-                        fail();
+                        fail(error);
                     }
                 },
                 complete: function() {
@@ -1751,6 +1756,7 @@ myApp.onPageInit('data', function(page) {
         var timeStr = myDate.toTimeString().substr(0, 5);
         return timeStr + "  " + dateStr;
     }
+    var current_comp = temp.compete.id;
     var toUpload = [];
     var compid = [];
     var length = 0;
@@ -1773,8 +1779,14 @@ myApp.onPageInit('data', function(page) {
             var id = doc.compete.id;
             if (!compid.includes(id)) {
                 compid.push(id);
-                $$(".data-tabbar").append('<a href="#dataTab' + id + '" class="tab-link">' + doc.compete.name + '</a>');
-                $$(".data-tabs").append('<ul class="tab" id="dataTab' + id + '"></ul>');
+                var tab_link = $$('<a href="#dataTab' + id + '" class="tab-link">' + doc.compete.name + '</a>');
+                var tab = $$('<ul class="tab" id="dataTab' + id + '"></ul>');
+                if (id === current_comp) {
+                    tab_link.addClass("active");
+                    tab.addClass("active");
+                }
+                tab_link.appendTo(".data-tabbar");
+                tab.appendTo(".data-tabs");
             }
             var num = (index + 1).toString();
             var pad = "00";
@@ -1874,6 +1886,8 @@ myApp.onPageInit('stopWatch', function(page) {
     var scoreFrom = [];
     var drawed = 0;
     var rounds = 1;
+    var trigger_attr;
+    var last_score_by;
     var score_board = $$("<div></div>");
     $$(".scrollable").css("height", "500px");
     $$("#scoreHeader").hide();
@@ -1884,6 +1898,10 @@ myApp.onPageInit('stopWatch', function(page) {
             var score_input;
             if (sa.name === "最终成绩") {
                 var formula = sa.formula;
+                trigger_attr = formula.trigger_attr.id;
+                console.log("trigger_attr:" + trigger_attr);
+                last_score_by = formula.last_score_by.id;
+                console.log("last_score_by:" + last_score_by);
                 var formula_holder = $$("<div class='formula'></div>");
                 formula_holder.data("formula", formula);
                 $$("#team1 .scores").append(formula_holder);
@@ -1893,7 +1911,7 @@ myApp.onPageInit('stopWatch', function(page) {
                 return;
             }
             if (sa.in_rounds === false) {
-                score_input = $$('<input class="score out_of_rounds" data-id=' + sa.id + ' data-name="' + sa.name + '">');
+                score_input = $$('<input class="score out_of_rounds float-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
                 score_wrapper.append(score_input);
                 score_wrapper.insertAfter("#team1 .scores");
                 return;
@@ -1996,7 +2014,7 @@ myApp.onPageInit('stopWatch', function(page) {
             input: this,
             formatValue: function(picker, values) {
 
-                return values[0] === "00" ? values[1] + "." + values[2] : values[0] + values[1] + "." + values[2];
+                return parseFloat(values[0] + values[1] + "." + values[2]).toFixed(2);
             },
             cols: [{
 
@@ -2036,7 +2054,7 @@ myApp.onPageInit('stopWatch', function(page) {
         var float_picker = myApp.picker({
             input: this,
             formatValue: function(picker, values) {
-                return values[0] === "00" ? values[1] : values[0] + values[1];
+                return parseInt(values[0] + values[1]);
             },
             cols: [{
 
@@ -2093,9 +2111,18 @@ myApp.onPageInit('stopWatch', function(page) {
             }]
         });
     });
+    if (trigger_attr && last_score_by) {
+        $$(".scores .score").each(function(ele) {
+            var _this = $$(this);
+            var id = _this.data("id");
+            if (id !== trigger_attr && id !== last_score_by) {
+                _this.addClass("toggle");
+            }
+        });
+    }
     var radios = $$(".scores input[type=radio]");
     if (radios.length) {
-        $$(".integer-picker").each(function() {
+        $$(".toggle").each(function() {
             $$(this).val("0").parent().hide();
         });
         $$.each(radios, function(i, v) {
@@ -2105,9 +2132,9 @@ myApp.onPageInit('stopWatch', function(page) {
             _this.attr('name', new_name);
             _this.on('change', function() {
                 if (_this.val() === "1") {
-                    _this.parents(".tab").find(".integer-picker, .float_picker").val("0").parent().hide();
+                    _this.parents(".tab").find(".toggle").val("0").parent().hide();
                 } else {
-                    _this.parents(".tab").find(".integer-picker, .float_picker").parent().show();
+                    _this.parents(".tab").find(".toggle").parent().show();
                 }
             });
 
@@ -2155,10 +2182,15 @@ myApp.onPageInit('stopWatch', function(page) {
                         mainView.router.loadPage('data.html');
                     });
 
-                }, function() {
+                }, function(failed_response) {
                     myApp.hideIndicator();
-
-                    myApp.alert("分数上传失败", "");
+                    var message;
+                    if (failed_response.message) {
+                        message = "分数上传失败";
+                    } else {
+                        message = "分数上传失败," + failed_response.message;
+                    }
+                    myApp.alert(message, "");
                 });
             }).catch(function(err) {
                 myApp.hideIndicator();

@@ -1016,3 +1016,7 @@ div.media-capture {
 .speed-dial.connected .active-state {
   background-color: rgba(132, 163, 255, 0.8);
 }
+
+.swiper-wrapper{
+  margin-bottom: 20px;
+}
