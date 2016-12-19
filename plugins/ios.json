@@ -43,9 +43,6 @@
         "cordova-plugin-network-information": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
-        "cordova-plugin-screen-orientation": {
-            "PACKAGE_NAME": "cn.robodou.competition"
-        },
         "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "cn.robodou.competition"
         },
@@ -78,6 +75,9 @@
             "PACKAGE_NAME": "cn.robodou.competition"
         },
         "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "cn.robodou.competition"
+        },
+        "cordova-plugin-screen-orientation": {
             "PACKAGE_NAME": "cn.robodou.competition"
         }
     },

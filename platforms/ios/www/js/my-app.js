@@ -32,15 +32,6 @@ document.addEventListener('deviceready', function() {
     });
 });
 
-
-//watch screen orientation
-window.addEventListener("orientationchange", function() {
-    console.log(screen.orientation);
-    if (screen.orientation.includes("portrait")) {
-        screen.lockOrientation('landscape');
-    }
-});
-
 var teamList;
 
 //Not use remote PouchDb server
@@ -48,13 +39,13 @@ var remoteCouch = false;
 
 // apption for app
 var app_options = {
-    // auth_host: "http://dev.account.domelab.com",
-    // host: "http://dev.robodou.cn",
-    // ws: "ws://dev.robodou.cn/cable"
+    auth_host: "http://dev.account.domelab.com",
+    host: "http://dev.robodou.cn",
+    ws: "ws://dev.robodou.cn/cable"
 
-    auth_host: "https://account.domelab.com",
-    host: "http://www.robodou.cn",
-    ws: "wss://ws.robodou.cn/cable"
+    // auth_host: "https://account.domelab.com",
+    // host: "http://www.robodou.cn",
+    // ws: "wss://ws.robodou.cn/cable"
 
 };
 
@@ -367,7 +358,9 @@ var track = {
         };
         ble.connect(deviceId, onConnect, function() {
             track.onDisconnected();
-            myApp.alert("连接赛道失败，请重试", "");
+            myApp.confirm("连接赛道失败，是否重连", "", function() {
+                track.reconnect();
+            });
         });
     },
     onData: function(data) {
@@ -435,7 +428,7 @@ var track = {
             var data = track.arrayToBytes(track.order);
             ble.write(track.service.deviceId, track.service.serviceUUID, track.service.txCharacteristic, data, function() {
                 console.log(track.status.sending + " send success");
-                window.plugins.toast.showShortCenter(track.action[track.status.sending] + "指令已发送");
+                window.plugins.toast.showShortBottom(track.action[track.status.sending] + "指令已发送");
                 if (track.status.sending === "run") {
                     track.status.playing = 1;
                     // setTimeout(function(){
@@ -466,6 +459,13 @@ var track = {
         }, function() {
             window.plugins.toast.showShortCenter("蓝牙未能断开");
         });
+    },
+    reconnect: function() {
+        if (track.service.deviceId) {
+            track.scan();
+        } else {
+            myApp.alert("请先扫码");
+        }
     },
     onDisconnected: function() {
         $$(".speed-dial").removeClass("connected");
@@ -754,6 +754,11 @@ var app = {
             myApp.alert("请打开你的网络", "");
         }, false);
 
+        document.addEventListener("online", function() {
+            if (mainView.activePage.name === "home") {
+                mainView.router.reloadPage('index.html');
+            }
+        }, false);
 
         $$(document).click(function() {
             $$('.wrapper-dropdown').removeClass('active');
@@ -763,10 +768,6 @@ var app = {
         $$('#msg').on('taphold', function() {
             myApp.alert(uuid, '');
         });
-
-        // $$('#score').on('taphold', function() {
-        //     track.scan();
-        // });
 
         $$(document).on('taphold', "#playerTable .wrapper-dropdown", function() {
             myApp.showIndicator();
@@ -835,7 +836,7 @@ var app = {
         $$(document).on("click", "#QR", function() {
             cordova.plugins.barcodeScanner.scan(
                 function(result) {
-                    // screen.lockOrientation('portrait');
+                    window.screen.lockOrientation('landscape');
                     if (result.text) {
                         var code = result.text.split(";")[0].split(":")[1];
                         myApp.alert("获得二维码: " + code, "");
@@ -898,6 +899,9 @@ var app = {
         });
         $$(document).on('click', '.btn-reset', function() {
             track.reset();
+        });
+        $$(document).on('click', '.btn-reconnect', function() {
+            track.reconnect();
         });
         $$(document).on('click', '.back-tag', function() {
             myApp.confirm("是否返回，数据不会保存", "", function() {
@@ -1295,7 +1299,8 @@ var app = {
 
 
             if (missed.length) {
-                all_missed[round_index] = missed;
+                console.log("round_index:" + round_index);
+                all_missed.push(missed);
                 score1[round_index] = null;
             } else {
                 score1[round_index] = this_scores;
@@ -1920,8 +1925,7 @@ myApp.onPageInit('stopWatch', function(page) {
             switch (sa.score_type) {
                 case 5:
                 case 4: //蓝牙赛道
-                    // $$("#team1 .scores").append('<div>' + sa.name + '：<input class="track-score score" data-id=' + sa.id + ' data-name="score' + (index + 1) + '"></div>');
-                    score_input = $$('<input class="score ble-score" disabled="true" data-id=' + sa.id + ' data-name="' + sa.name + '">');
+                    score_input = $$('<input class="score ble-score" data-id=' + sa.id + ' data-name="' + sa.name + '"onfocus="blur();">');
                     break;
                 case 3:
                     break;
@@ -1932,13 +1936,6 @@ myApp.onPageInit('stopWatch', function(page) {
                     if (sa.value_type === "2") {
                         score_input = $$('<input class="score float-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
                     } else if (sa.value_type === "1") {
-                        // score_input = $$('<select class="score" data-id=' + sa.id + ' data-name="' + sa.name + '"><option value="" selected>请选择</option></select>');
-                        // for (var i = 0; i <= 1000; i++) {
-                        //     var option = document.createElement("option");
-                        //     option.value = i;
-                        //     option.text = i;
-                        //     score_input.append(option);
-                        // }
                         score_input = $$('<input class="score integer-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
 
                     } else if (sa.value_type === "3") {
@@ -2131,10 +2128,13 @@ myApp.onPageInit('stopWatch', function(page) {
             var new_name = _this.data('name') + round;
             _this.attr('name', new_name);
             _this.on('change', function() {
+                console.log(_this.val());
                 if (_this.val() === "1") {
                     _this.parents(".tab").find(".toggle").val("0").parent().hide();
+                    _this.parents(".tab").find(".ble-score").val("").prop("disabled", false).parent().show();
                 } else {
                     _this.parents(".tab").find(".toggle").parent().show();
+                    _this.parents(".tab").find(".ble-score").val("").prop("disabled", true).parent().hide();
                 }
             });
 
@@ -2199,7 +2199,6 @@ myApp.onPageInit('stopWatch', function(page) {
         });
 
         $$(".canvasWrapper,#takePhoto,#takeVideo,#score-save").hide();
-        return;
     } else {
         var score_id = temp.compete.id + ";" + temp.event.id + ";" + temp.schedule_id + ";" + temp.th + ";" + temp.team.identifier;
         scoreDB.get(score_id, function(err, doc) {
@@ -2209,282 +2208,291 @@ myApp.onPageInit('stopWatch', function(page) {
                 loadScore(doc.score1, doc.out_of_rounds);
             }
         });
-    }
-    $$("#takePhoto").on("click", function() {
-        var quantity = $$("#photos img").length;
-        if (quantity === 3) {
-            myApp.alert("最多拍三张照片", "");
-        } else {
-            app.takePhoto(1);
-        }
-    });
 
-    $$("#takeVideo").on("click", function() {
-        if ($$("#video video").length) {
-            myApp.confirm("是否重新拍摄视频？", function() {
-                $$("#video").html("");
+
+        $$("#takePhoto").on("click", function() {
+            var quantity = $$("#photos img").length;
+            if (quantity === 3) {
+                myApp.alert("最多拍三张照片", "");
+            } else {
+                app.takePhoto(1);
+            }
+        });
+
+        $$("#takeVideo").on("click", function() {
+            if ($$("#video video").length) {
+                myApp.confirm("是否重新拍摄视频？", function() {
+                    $$("#video").html("");
+                    app.takeVideo();
+                });
+            } else {
                 app.takeVideo();
-            });
-        } else {
-            app.takeVideo();
-        }
+            }
 
-    });
+        });
 
-    $$("#score-submit").on("click", function() {
-        myApp.showIndicator();
-        app.submitScore(drawed);
-    });
-    $$("#score-save").on("click", function() {
-        myApp.showIndicator();
-        var temp_score = app.collect_score();
-        console.log(temp_score);
-        if (temp_score.missed.length && temp_score.missed[0]) {
-            myApp.hideIndicator();
-            myApp.alert("至少完成一轮");
-            return;
-        }
-        var score = app.buildScore(temp_score.score1);
-        score.missed = temp_score.missed.length;
-        app.saveScore(score, function() {
-            myApp.confirm("保存成功,是否返回列表？", "", function() {
-                mainView.router.loadPage('player.html');
+        $$("#score-submit").on("click", function() {
+            myApp.showIndicator();
+            app.submitScore(drawed);
+        });
+        $$("#score-save").on("click", function() {
+            myApp.showIndicator();
+            var temp_score = app.collect_score();
+            console.log(temp_score);
+            console.log(temp_score.missed.length);
+            if (temp_score.missed.length == $$(".score-tab-links").children().length) {
+                myApp.hideIndicator();
+                myApp.alert("至少完成一轮");
+                return;
+            }
+            var score = app.buildScore(temp_score.score1);
+            score.missed = temp_score.missed.length;
+            app.saveScore(score, function() {
+                myApp.confirm("保存成功,是否返回列表？", "", function() {
+                    mainView.router.loadPage('player.html');
+                });
             });
         });
-    });
-    console.log("scoreFrom:" + scoreFrom);
-    if (scoreFrom.includes(5)) {
-        $$(".scoreBoard").append('<div class="speed-dial speed-dial-opened"><a href="#" class="floating-button"><i class="icon f7-icons">add</i><i class="icon f7-icons">close</i></a><div class="speed-dial-buttons"><a class="btn-connect" href="#"><i class="icon icon-connect">接入</i></a><a class="btn-reset" href="#"><i class="icon icon-reset">重置</i></a></div></div>');
-        if (track.service.deviceId) {
-            ble.isConnected(track.service.deviceId, function() {
-                $$(".speed-dial").addClass("connected");
-                $$(".speed-dial .btn-connect").removeClass('btn-connect').addClass('btn-disconnect').text('断开');
-            }, function() {
-                track.onDisconnected();
-            });
+        console.log("scoreFrom:" + scoreFrom);
+        if (scoreFrom.includes(5)) {
+            $$(".scoreBoard").append('<div class="speed-dial speed-dial-opened"><a href="#" class="floating-button"><i class="icon f7-icons">add</i><i class="icon f7-icons">close</i></a><div class="speed-dial-buttons"><a class="btn-connect" href="#"><i class="icon icon-connect">接入</i></a><a class="btn-reconnect" href="#"><i class="icon icon-reconnect">重连</i></a></div></div>');
+            if (track.service.deviceId) {
+                ble.isConnected(track.service.deviceId, function() {
+                    $$(".speed-dial").addClass("connected");
+                    $$(".speed-dial .btn-connect").removeClass('btn-connect').addClass('btn-disconnect').text('断开');
+                }, function() {
+                    track.onDisconnected();
+                });
+            }
+        } else if (scoreFrom.includes(4)) {
+            $$(".scoreBoard").append('<div class="speed-dial speed-dial-opened"><a href="#" class="floating-button"><i class="icon f7-icons">add</i><i class="icon f7-icons">close</i></a><div class="speed-dial-buttons"><a class="btn-connect" href="#"><i class="icon icon-connect">接入</i></a><a class="btn-start" href="#"><i class="icon icon-start">开始</i></a><a class="btn-reset" href="#"><i class="icon icon-reset">重置</i></a></div></div>');
+            if (track.service.deviceId) {
+                ble.isConnected(track.service.deviceId, function() {
+                    $$(".speed-dial").addClass("connected");
+                    $$(".speed-dial .btn-connect").removeClass('btn-connect').addClass('btn-disconnect').text('断开');
+                }, function() {
+                    track.onDisconnected();
+                });
+            }
+            // $$("#scoreHeader").html('<div id="runWrapper"><img src="images/run.png" usemap="#runmap"><map name="runmap"><area id="run" shape="poly" coords="26,0,433,0,452,29,389,118,72,118,8,28"></map></div>');
+            // document.getElementById('run').onclick = function() {
+            //     track.run();
+            // };
         }
-    } else if (scoreFrom.includes(4)) {
-        $$(".scoreBoard").append('<div class="speed-dial speed-dial-opened"><a href="#" class="floating-button"><i class="icon f7-icons">add</i><i class="icon f7-icons">close</i></a><div class="speed-dial-buttons"><a class="btn-connect" href="#"><i class="icon icon-connect">接入</i></a><a class="btn-start" href="#"><i class="icon icon-start">开始</i></a><a class="btn-reset" href="#"><i class="icon icon-reset">重置</i></a></div></div>');
-        if (track.service.deviceId) {
-            ble.isConnected(track.service.deviceId, function() {
-                $$(".speed-dial").addClass("connected");
-                $$(".speed-dial .btn-connect").removeClass('btn-connect').addClass('btn-disconnect').text('断开');
-            }, function() {
-                track.onDisconnected();
-            });
-        }
-        // $$("#scoreHeader").html('<div id="runWrapper"><img src="images/run.png" usemap="#runmap"><map name="runmap"><area id="run" shape="poly" coords="26,0,433,0,452,29,389,118,72,118,8,28"></map></div>');
-        // document.getElementById('run').onclick = function() {
-        //     track.run();
-        // };
-    }
 
-    // $$("#scoreHeader").html('<div id="stopwatch"><div id="time"></div><div class="btn-wrapper"><span id="reset" class="sm-circle-btn">重置</span> <span id="record" class="sm-circle-btn">录入</span><span id="start" class="sm-circle-btn">开始</span></div></div>');
-    // (function() {
-    //     var Stopwatch = function() {
-    //         var startAt = 0;
-    //         var lapTime = 0;
-    //
-    //         var now = function() {
-    //             return (new Date()).getTime();
-    //         };
-    //
-    //         this.start = function() {
-    //             startAt = startAt ? startAt : now();
-    //         };
-    //
-    //         this.stop = function() {
-    //             lapTime = startAt ? lapTime + now() - startAt : lapTime;
-    //             startAt = 0;
-    //         };
-    //
-    //         this.reset = function() {
-    //             lapTime = startAt = 0;
-    //         };
-    //
-    //         this.time = function() {
-    //             return lapTime + (startAt ? now() - startAt : 0);
-    //         };
-    //     };
-    //     var x = new Stopwatch();
-    //     var $time;
-    //     var clocktimer;
-    //     var total;
-    //     var timeLimit = temp.event.time_limit * 1000;
-    //
-    //     var timeoutHander = function() {
-    //         myApp.alert("已超时", "");
-    //     };
-    //
-    //     function pad(num, size) {
-    //         var a = num;
-    //         if (a.toString().length > size) {
-    //             return a.toString().substring(0, size);
-    //         } else {
-    //             var s = "0000" + num;
-    //             return s.substr(s.length - size);
-    //         }
-    //
-    //     }
-    //
-    //     function formatTime(time) {
-    //         var h = 0;
-    //         var m = 0;
-    //         var s = 0;
-    //         var ms = 0;
-    //         var newTime = '';
-    //
-    //         time = time % (60 * 60 * 1000);
-    //         m = Math.floor(time / (60 * 1000));
-    //         time = time % (60 * 1000);
-    //         s = Math.floor(time / 1000);
-    //         ms = time % 1000;
-    //
-    //         newTime = pad(m, 2) + ':' + pad(s, 2) + ':' + pad(ms, 2);
-    //         return newTime;
-    //     }
-    //
-    //     function show() {
-    //         $time = document.getElementById('time');
-    //         update();
-    //     }
-    //
-    //     function update() {
-    //         var timeNow = x.time();
-    //
-    //         if (timeNow >= timeLimit) {
-    //             stop();
-    //             $time.innerHTML = formatTime(timeLimit);
-    //             timeoutHander();
-    //         } else {
-    //             $time.innerHTML = formatTime(timeNow);
-    //         }
-    //     }
-    //
-    //     function start() {
-    //         clocktimer = setInterval(update, 1);
-    //         x.start();
-    //         $$("#start").text("停止");
-    //         document.getElementById('start').onclick = stop;
-    //     }
-    //
-    //     function stop() {
-    //         x.stop();
-    //         clearInterval(clocktimer);
-    //         document.getElementById('start').onclick = start;
-    //         $$("#start").text("开始");
-    //     }
-    //
-    //     function reset() {
-    //         stop();
-    //         x.reset();
-    //         update();
-    //     }
-    //
-    //     function record() {
-    //         stop();
-    //         var elements = document.getElementsByClassName("time-score");
-    //         for (var i = 0; i < elements.length; i++) {
-    //             if (!elements[i].value && $time.innerHTML !== "00:00:00") {
-    //                 elements[i].value = $time.innerHTML;
-    //                 if (i === elements.length - 1) {
-    //                     reset();
-    //                     document.getElementById('start').onclick = document.getElementById('reset').onclick = document.getElementById('record').onclick = null;
-    //
-    //                     total = 0;
-    //                     for (var j = 0; j < elements.length; i++) {
-    //                         total = total + unformat(elements[j].value);
-    //                     }
-    //                     console.log(total);
-    //                     document.querySelector('.final-score').value = formatTime(total);
-    //                 }
-    //                 break;
-    //             }
-    //         }
-    //         x.reset();
-    //     }
-    //
-    //     function unformat(data) {
-    //         var a = data.split(":");
-    //         return a[0] * 60 * 1000 + a[1] * 1000 + a[2] * 10;
-    //     }
-    //     show();
-    //     document.getElementById('start').onclick = start;
-    //     document.getElementById('reset').onclick = reset;
-    //     document.getElementById('record').onclick = record;
-    // }());
+        // $$("#scoreHeader").html('<div id="stopwatch"><div id="time"></div><div class="btn-wrapper"><span id="reset" class="sm-circle-btn">重置</span> <span id="record" class="sm-circle-btn">录入</span><span id="start" class="sm-circle-btn">开始</span></div></div>');
+        // (function() {
+        //     var Stopwatch = function() {
+        //         var startAt = 0;
+        //         var lapTime = 0;
+        //
+        //         var now = function() {
+        //             return (new Date()).getTime();
+        //         };
+        //
+        //         this.start = function() {
+        //             startAt = startAt ? startAt : now();
+        //         };
+        //
+        //         this.stop = function() {
+        //             lapTime = startAt ? lapTime + now() - startAt : lapTime;
+        //             startAt = 0;
+        //         };
+        //
+        //         this.reset = function() {
+        //             lapTime = startAt = 0;
+        //         };
+        //
+        //         this.time = function() {
+        //             return lapTime + (startAt ? now() - startAt : 0);
+        //         };
+        //     };
+        //     var x = new Stopwatch();
+        //     var $time;
+        //     var clocktimer;
+        //     var total;
+        //     var timeLimit = temp.event.time_limit * 1000;
+        //
+        //     var timeoutHander = function() {
+        //         myApp.alert("已超时", "");
+        //     };
+        //
+        //     function pad(num, size) {
+        //         var a = num;
+        //         if (a.toString().length > size) {
+        //             return a.toString().substring(0, size);
+        //         } else {
+        //             var s = "0000" + num;
+        //             return s.substr(s.length - size);
+        //         }
+        //
+        //     }
+        //
+        //     function formatTime(time) {
+        //         var h = 0;
+        //         var m = 0;
+        //         var s = 0;
+        //         var ms = 0;
+        //         var newTime = '';
+        //
+        //         time = time % (60 * 60 * 1000);
+        //         m = Math.floor(time / (60 * 1000));
+        //         time = time % (60 * 1000);
+        //         s = Math.floor(time / 1000);
+        //         ms = time % 1000;
+        //
+        //         newTime = pad(m, 2) + ':' + pad(s, 2) + ':' + pad(ms, 2);
+        //         return newTime;
+        //     }
+        //
+        //     function show() {
+        //         $time = document.getElementById('time');
+        //         update();
+        //     }
+        //
+        //     function update() {
+        //         var timeNow = x.time();
+        //
+        //         if (timeNow >= timeLimit) {
+        //             stop();
+        //             $time.innerHTML = formatTime(timeLimit);
+        //             timeoutHander();
+        //         } else {
+        //             $time.innerHTML = formatTime(timeNow);
+        //         }
+        //     }
+        //
+        //     function start() {
+        //         clocktimer = setInterval(update, 1);
+        //         x.start();
+        //         $$("#start").text("停止");
+        //         document.getElementById('start').onclick = stop;
+        //     }
+        //
+        //     function stop() {
+        //         x.stop();
+        //         clearInterval(clocktimer);
+        //         document.getElementById('start').onclick = start;
+        //         $$("#start").text("开始");
+        //     }
+        //
+        //     function reset() {
+        //         stop();
+        //         x.reset();
+        //         update();
+        //     }
+        //
+        //     function record() {
+        //         stop();
+        //         var elements = document.getElementsByClassName("time-score");
+        //         for (var i = 0; i < elements.length; i++) {
+        //             if (!elements[i].value && $time.innerHTML !== "00:00:00") {
+        //                 elements[i].value = $time.innerHTML;
+        //                 if (i === elements.length - 1) {
+        //                     reset();
+        //                     document.getElementById('start').onclick = document.getElementById('reset').onclick = document.getElementById('record').onclick = null;
+        //
+        //                     total = 0;
+        //                     for (var j = 0; j < elements.length; i++) {
+        //                         total = total + unformat(elements[j].value);
+        //                     }
+        //                     console.log(total);
+        //                     document.querySelector('.final-score').value = formatTime(total);
+        //                 }
+        //                 break;
+        //             }
+        //         }
+        //         x.reset();
+        //     }
+        //
+        //     function unformat(data) {
+        //         var a = data.split(":");
+        //         return a[0] * 60 * 1000 + a[1] * 1000 + a[2] * 10;
+        //     }
+        //     show();
+        //     document.getElementById('start').onclick = start;
+        //     document.getElementById('reset').onclick = reset;
+        //     document.getElementById('record').onclick = record;
+        // }());
 
-    var canvas = document.getElementById('canvas');
-    var context = canvas.getContext("2d");
-    var ele;
-    var clickX = [];
-    var clickY = [];
-    var clickDrag = [];
-    var paint;
-    canvas.addEventListener("touchstart", touchStartHandler, false);
-    canvas.addEventListener("touchmove", touchMoveHandler, false);
-    canvas.addEventListener("touchend", touchEndHandler, false);
-    document.getElementById("clearCanvas").onclick = function() {
-        drawed = 0;
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-        clickX = [];
-        clickY = [];
-        clickDrag = [];
-    };
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext("2d");
+        var ele;
+        var clickX = [];
+        var clickY = [];
+        var clickDrag = [];
+        var paint;
+        canvas.addEventListener("touchstart", touchStartHandler, false);
+        canvas.addEventListener("touchmove", touchMoveHandler, false);
+        canvas.addEventListener("touchend", touchEndHandler, false);
+        document.getElementById("clearCanvas").onclick = function() {
+            drawed = 0;
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            clickX = [];
+            clickY = [];
+            clickDrag = [];
+        };
 
-    function touchStartHandler(e) {
-        e.preventDefault();
-        var touchEvent = e.changedTouches[0];
-        paint = true;
-        ele = $$("#canvas").offset();
-        addClick(touchEvent.clientX - ele.left, touchEvent.clientY - ele.top);
-        redraw();
-    }
-
-    function touchMoveHandler(e) {
-        e.preventDefault();
-        var touchEvent = e.changedTouches[0];
-        if (paint) {
-            addClick(touchEvent.clientX - ele.left, touchEvent.clientY - ele.top, true);
+        function touchStartHandler(e) {
+            e.preventDefault();
+            var touchEvent = e.changedTouches[0];
+            paint = true;
+            ele = $$("#canvas").offset();
+            addClick(touchEvent.clientX - ele.left, touchEvent.clientY - ele.top);
             redraw();
         }
-        drawed++;
-    }
 
-    function touchEndHandler(e) {
-        e.preventDefault();
-        paint = false;
-    }
-
-    function addClick(x, y, dragging) {
-        clickX.push(x);
-        clickY.push(y);
-        clickDrag.push(dragging);
-    }
-
-    function redraw() {
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-        context.strokeStyle = "#D7E4F4";
-        context.lineJoin = "round";
-        context.lineCap = "round";
-        context.shadowColor = "rgba(0,0,0,.5)";
-        context.shadowBlur = 2;
-        context.lineWidth = 2;
-
-        for (var i = 0; i < clickX.length; i++) {
-            context.beginPath();
-            if (clickDrag[i] && i) {
-                context.moveTo(clickX[i - 1], clickY[i - 1]);
-            } else {
-                context.moveTo(clickX[i] - 1, clickY[i]);
+        function touchMoveHandler(e) {
+            e.preventDefault();
+            var touchEvent = e.changedTouches[0];
+            if (paint) {
+                addClick(touchEvent.clientX - ele.left, touchEvent.clientY - ele.top, true);
+                redraw();
             }
-            context.lineTo(clickX[i], clickY[i]);
-            context.closePath();
-            context.stroke();
+            drawed++;
         }
+
+        function touchEndHandler(e) {
+            e.preventDefault();
+            paint = false;
+        }
+
+        function addClick(x, y, dragging) {
+            clickX.push(x);
+            clickY.push(y);
+            clickDrag.push(dragging);
+        }
+
+        function redraw() {
+            context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+            context.strokeStyle = "#D7E4F4";
+            context.lineJoin = "round";
+            context.lineCap = "round";
+            context.shadowColor = "rgba(0,0,0,.5)";
+            context.shadowBlur = 2;
+            context.lineWidth = 2;
+
+            for (var i = 0; i < clickX.length; i++) {
+                context.beginPath();
+                if (clickDrag[i] && i) {
+                    context.moveTo(clickX[i - 1], clickY[i - 1]);
+                } else {
+                    context.moveTo(clickX[i] - 1, clickY[i]);
+                }
+                context.lineTo(clickX[i], clickY[i]);
+                context.closePath();
+                context.stroke();
+            }
+        }
+
     }
-
-
+    $$(".scores .tab").each(function() {
+        var round = $$(this);
+        if (round.data("valid") === false) {
+            var cancel = round.find(".cancel-round");
+            cancel.text("取消" + cancel.text());
+        }
+    });
 });
 
 app.init();

@@ -15,14 +15,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-screen-orientation": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-screen-orientation"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-ble-central": {
         "source": {
             "type": "git",
@@ -174,6 +166,22 @@
             "id": "cordova-plugin-whitelist@1"
         },
         "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-screen-orientation": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-screen-orientation@~1.4.2"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-dialogs": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-dialogs"
+        },
+        "is_top_level": false,
         "variables": {}
     }
 }

@@ -43,9 +43,6 @@
     <feature name="NetworkStatus">
         <param name="ios-package" value="CDVConnection" />
     </feature>
-    <feature name="YoikScreenOrientation">
-        <param name="ios-package" value="YoikScreenOrientation" />
-    </feature>
     <feature name="SplashScreen">
         <param name="ios-package" value="CDVSplashScreen" />
         <param name="onload" value="true" />
@@ -74,6 +71,12 @@
     </feature>
     <feature name="Console">
         <param name="ios-package" value="CDVLogger" />
+    </feature>
+    <feature name="YoikScreenOrientation">
+        <param name="ios-package" value="YoikScreenOrientation" />
+    </feature>
+    <feature name="QRScanner">
+        <param name="ios-package" value="QRScanner" />
     </feature>
     <feature name="BLE">
         <param name="ios-package" onload="true" value="BLECentralPlugin" />

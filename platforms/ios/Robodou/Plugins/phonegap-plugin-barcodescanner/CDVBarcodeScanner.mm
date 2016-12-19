@@ -880,10 +880,6 @@ parentViewController:(UIViewController*)parentViewController
     previewLayer.frame = self.view.bounds;
     previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
 
-    if ([previewLayer.connection isVideoOrientationSupported]) {
-        [previewLayer.connection setVideoOrientation:AVCaptureVideoOrientationPortrait];
-    }
-
     [self.view.layer insertSublayer:previewLayer below:[[self.view.layer sublayers] objectAtIndex:0]];
 
     [self.view addSubview:[self buildOverlayView]];
@@ -1142,10 +1138,8 @@ parentViewController:(UIViewController*)parentViewController
         [previewLayer setOrientation:AVCaptureVideoOrientationLandscapeLeft];
     } else if (orientation == UIInterfaceOrientationLandscapeRight) {
         [previewLayer setOrientation:AVCaptureVideoOrientationLandscapeRight];
-    } else if (orientation == UIInterfaceOrientationPortrait) {
-        [previewLayer setOrientation:AVCaptureVideoOrientationPortrait];
-    } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
-        [previewLayer setOrientation:AVCaptureVideoOrientationPortraitUpsideDown];
+    }else{
+        [previewLayer setOrientation:AVCaptureVideoOrientationLandscapeRight];
     }
 
     previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;

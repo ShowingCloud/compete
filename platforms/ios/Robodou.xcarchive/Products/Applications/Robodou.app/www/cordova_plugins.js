@@ -350,22 +350,6 @@ module.exports = [
         ]
     },
     {
-        "id": "cordova-plugin-screen-orientation.screenorientation",
-        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.js",
-        "pluginId": "cordova-plugin-screen-orientation",
-        "clobbers": [
-            "cordova.plugins.screenorientation"
-        ]
-    },
-    {
-        "id": "cordova-plugin-screen-orientation.screenorientation.ios",
-        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.ios.js",
-        "pluginId": "cordova-plugin-screen-orientation",
-        "merges": [
-            "cordova.plugins.screenorientation"
-        ]
-    },
-    {
         "id": "cordova-plugin-splashscreen.SplashScreen",
         "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
         "pluginId": "cordova-plugin-splashscreen",
@@ -464,6 +448,30 @@ module.exports = [
         "clobbers": [
             "cordova.logger"
         ]
+    },
+    {
+        "id": "cordova-plugin-screen-orientation.screenorientation",
+        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.js",
+        "pluginId": "cordova-plugin-screen-orientation",
+        "clobbers": [
+            "cordova.plugins.screenorientation"
+        ]
+    },
+    {
+        "id": "cordova-plugin-screen-orientation.screenorientation.ios",
+        "file": "plugins/cordova-plugin-screen-orientation/www/screenorientation.ios.js",
+        "pluginId": "cordova-plugin-screen-orientation",
+        "merges": [
+            "cordova.plugins.screenorientation"
+        ]
+    },
+    {
+        "id": "cordova-plugin-qrscanner.QRScanner",
+        "file": "plugins/cordova-plugin-qrscanner/www/www.min.js",
+        "pluginId": "cordova-plugin-qrscanner",
+        "clobbers": [
+            "QRScanner"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -479,7 +487,6 @@ module.exports.metadata =
     "cordova-plugin-media": "2.4.0",
     "cordova-plugin-media-capture": "1.4.0",
     "cordova-plugin-network-information": "1.3.0",
-    "cordova-plugin-screen-orientation": "1.4.2",
     "cordova-plugin-splashscreen": "4.0.0",
     "cordova-plugin-sqlite-2": "1.0.4",
     "cordova-plugin-statusbar": "2.2.0",
@@ -490,7 +497,10 @@ module.exports.metadata =
     "cordova-plugin-secure-storage": "2.6.3",
     "cordova-plugin-vibration": "2.1.3",
     "cordova-plugin-console": "1.0.5",
-    "cordova-plugin-whitelist": "1.3.1"
+    "cordova-plugin-whitelist": "1.3.1",
+    "cordova-plugin-screen-orientation": "1.4.2",
+    "cordova-plugin-swift-support": "3.1.0",
+    "cordova-plugin-qrscanner": "2.4.0"
 };
 // BOTTOM OF METADATA
 });
