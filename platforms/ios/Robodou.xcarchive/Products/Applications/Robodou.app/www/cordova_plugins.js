@@ -466,11 +466,19 @@ module.exports = [
         ]
     },
     {
-        "id": "cordova-plugin-qrscanner.QRScanner",
-        "file": "plugins/cordova-plugin-qrscanner/www/www.min.js",
-        "pluginId": "cordova-plugin-qrscanner",
+        "id": "cordova-hot-code-push-local-dev-addon.chcpLocalDev",
+        "file": "plugins/cordova-hot-code-push-local-dev-addon/www/chcpLocalDev.js",
+        "pluginId": "cordova-hot-code-push-local-dev-addon",
         "clobbers": [
-            "QRScanner"
+            "chcpLocalDev"
+        ]
+    },
+    {
+        "id": "cordova-hot-code-push-plugin.chcp",
+        "file": "plugins/cordova-hot-code-push-plugin/www/chcp.js",
+        "pluginId": "cordova-hot-code-push-plugin",
+        "clobbers": [
+            "chcp"
         ]
     }
 ];
@@ -499,8 +507,8 @@ module.exports.metadata =
     "cordova-plugin-console": "1.0.5",
     "cordova-plugin-whitelist": "1.3.1",
     "cordova-plugin-screen-orientation": "1.4.2",
-    "cordova-plugin-swift-support": "3.1.0",
-    "cordova-plugin-qrscanner": "2.4.0"
+    "cordova-hot-code-push-local-dev-addon": "0.4.2",
+    "cordova-hot-code-push-plugin": "1.5.2"
 };
 // BOTTOM OF METADATA
 });

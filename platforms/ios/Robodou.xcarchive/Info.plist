@@ -9,16 +9,16 @@
 		<key>CFBundleIdentifier</key>
 		<string>cn.robodou.competition</string>
 		<key>CFBundleShortVersionString</key>
-		<string>0.0.1</string>
+		<string>22</string>
 		<key>CFBundleVersion</key>
-		<string>0.0.1</string>
+		<string>22</string>
 		<key>SigningIdentity</key>
 		<string>iPhone Developer: 昊天 王 (B38Z3YLN6M)</string>
 	</dict>
 	<key>ArchiveVersion</key>
 	<integer>2</integer>
 	<key>CreationDate</key>
-	<date>2016-12-19T08:36:48Z</date>
+	<date>2016-12-20T09:12:50Z</date>
 	<key>Name</key>
 	<string>Robodou</string>
 	<key>SchemeName</key>

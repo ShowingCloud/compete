@@ -10,7 +10,8 @@ var myApp = new Framework7({
     modalButtonOk: '确定',
     modalButtonCancel: '取消',
     modalTitle: '',
-    smartSelectPickerCloseText: '完成'
+    smartSelectPickerCloseText: '完成',
+    toolbarCloseText: '完成'
 });
 
 var uuid;
@@ -1266,10 +1267,11 @@ var app = {
 
                 if (value) {
                     if (_this.hasClass("time-picker")) {
-                        var m = value.slice(0, value.indexOf("分"));
+                        var h = value.slice(0, value.indexOf("时"));
+                        var m = value.slice(value.indexOf("时") + 1, value.indexOf("分"));
                         var s = value.slice(value.indexOf("分") + 1, value.indexOf("秒"));
                         var S = value.slice(value.indexOf("秒") + 1, value.indexOf("毫秒"));
-                        score = parseInt(m) * 60000 + parseInt(s) * 1000 + parseFloat(S / 1000).toFixed(2);
+                        score = parseInt(h) * 3600000 + parseInt(m) * 60000 + parseInt(s) * 1000 + parseFloat(S / 1000).toFixed(2);
                     } else if (_this.attr('type') === "radio") {
                         if (_this.prop("checked")) {
                             checked_radios.push(id);
@@ -1868,6 +1870,7 @@ myApp.onPageInit('stopWatch', function(page) {
                             date = new Date(parseFloat(value2.val));
                         }
                         var str = '';
+                        str += date.getUTCHours() + "时";
                         str += date.getUTCMinutes() + "分";
                         str += date.getUTCSeconds() + "秒";
                         str += date.getUTCMilliseconds() + "毫秒";
@@ -1934,9 +1937,9 @@ myApp.onPageInit('stopWatch', function(page) {
                     break;
                 case 1: //手动计分
                     if (sa.value_type === "2") {
-                        score_input = $$('<input class="score float-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
+                        score_input = $$('<input type="number" class="score float-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
                     } else if (sa.value_type === "1") {
-                        score_input = $$('<input class="score integer-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
+                        score_input = $$('<input type="number" class="score integer-picker" data-id=' + sa.id + ' data-name="' + sa.name + '">');
 
                     } else if (sa.value_type === "3") {
                         score_input = $$('<input type="radio" class="score" checked="true" value="1" data-id=' + sa.id + ' data-name="' + sa.name + '">是<input type="radio" class="score" value="0" data-id=' + sa.id + ' data-name="' + sa.name + '">否');
@@ -2006,85 +2009,123 @@ myApp.onPageInit('stopWatch', function(page) {
         });
     });
 
-    $$(".float-picker").each(function() {
-        var float_picker = myApp.picker({
-            input: this,
-            formatValue: function(picker, values) {
+    // $$(".float-picker").each(function() {
+    //     var float_picker = myApp.picker({
+    //         input: this,
+    //         formatValue: function(picker, values) {
+    //
+    //             return parseFloat(values[0] + values[1] + "." + values[2]).toFixed(2);
+    //         },
+    //         cols: [{
+    //
+    //                 values: (function() {
+    //                     var arr = [];
+    //                     for (var i = 0; i <= 9; i++) {
+    //                         arr.push(i < 10 ? '0' + i : i);
+    //                     }
+    //                     return arr;
+    //                 })(),
+    //             }, {
+    //                 values: (function() {
+    //                     var arr = [];
+    //                     for (var i = 0; i <= 99; i++) {
+    //                         arr.push(i < 10 ? '0' + i : i);
+    //                     }
+    //                     return arr;
+    //                 })(),
+    //             },
+    //
+    //             {
+    //                 divider: true,
+    //                 content: '.'
+    //             }, {
+    //                 values: (function() {
+    //                     var arr = [];
+    //                     for (var i = 0; i <= 99; i++) {
+    //                         arr.push(i < 10 ? '0' + i : i);
+    //                     }
+    //                     return arr;
+    //                 })(),
+    //             },
+    //         ]
+    //     });
+    // });
 
-                return parseFloat(values[0] + values[1] + "." + values[2]).toFixed(2);
-            },
-            cols: [{
-
-                    values: (function() {
-                        var arr = [];
-                        for (var i = 0; i <= 9; i++) {
-                            arr.push(i < 10 ? '0' + i : i);
-                        }
-                        return arr;
-                    })(),
-                }, {
-                    values: (function() {
-                        var arr = [];
-                        for (var i = 0; i <= 99; i++) {
-                            arr.push(i < 10 ? '0' + i : i);
-                        }
-                        return arr;
-                    })(),
-                },
-
-                {
-                    divider: true,
-                    content: '.'
-                }, {
-                    values: (function() {
-                        var arr = [];
-                        for (var i = 0; i <= 99; i++) {
-                            arr.push(i < 10 ? '0' + i : i);
-                        }
-                        return arr;
-                    })(),
-                },
-            ]
-        });
+    $$(".integer-picker").on("keypress", function(event) {
+        if (event.charCode < 48 || event.charCode > 57) {
+            event.preventDefault();
+        }
     });
-    $$(".integer-picker").each(function() {
-        var float_picker = myApp.picker({
-            input: this,
-            formatValue: function(picker, values) {
-                return parseInt(values[0] + values[1]);
-            },
-            cols: [{
 
-                values: (function() {
-                    var arr = [];
-                    for (var i = 0; i <= 9; i++) {
-                        arr.push(i < 10 ? '0' + i : i);
-                    }
-                    return arr;
-                })(),
-            }, {
-                values: (function() {
-                    var arr = [];
-                    for (var i = 0; i <= 99; i++) {
-                        arr.push(i < 10 ? '0' + i : i);
-                    }
-                    return arr;
-                })(),
-            }]
-        });
+    $$(".float-picker").on("keypress", function(event) {
+        if (!(event.charCode >= 48 && event.charCode <= 57 || event.charCode === 46)) {
+            event.preventDefault();
+        } else if (event.charCode === 46) {
+            if ($$(this).val().includes(".")) {
+                event.preventDefault();
+            }
+        }
     });
+
+    $$(".float-picker").on("focusout", function(event) {
+        var value = $$(this).val();
+        if (value) {
+            $$(this).val(parseFloat(value));
+        }
+    });
+    $$(".integer-picker").on("focusout", function(event) {
+        var value = $$(this).val();
+        if (value) {
+            $$(this).val(parseInt(value));
+        }
+    });
+
+    // $$(".integer-picker").each(function() {
+    //     var float_picker = myApp.picker({
+    //         input: this,
+    //         formatValue: function(picker, values) {
+    //             return parseInt(values[0] + values[1]);
+    //         },
+    //         cols: [{
+    //
+    //             values: (function() {
+    //                 var arr = [];
+    //                 for (var i = 0; i <= 9; i++) {
+    //                     arr.push(i < 10 ? '0' + i : i);
+    //                 }
+    //                 return arr;
+    //             })(),
+    //         }, {
+    //             values: (function() {
+    //                 var arr = [];
+    //                 for (var i = 0; i <= 99; i++) {
+    //                     arr.push(i < 10 ? '0' + i : i);
+    //                 }
+    //                 return arr;
+    //             })(),
+    //         }]
+    //     });
+    // });
     $$(".time-picker").each(function() {
         var float_picker = myApp.picker({
             input: this,
             formatValue: function(picker, values) {
 
-                return values[0] + values[1] + values[2];
+                return values[0] + values[1] + values[2] + values[3];
             },
             cols: [{
+                values: (function() {
+                    var arr = [];
+                    for (var i = 0; i <= 23; i++) {
+                        arr.push(i < 10 ? '0' + i + '时' : i + '时');
+                    }
+                    return arr;
+                })(),
+            }, {
 
                 values: (function() {
                     var arr = [];
-                    for (var i = 0; i <= 9; i++) {
+                    for (var i = 0; i <= 59; i++) {
                         arr.push(i < 10 ? '0' + i + '分' : i + '分');
                     }
                     return arr;

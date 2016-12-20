@@ -87,6 +87,10 @@
         </author>
     <access origin="*" />
     <allow-navigation href="*" />
+    <chcp>
+        <config-file url="http://192.168.1.112:31284/chcp.json" />
+        <local-development enabled="true" />
+    </chcp>
     <preference name="AllowInlineMediaPlayback" value="false" />
     <preference name="BackupWebStorage" value="cloud" />
     <preference name="DisallowOverscroll" value="true" />
