@@ -32,20 +32,22 @@
     <true/>
     <key>NSAppTransportSecurity</key>
     <dict>
+      <key>NSExceptionDomains</key>
+      <dict>
+        <key>localhost</key>
+        <dict>
+          <key>NSExceptionAllowsInsecureHTTPLoads</key>
+          <true/>
+        </dict>
+      </dict>
       <key>NSAllowsArbitraryLoads</key>
       <true/>
     </dict>
     <key>NSBluetoothPeripheralUsageDescription</key>
     <string/>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string/>
     <key>NSMainNibFile</key>
     <string/>
     <key>NSMainNibFile~ipad</key>
-    <string/>
-    <key>NSMicrophoneUsageDescription</key>
-    <string/>
-    <key>NSPhotoLibraryUsageDescription</key>
     <string/>
     <key>UIInterfaceOrientation</key>
     <array>
@@ -63,7 +65,13 @@
       <string>UIInterfaceOrientationLandscapeLeft</string>
       <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string/>
     <key>NSCameraUsageDescription</key>
+    <string/>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string/>
+    <key>NSMicrophoneUsageDescription</key>
     <string/>
   </dict>
 </plist>

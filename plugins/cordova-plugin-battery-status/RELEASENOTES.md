@@ -20,6 +20,21 @@
 -->
 # Release Notes
 
+
+### 1.2.2 (Dec 12, 2016)
+* [CB-12227](https://issues.apache.org/jira/browse/CB-12227) (windows) Fixed Browserify error
+* [CB-12236](https://issues.apache.org/jira/browse/CB-12236) - Fix RELEASENOTES.md for cordova-plugin-battery-status
+* [CB-12230](https://issues.apache.org/jira/browse/CB-12230) Removed Windows 8.1 build badges
+* [CB-12224](https://issues.apache.org/jira/browse/CB-12224) Incremented plugin version.
+
+### 1.2.1 (Dec 07, 2016)
+
+* [CB-12224](https://issues.apache.org/jira/browse/CB-12224) Updated version and RELEASENOTES.md for release 1.2.1
+* [CB-8929](https://issues.apache.org/jira/browse/CB-8929) Fix failing tests on iOS
+* [CB-8929](https://issues.apache.org/jira/browse/CB-8929) Use PowerManager to get battery state on Win 10
+* [CB-11917](https://issues.apache.org/jira/browse/CB-11917) - Remove pull request template checklist item: "iCLA has been submitted…"
+* [CB-11832](https://issues.apache.org/jira/browse/CB-11832) Incremented plugin version.
+
 ### 1.2.0 (Sep 08, 2016)
 * [CB-11795](https://issues.apache.org/jira/browse/CB-11795) Add 'protective' entry to cordovaDependencies
 * Plugin uses Android Log class and not Cordova LOG class

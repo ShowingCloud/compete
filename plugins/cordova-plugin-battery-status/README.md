@@ -21,9 +21,9 @@ description: Get events for device battery level.
 #         under the License.
 -->
 
-|Android|iOS| Windows 8.1 Store | Windows 8.1 Phone | Windows 10 Store | Travis CI |
-|:-:|:-:|:-:|:-:|:-:|:-:|
-|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=android,PLUGIN=cordova-plugin-battery-status)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=android,PLUGIN=cordova-plugin-battery-status/)|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=ios,PLUGIN=cordova-plugin-battery-status)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=ios,PLUGIN=cordova-plugin-battery-status/)|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=windows-8.1-store,PLUGIN=cordova-plugin-battery-status)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=windows-8.1-store,PLUGIN=cordova-plugin-battery-status/)|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=windows-8.1-phone,PLUGIN=cordova-plugin-battery-status)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=windows-8.1-phone,PLUGIN=cordova-plugin-battery-status/)|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=windows-10-store,PLUGIN=cordova-plugin-battery-status)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=windows-10-store,PLUGIN=cordova-plugin-battery-status/)|[![Build Status](https://travis-ci.org/apache/cordova-plugin-battery-status.svg?branch=master)](https://travis-ci.org/apache/cordova-plugin-battery-status)|
+|Android 4.4|Android 5.1|iOS|Windows 10 Store|Travis CI|
+|:-:|:-:|:-:|:-:|:-:|
+|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=android-4.4,PLUGIN=cordova-plugin-battery-status)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=android-4.4,PLUGIN=cordova-plugin-battery-status/)|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=android-5.1,PLUGIN=cordova-plugin-battery-status)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=android-5.1,PLUGIN=cordova-plugin-battery-status/)|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=ios,PLUGIN=cordova-plugin-battery-status)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=ios,PLUGIN=cordova-plugin-battery-status/)|[![Build Status](http://cordova-ci.cloudapp.net:8080/buildStatus/icon?job=cordova-periodic-build/PLATFORM=windows-10-store,PLUGIN=cordova-plugin-battery-status)](http://cordova-ci.cloudapp.net:8080/job/cordova-periodic-build/PLATFORM=windows-10-store,PLUGIN=cordova-plugin-battery-status/)|[![Build Status](https://travis-ci.org/apache/cordova-plugin-battery-status.svg?branch=master)](https://travis-ci.org/apache/cordova-plugin-battery-status)|
 
 # cordova-plugin-battery-status
 
@@ -65,7 +65,7 @@ Fires when the battery charge percentage changes by at least 1 percent, or when 
 - Android
 - BlackBerry 10
 - Windows Phone 7 and 8
-- Windows (Windows Phone 8.1 only)
+- Windows (Windows Phone 8.1 and Windows 10)
 - Firefox OS
 - Browser (Chrome, Firefox, Opera)
 
@@ -100,7 +100,7 @@ Fires when the battery charge percentage reaches the low charge threshold. This 
 - Android
 - BlackBerry 10
 - Firefox OS
-- Windows (Windows Phone 8.1 only)
+- Windows (Windows Phone 8.1 and Windows 10)
 - Browser (Chrome, Firefox, Opera)
 
 ### Quirks: Windows Phone 8.1
@@ -126,7 +126,7 @@ Fires when the battery charge percentage reaches the critical charge threshold. 
 - Android
 - BlackBerry 10
 - Firefox OS
-- Windows (Windows Phone 8.1 only)
+- Windows (Windows Phone 8.1 and Windows 10)
 - Browser (Chrome, Firefox, Opera)
 
 ### Quirks: Windows Phone 8.1
