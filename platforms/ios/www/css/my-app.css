@@ -1024,3 +1024,7 @@ div.media-capture {
 .swiper-wrapper{
   margin-bottom: 20px;
 }
+
+.picker-keypad-button-letters{
+  display: none;
+}

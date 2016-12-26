@@ -761,10 +761,6 @@ var app = {
             }
         }, false);
 
-        $$(document).click(function() {
-            $$('.wrapper-dropdown').removeClass('active');
-        });
-
         //Check uuid
         $$('#msg').on('taphold', function() {
             myApp.alert(uuid, '');
@@ -865,6 +861,7 @@ var app = {
             var identifier = _this.data("identifier");
             var team_id = _this.data("id");
             temp.edit = null;
+
             if (_this.hasClass("unfinished")) {
                 app.teamInfo(identifier, team_id);
             } else {
@@ -902,6 +899,13 @@ var app = {
         });
         $$(document).on('click', '.btn-reconnect', function() {
             track.reconnect();
+        });
+        $$(document).on('click', '.delete-media', function() {
+            var _this = $$(this);
+            var media_tag = _this.parent();
+            myApp.confirm("是否删除？","",function(){
+              media_tag.remove();
+            });
         });
         $$(document).on('click', '.back-tag', function() {
             myApp.confirm("是否返回，数据不会保存", "", function() {
@@ -1185,7 +1189,7 @@ var app = {
             var i, path, len;
             for (i = 0, len = mediaFiles.length; i < len; i += 1) {
                 path = mediaFiles[i].fullPath;
-                console.log(mediaFiles[i]);
+                console.log(path);
                 $$("#photos").append('<img src="' + path + '">');
             }
         };
@@ -1210,7 +1214,6 @@ var app = {
             var v = "<video controls='controls'>";
             v += "<source src='" + path + "' type='" + type + "'>";
             v += "</video>";
-            $$("#video").append(v);
 
             VideoEditor.createThumbnail(
                 function(result) {
@@ -1218,14 +1221,19 @@ var app = {
                     var v = "<video controls='controls' poster='" + result + "' >";
                     v += "<source src='" + path + "' type='" + type + "'>";
                     v += "</video>";
-                    $$("#video").append(v);
+                    var wrapper = $$("<div class='media-wrapper'></div>");
+                    wrapper.append(v).append("<i class='f7-icons delete-media'>close_round</i>");
+                    $$("#video").append(wrapper);
                 }, // success cb
                 function(e) {
+                    alert("error");
+                    console.log(e);
                     var v = "<video controls='controls'>";
                     v += "<source src='" + path + "' type='" + type + "'>";
                     v += "</video>";
-                    $$("#video").append(v);
-                    console.log(e);
+                    var wrapper = $$("<div class='media-wrapper'></div>");
+                    wrapper.append(v).append("<i class='f7-icons delete-media'>close_round</i>");
+                    $$("#video").append(wrapper);
                 }, // error cb
                 {
                     fileUri: path, // the path to the video on the device
@@ -1346,12 +1354,12 @@ var app = {
                 myApp.hidePreloader();
                 myApp.hideIndicator();
                 myApp.alert("成绩已上传", "", function() {
-                    mainView.router.loadPage('player.html');
+                    mainView.router.back();
                 });
             }, function() {
                 myApp.hideIndicator();
                 myApp.alert("成绩上传失败，请稍后再上传", "", function() {
-                    mainView.router.loadPage('player.html');
+                    mainView.router.back();
                 });
             });
         }
@@ -1714,14 +1722,12 @@ myApp.onPageInit('msg', function(page) {
 });
 
 myApp.onPageInit('player', function() {
-    app.getTeams({
-        "event_id": temp.event.id,
-        "group": temp.event.group,
-        "schedule_id": temp.schedule_id,
-    });
     $$("#player-title").text(temp.compete.name + " " + temp.event.name + " " + temp.schedule_name);
     $$(".wrapper-dropdown").on('click', function(event) {
         $$(this).toggleClass("active");
+        $$(document).once('click',function() {
+            $$('.wrapper-dropdown').removeClass('active');
+        });
         event.stopPropagation();
     });
     $$(".wrapper-dropdown li").on('click', function() {
@@ -1750,6 +1756,15 @@ myApp.onPageInit('player', function() {
         }
     });
 });
+
+myApp.onPageAfterAnimation('player', function() {
+  app.getTeams({
+      "event_id": temp.event.id,
+      "group": temp.event.group,
+      "schedule_id": temp.schedule_id,
+  });
+});
+
 myApp.onPageInit('round', function() {
     $$(".round-wrapper").on('click', function() {
         var data = $$(this).dataset();
@@ -1904,16 +1919,13 @@ myApp.onPageInit('stopWatch', function(page) {
     $$(".scrollable").css("height", "500px");
     $$("#scoreHeader").hide();
     if (scoreAttr) {
-        console.log(scoreAttr);
         scoreAttr.forEach(function(sa, index) {
             var score_wrapper = $$('<div>' + sa.name + '：</div>');
             var score_input;
             if (sa.name === "最终成绩") {
                 var formula = sa.formula;
                 trigger_attr = formula.trigger_attr.id;
-                console.log("trigger_attr:" + trigger_attr);
                 last_score_by = formula.last_score_by.id;
-                console.log("last_score_by:" + last_score_by);
                 var formula_holder = $$("<div class='formula'></div>");
                 formula_holder.data("formula", formula);
                 $$("#team1 .scores").append(formula_holder);
@@ -2013,40 +2025,55 @@ myApp.onPageInit('stopWatch', function(page) {
         });
     });
 
-    $$(".integer-picker").on("keypress", function(event) {
-        if (event.charCode < 48 || event.charCode > 57) {
-            event.preventDefault();
-        }
+    $$('.integer-picker').each(function(){
+      var myKeypad = myApp.keypad({
+          input: this,
+          dotButton: false,
+          toolbarCloseText: '完成'
+      });
     });
 
-    $$(".float-picker").on("keypress", function(event) {
-        if (!(event.charCode >= 48 && event.charCode <= 57 || event.charCode === 46)) {
-            event.preventDefault();
-        } else if (event.charCode === 46) {
-            if ($$(this).val().includes(".")) {
-                event.preventDefault();
-            }
-        }
+    $$('.float-picker').each(function(){
+      var myKeypad = myApp.keypad({
+          input: this,
+          toolbarCloseText: '完成'
+      });
     });
 
-    $$(".float-picker").on("focusout", function(event) {
-        var value = $$(this).val();
-        if (value) {
-            $$(this).val(parseFloat(value));
-        }
-    });
-    $$(".integer-picker").on("focusout", function(event) {
-        var value = $$(this).val();
-        if (value) {
-            $$(this).val(parseInt(value));
-        }
-    });
+    // $$(".integer-picker").on("keypress", function(event) {
+    //     if (event.charCode < 48 || event.charCode > 57) {
+    //         event.preventDefault();
+    //     }
+    // });
+    //
+    // $$(".float-picker").on("keypress", function(event) {
+    //     if (!(event.charCode >= 48 && event.charCode <= 57 || event.charCode === 46)) {
+    //         event.preventDefault();
+    //     } else if (event.charCode === 46) {
+    //         if ($$(this).val().includes(".")) {
+    //             event.preventDefault();
+    //         }
+    //     }
+    // });
+    //
+    // $$(".float-picker").on("focusout", function(event) {
+    //     var value = $$(this).val();
+    //     if (value) {
+    //         $$(this).val(parseFloat(value));
+    //     }
+    // });
+    // $$(".integer-picker").on("focusout", function(event) {
+    //     var value = $$(this).val();
+    //     if (value) {
+    //         $$(this).val(parseInt(value));
+    //     }
+    // });
     if (trigger_attr && last_score_by) {
         $$(".scores .score").each(function(ele) {
             var _this = $$(this);
             var id = _this.data("id");
             if (id !== trigger_attr && id !== last_score_by) {
-                _this.addClass("toggle");
+                _this.addClass("toggle").prop("disabled", true);
             }
         });
     }
@@ -2061,12 +2088,11 @@ myApp.onPageInit('stopWatch', function(page) {
             var new_name = _this.data('name') + round;
             _this.attr('name', new_name);
             _this.on('change', function() {
-                console.log('radio change'+_this.val());
                 if (_this.val() === "1") {
-                    _this.parents(".tab").find(".toggle").val("").parent().hide();
+                    _this.parents(".tab").find(".toggle").prop("disabled", true).val("").parent().hide();
                     _this.parents(".tab").find(".ble-score").val("").prop("disabled", false).parent().show();
                 } else {
-                    _this.parents(".tab").find(".toggle").parent().show();
+                    _this.parents(".tab").find(".toggle").prop("disabled", false).parent().show();
                     _this.parents(".tab").find(".ble-score").val("").prop("disabled", true).parent().hide();
                 }
             });
@@ -2084,8 +2110,6 @@ myApp.onPageInit('stopWatch', function(page) {
     }
 
     if (temp.edit) {
-        console.log("edit");
-        console.log(temp.edit);
         loadScore(temp.edit.score1, temp.edit.out_of_rounds);
         $$(".remarkInput").val(temp.edit.remark);
 
@@ -2182,11 +2206,10 @@ myApp.onPageInit('stopWatch', function(page) {
             score.missed = temp_score.missed.length;
             app.saveScore(score, function() {
                 myApp.confirm("保存成功,是否返回列表？", "", function() {
-                    mainView.router.loadPage('player.html');
+                    mainView.router.back();
                 });
             });
         });
-        console.log("scoreFrom:" + scoreFrom);
         if (scoreFrom.includes(5)) {
             $$(".scoreBoard").append('<div class="speed-dial speed-dial-opened"><a href="#" class="floating-button"><i class="icon f7-icons">add</i><i class="icon f7-icons">close</i></a><div class="speed-dial-buttons"><a class="btn-connect" href="#"><i class="icon icon-connect">接入</i></a><a class="btn-reconnect" href="#"><i class="icon icon-reconnect">重连</i></a></div></div>');
             if (track.service.deviceId) {

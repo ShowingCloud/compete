@@ -37,6 +37,7 @@
   <link rel="stylesheet" href="css/framework7.ios.min.css">
   <link rel="stylesheet" href="css/framework7.ios.colors.min.css">
   <link rel="stylesheet" href="css/animate.min.css">
+  <link rel="stylesheet" href="css/framework7.keypad.min.css">
   <link rel="stylesheet" href="css/my-app.css">
   <script id="processTemp" type="text/template7">
     <div class="row competeTab1">
@@ -86,7 +87,7 @@
         <div class="swiper-slide">
           <p>姓名：{{username}}</p>
           <p>参赛编号：{{@root.identifier}}</p>
-          <p>性别：{{#js_compare "this.gender === 1"}}男{{else}}女{{/js_compare}} </p>
+          <p>性别：{{#js_compare "this.gender === 1"}}男{{else}}女{{/js_compare}}</p>
           <p>学校：{{@root.school_name}}</p>
           <p class="play-event">参赛项目：{{@root.event_name}} {{@root.comp_name}}</p>
         </div>
@@ -211,6 +212,7 @@
   </div>
   <script type="text/javascript" src="cordova.js "></script>
   <script type="text/javascript" src="js/framework7.min.js "></script>
+  <script type="text/javascript" src="js/framework7.keypad.js "></script>
   <script type="text/javascript" src="js/pouchdb.min.js "></script>
   <script type="text/javascript" src="js/action_cable.js"></script>
   <script src="js/pouchdb.cordova-sqlite.js"></script>

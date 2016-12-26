@@ -26,20 +26,10 @@
     <string>????</string>
     <key>CFBundleVersion</key>
     <string>0.0.1</string>
-    <key>LSApplicationCategoryType</key>
-    <string/>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSAppTransportSecurity</key>
     <dict>
-      <key>NSExceptionDomains</key>
-      <dict>
-        <key>localhost</key>
-        <dict>
-          <key>NSExceptionAllowsInsecureHTTPLoads</key>
-          <true/>
-        </dict>
-      </dict>
       <key>NSAllowsArbitraryLoads</key>
       <true/>
     </dict>
@@ -65,13 +55,11 @@
       <string>UIInterfaceOrientationLandscapeLeft</string>
       <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string/>
-    <key>NSCameraUsageDescription</key>
+    <key>NSMicrophoneUsageDescription</key>
     <string/>
     <key>NSPhotoLibraryUsageDescription</key>
     <string/>
-    <key>NSMicrophoneUsageDescription</key>
+    <key>NSCameraUsageDescription</key>
     <string/>
   </dict>
 </plist>

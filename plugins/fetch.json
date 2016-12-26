@@ -40,14 +40,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "phonegap-plugin-barcodescanner": {
-        "source": {
-            "type": "registry",
-            "id": "phonegap-plugin-barcodescanner@~6.0.4"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-secure-storage": {
         "source": {
             "type": "registry",
@@ -104,14 +96,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-media": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-media@2.4.1"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-file-transfer": {
         "source": {
             "type": "registry",
@@ -124,22 +108,6 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-splashscreen@4.0.1"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-statusbar": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-statusbar@2.2.1"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-camera": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-camera@2.3.1"
         },
         "is_top_level": true,
         "variables": {}
@@ -160,14 +128,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-media-capture": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-media-capture"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-video-editor": {
         "source": {
             "type": "registry",
@@ -176,10 +136,10 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cocoon-cordova-labs-local-webserver": {
+    "phonegap-plugin-barcodescanner": {
         "source": {
             "type": "registry",
-            "id": "cocoon-cordova-labs-local-webserver"
+            "id": "phonegap-plugin-barcodescanner@~6.0.4"
         },
         "is_top_level": true,
         "variables": {}
@@ -188,6 +148,24 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-browsersync"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-statusbar": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/apache/cordova-plugin-statusbar.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-media-capture": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/apache/cordova-plugin-media-capture.git",
+            "subdir": "."
         },
         "is_top_level": true,
         "variables": {}
